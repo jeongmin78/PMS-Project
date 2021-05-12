@@ -73,8 +73,9 @@ public class Guest extends BaseJpaModel<Long> {
     }
 
     @Builder
-	public Guest(String guestNm, String guestNmEng, String guestTel, String email,
+	public Guest(Long id, String guestNm, String guestNmEng, String guestTel, String email,
 				 String brth, String gender, String langCd, String rmk) {
+    	this.id = id;
     	this.guestNm = guestNm;
     	this.guestNmEng = guestNmEng;
     	this.guestTel = guestTel;

@@ -1,8 +1,11 @@
 package edu.axboot.chk;
 
 import edu.axboot.AXBootApplication;
+import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
 import edu.axboot.controllers.dto.ChkSaveRequestDto;
+import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkService;
+import edu.axboot.domain.chkmemo.ChkMemoService;
 import edu.axboot.domain.room.RoomService;
 import lombok.extern.java.Log;
 import org.junit.FixMethodOrder;
@@ -15,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.assertTrue;
 
 @Log
@@ -24,8 +30,12 @@ import static org.junit.Assert.assertTrue;
 public class ChkServiceTest {
     @Autowired
     private ChkService chkService;
+    @Autowired
+    private ChkMemoService chkMemoService;
+
     private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
     public static long testId = 0;
+    public static String testRsvNum;
 
     @Test
     public void test1_예약등록_저장하기() {
@@ -48,11 +58,30 @@ public class ChkServiceTest {
                 .advnYn("Y")
                 .build();
         //when
-        testId = this.chkService.saveUsingJpa(saveDto);
-        logger.info("\n"+ "ID ===============> " + testId);
+        testRsvNum = this.chkService.saveUsingJpa(saveDto);
+        logger.info("\n"+ "ID ===============> " + testRsvNum);
         //then
-        assertTrue(testId > 0);
+        assertTrue(testRsvNum != null);
+    }
 
+    @Test
+    public void test2_예약등록_메모작성하기() {
+
+        //given
+        ChkMemoSaveRequestDto memoSaveDto = ChkMemoSaveRequestDto.builder()
+                .id(null)
+                .rsvNum("R20210512002")
+                .sno(2)
+                .memoCn("memoCn")
+                .memoDtti(Timestamp.valueOf(LocalDateTime.now()))
+                .memoMan("memoMan")
+                .delYn("delYn")
+                .build();
+        //when
+        testRsvNum = this.chkMemoService.saveUsingJpa(memoSaveDto);
+        logger.info("\n"+ "ID ===============> " + testRsvNum);
+        //then
+        assertTrue(testRsvNum != null);
     }
 
 }

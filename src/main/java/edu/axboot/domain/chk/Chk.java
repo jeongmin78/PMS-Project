@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -208,9 +209,8 @@ public class Chk extends BaseJpaModel<Long> {
     	this.rsvNum = "R" + today.format(numbering) + leftpad;
     	this.sttusCd = "RSV_01";
 	}
-//	@Transient
-//	private List<Long> memoIdList = new ArrayList<>();
-//
-//	@OneToMany(mappedBy = "chkMemo")
-//	private List<ChkMemo> memoList = new ArrayList<>();
+
+	@OneToMany(mappedBy = "chk")
+	private List<ChkMemo> memoList = new ArrayList<ChkMemo>();
+
 }

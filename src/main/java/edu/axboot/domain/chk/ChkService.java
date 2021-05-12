@@ -4,6 +4,7 @@ import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import edu.axboot.controllers.dto.ChkSaveRequestDto;
 import edu.axboot.domain.BaseService;
+import edu.axboot.domain.chkmemo.ChkMemo;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +68,11 @@ public class ChkService extends BaseService<Chk, Long> {
     }
 
     @Transactional
-    public Long saveUsingJpa(ChkSaveRequestDto requestDto) {
+    public String saveUsingJpa(ChkSaveRequestDto requestDto) {
 
         Chk entity = requestDto.toEntity();
         entity.예약일_예약번호_예약상태_생성(sequence++);
-        return chkRepository.save(entity).getId();
+        return chkRepository.save(entity).getRsvNum();
     }
 
 }
