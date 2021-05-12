@@ -63,7 +63,7 @@ public class RoomService extends BaseService<Room, Long> {
         for (Room room: requests) {
             if (room.isCreated()) {
                 save(room);
-        } else if(room.isModified()) {
+            } else if(room.isModified()) {
                 update(qRoom)
                         .set(qRoom.roomNum, room.getRoomNum())
                         .set(qRoom.roomTypCd, room.getRoomTypCd())
@@ -81,5 +81,4 @@ public class RoomService extends BaseService<Room, Long> {
             }
         }
     }
-
 }

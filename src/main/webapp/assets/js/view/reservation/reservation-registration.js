@@ -20,6 +20,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     // },
     PAGE_SAVE: function (caller, act, data) {
         var item = caller.formView01.getData();
+        // console.log(item); return false;
         axboot.ajax({
             type: "POST",
             url: '/api/v1/chk',
@@ -105,26 +106,21 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  */
  fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
-        return { useYn: 'Y' };
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     },
     getData: function () {
-        var item = {};
-        this.target.find('input,select').each(function (i, elem) {
-            var $elem = $(this);
-            var name = $elem.data('axPath');
-            var value = $elem.val() || '';
-            item[name] = value;
-            console.log(item[name]);
-        });
+        var _this = this;
+        var data = _this.model.get();
+        if($('.js-advnYn').is(":checked")==true) {
+            data.advnYn = 'Y';
+        } else data.advnYn = 'N';
+        return $.extend({}, data);
+
     },
-    setData: function (item) {
-        var value;
-        item[rsvDt] = new Date();
-        for (var prop in item) {
-            value = item[prop] || '';
-            $('[data-ax-path="' + prop + '"]').val(value);
-        }
-        console.log(value);
+    setData: function (data) {
+        data = $.extend({}, data);
+        this.model.setModel(data);
     },
     validate: function () {
         var item = this.model.get();
@@ -136,27 +132,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
             });
             return false;
         }
-
-        // required 이외 벨리데이션 정의
-        var pattern;
-        if (item.email) {
-            pattern = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.(?:[A-Za-z0-9]{2,}?)$/i;
-            if (!pattern.test(item.email)) {
-                axDialog.alert('이메일 형식을 확인하세요.', function () {
-                    $('[data-ax-path="email"]').focus();
-                });
-                return false;
-            }
-        }
-
-        if (item.bizno && !(pattern = /^([0-9]{3})\-?([0-9]{2})\-?([0-9]{5})$/).test(item.bizno)) {
-            axDialog.alert('사업자번호 형식을 확인하세요.'),
-                function () {
-                    $('[data-ax-path="bizno"]').focus();
-                };
-            return false;
-        }
-
         return true;
     },
     initEvent: function () {

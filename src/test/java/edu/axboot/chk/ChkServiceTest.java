@@ -1,8 +1,8 @@
-package edu.axboot.room;
+package edu.axboot.chk;
 
 import edu.axboot.AXBootApplication;
-import edu.axboot.controllers.dto.RoomListResponseDto;
-import edu.axboot.controllers.dto.RoomSaveRequestDto;
+import edu.axboot.controllers.dto.ChkSaveRequestDto;
+import edu.axboot.domain.chk.ChkService;
 import edu.axboot.domain.room.RoomService;
 import lombok.extern.java.Log;
 import org.junit.FixMethodOrder;
@@ -15,21 +15,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 import static org.junit.Assert.assertTrue;
 
 @Log
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AXBootApplication.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RoomServiceTest {
-
+public class ChkServiceTest {
     @Autowired
-    private RoomService roomService;
-    private static final Logger logger = LoggerFactory.getLogger(RoomService.class);
-
+    private ChkService chkService;
+    private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
     public static long testId = 0;
+
+    @Test
+    public void test1_예약등록_저장하기() {
+        //given
+        ChkSaveRequestDto saveDto = ChkSaveRequestDto.builder()
+                .id(null)
+                .sno(null)
+                .rsvNum(null)
+                .rsvDt(null)
+                .guestNm("guestNm")
+                .arrDt("arrDt")
+                .depDt("depDt")
+                .nightCnt(2)
+                .roomTypCd("roomTypCd")
+                .adultCnt(2)
+                .chldCnt(0)
+                .saleTypCd("saleTypCd")
+                .sttusCd("01")
+                .srcCd("01")
+                .advnYn("Y")
+                .build();
+        //when
+        testId = this.chkService.saveUsingJpa(saveDto);
+        logger.info("\n"+ "ID ===============> " + testId);
+        //then
+        assertTrue(testId > 0);
+
+    }
+
+}
+
 
 /*    @Test
     public void test1_객실_한건_저장하기() {
@@ -62,4 +89,3 @@ public class RoomServiceTest {
         //then
         assertTrue(result.size() > 0);
     }*/
-}

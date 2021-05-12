@@ -6,14 +6,25 @@ import edu.axboot.domain.guest.Guest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
+@SequenceGenerator(
+		name="SNO_SEQ_GENERATOR",
+		sequenceName = "SNO",
+		initialValue = 1,
+		allocationSize = 50)
 @NoArgsConstructor
 @Table(name = "PMS_CHK")
 public class Chk extends BaseJpaModel<Long> {
@@ -141,13 +152,15 @@ public class Chk extends BaseJpaModel<Long> {
 	private List<Long> fileIdList = new ArrayList<>();
 
     @Builder
-	public Chk(String rsvDt, Integer sno, String rsvNum, Long guestId, String guestNm,
+	public Chk(Long id, String rsvDt, Integer sno, String rsvNum, Long guestId, String guestNm,
 			   String guestNmEng, String guestTel, String email, String langCd,
 			   String arrDt, String arrTime, String depDt, String depTime,
 			   Integer nightCnt, String roomTypCd, String roomNum,
 			   Integer adultCnt, Integer chldCnt, String saleTypCd,
 			   String sttusCd, String srcCd, String brth, String gender,
-			   String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc) {
+			   String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
+			   boolean isCreated, boolean isModified, boolean isDeleted) {
+    	this.id = id;
     	this.rsvDt = rsvDt;
     	this.sno = sno;
     	this.rsvNum = rsvNum;
@@ -175,6 +188,21 @@ public class Chk extends BaseJpaModel<Long> {
     	this.advnYn = advnYn;
     	this.salePrc = salePrc;
     	this.svcPrc = svcPrc;
+		this.__created__ = isCreated;
+		this.__modified__ = isModified;
+		this.__deleted__ = isDeleted;
 	}
+	private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
+	public void  예약일_예약번호_예약상태_생성(int sequence) {
+		LocalDate today = LocalDate.now();
+		logger.info("\n===============================" + today);
+		String leftpad = StringUtils.leftPad(String.valueOf(sequence),3,"0");
+		DateTimeFormatter numbering = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+		this.rsvDt = String.valueOf(today);
+    	this.sno = sequence;
+    	this.rsvNum = "R" + today.format(numbering) + leftpad;
+    	this.sttusCd = "RSV_01";
+	}
 }

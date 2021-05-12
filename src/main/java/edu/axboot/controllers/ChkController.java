@@ -4,6 +4,7 @@ import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
+import edu.axboot.controllers.dto.ChkSaveRequestDto;
 import edu.axboot.controllers.dto.RoomListResponseDto;
 import edu.axboot.controllers.dto.RoomSaveRequestDto;
 import edu.axboot.domain.chk.Chk;
@@ -33,11 +34,11 @@ public class ChkController extends BaseController {
         return Responses.ListResponse.of(list);
     }
 
-    @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
-    public ApiResponse save(@RequestBody List<Chk> request) {
-        chkService.save(request);
-        return ok();
-    }
+//    @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
+//    public ApiResponse save(@RequestBody List<Chk> request) {
+//        chkService.save(request);
+//        return ok();
+//    }
 
     //    ------------------------------------------------------------
 
@@ -48,8 +49,8 @@ public class ChkController extends BaseController {
     }
 
     @RequestMapping(method = {RequestMethod.POST}, produces = APPLICATION_JSON)
-    public ApiResponse save(@RequestBody Chk request) {
-        chkService.saveUsingQueryDsl(request);
+    public ApiResponse save(@RequestBody ChkSaveRequestDto requestDto) {
+        chkService.saveUsingJpa(requestDto);
         return ok();
     }
 }

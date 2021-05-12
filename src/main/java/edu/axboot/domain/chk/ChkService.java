@@ -2,27 +2,27 @@ package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
+import edu.axboot.controllers.dto.ChkSaveRequestDto;
 import edu.axboot.domain.BaseService;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class ChkService extends BaseService<Chk, Long> {
-    private ChkRepository chkRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
-    @Inject
-    public ChkService(ChkRepository chkRepository) {
-        super(chkRepository);
-        this.chkRepository = chkRepository;
-    }
+    private final ChkRepository chkRepository;
+    private static int sequence;
 
     public List<Chk> gets(RequestParams<Chk> requestParams) {
         return findAll();
     }
-
 
     public List<Chk> getList(RequestParams<Chk> requestParams) {
         String rsvNum = requestParams.getString("rsvNum","");
@@ -66,9 +66,11 @@ public class ChkService extends BaseService<Chk, Long> {
     }
 
     @Transactional
-    public void saveUsingQueryDsl(Chk request) {
-        if (request.getId() == null || request.getId() == 0) {
-            this.chkRepository.save(request);
-        }
+    public Long saveUsingJpa(ChkSaveRequestDto requestDto) {
+
+        Chk entity = requestDto.toEntity();
+        entity.예약일_예약번호_예약상태_생성(sequence++);
+        return chkRepository.save(entity).getId();
     }
+
 }

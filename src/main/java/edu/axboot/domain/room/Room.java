@@ -64,8 +64,10 @@ public class Room extends BaseJpaModel<Long> {
 	}
 
 	@Builder
-	public Room(String roomNum, String roomTypCd, String dndYn, String ebYn,
-				String roomSttusCd, String clnSttusCd, String svcSttusCd){
+	public Room(Long id, String roomNum, String roomTypCd, String dndYn, String ebYn,
+				String roomSttusCd, String clnSttusCd, String svcSttusCd,
+				Boolean isCreated, Boolean isModified, Boolean isDeleted){
+		this.id = id;
 		this.roomNum = roomNum;
 		this.roomTypCd = roomTypCd;
 		this.dndYn = dndYn;
@@ -73,5 +75,24 @@ public class Room extends BaseJpaModel<Long> {
 		this.roomSttusCd = roomSttusCd;
 		this.clnSttusCd = clnSttusCd;
 		this.svcSttusCd = svcSttusCd;
+		this.__created__ = isCreated;
+		this.__modified__ = isModified;
+		this.__deleted__ = isDeleted;
+	}
+
+	public Room toEntity() {
+		return Room.builder()
+				.id(id)
+				.roomNum(roomNum)
+				.roomTypCd(roomTypCd)
+				.dndYn(dndYn)
+				.ebYn(ebYn)
+				.roomSttusCd(roomSttusCd)
+				.clnSttusCd(clnSttusCd)
+				.svcSttusCd(svcSttusCd)
+				.isCreated(__created__)
+				.isModified(__modified__)
+				.isDeleted(__deleted__)
+				.build();
 	}
 }
