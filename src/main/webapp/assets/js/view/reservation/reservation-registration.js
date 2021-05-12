@@ -1,23 +1,23 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    // PAGE_SEARCH: function (caller, act, data) {
-    //     axboot.ajax({
-    //         type: "GET",
-    //         url: ["samples", "parent"],
-    //         data: caller.searchView.getData(),
-    //         callback: function (res) {
-    //             caller.gridView01.setData(res);
-    //         },
-    //         options: {
-    //             // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-    //             onError: function (err) {
-    //                 console.log(err);
-    //             }
-    //         }
-    //     });
+    PAGE_SEARCH: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: '/api/v1/chkmemos',
+            // data: caller.gridView.getData(),
+            callback: function (res) {
+                caller.gridView01.setData(res);
+            },
+            options: {
+                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                onError: function (err) {
+                    console.log(err);
+                }
+            }
+        });
 
-    //     return false;
-    // },
+        return false;
+    },
     PAGE_SAVE: function (caller, act, data) {
         var item = caller.formView01.getData();
         // console.log(item); return false;
@@ -30,6 +30,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axToast.push("저장 되었습니다");
             }
         });
+        var memo = caller.gridView01.getdata();
     },
     ITEM_CLICK: function (caller, act, data) {
 
@@ -39,6 +40,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ITEM_DEL: function (caller, act, data) {
         caller.gridView01.delRow("selected");
+    },
+    DEP_CHANGE: function (caller, act, data) {
+        var item = caller.formView01.getData();
+        // 날짜계산
+        caller.formView01.setData(item);
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -55,6 +61,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 fnObj.pageStart = function () {
     this.pageButtonView.initView();
     this.searchView.initView();
+    this.gridView01.initView();
     this.formView01.initView();
 
     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -100,6 +107,40 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     }
 });
 
+/**
+ * gridView
+ */
+ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
+    initView: function () {
+        this.target = axboot.gridBuilder({
+            // onPageChange: function (pageNumber) {
+            //     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, { pageNumber: pageNumber });
+            // },
+            showRowSelector: true,
+            frozenColumnIndex: 0,
+            multipleSelect: true,
+            target: $('[data-ax5grid="grid-view-01"]'),
+            columns: [
+                { key: 'memoDtti', label: "작성일", width: '30%', align: 'center' },
+                { key: 'memoCn', label: "메모", width: '70%', align: 'center' },
+            ],
+            body: {
+                onClick: function () {
+                    this.self.select(this.dindex, { selectedClear: true });
+                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
+                },
+            },
+        });
+        axboot.buttonClick(this, 'data-grid-view-01-btn', {
+            add: function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
+            },
+            delete: function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
+            },
+        });
+    },
+});
 
 /**
  * formView
@@ -116,7 +157,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
             data.advnYn = 'Y';
         } else data.advnYn = 'N';
         return $.extend({}, data);
-
     },
     setData: function (data) {
         data = $.extend({}, data);
@@ -151,5 +191,9 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         // this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
 
         this.initEvent();
+        
+        this.arrDt = $('.js-arrDt, .js-nightCnt').on('change', function () {
+            ACTIONS.dispatch(ACTIONS.DEP_CHANGE);
+        })
     },
 });

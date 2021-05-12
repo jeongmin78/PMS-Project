@@ -2,12 +2,15 @@ package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import edu.axboot.domain.BaseJpaModel;
+import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.guest.Guest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,4 +208,9 @@ public class Chk extends BaseJpaModel<Long> {
     	this.rsvNum = "R" + today.format(numbering) + leftpad;
     	this.sttusCd = "RSV_01";
 	}
+//	@Transient
+//	private List<Long> memoIdList = new ArrayList<>();
+//
+//	@OneToMany(mappedBy = "chkMemo")
+//	private List<ChkMemo> memoList = new ArrayList<>();
 }

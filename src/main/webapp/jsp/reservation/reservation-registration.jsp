@@ -173,7 +173,16 @@
                         <div data-ax-td style="width:100%">
                             <div data-ax-td-label style="width:120px;">투숙메모</div>
                             <div data-ax-td-wrap>
-                                <textarea name="remark" data-ax-path="remark" rows="5" class="form-control"></textarea>
+                                <div class="ax-button-group" data-fit-height-aside="grid-view-01">
+                                    <div class="left">
+                                        <h2><i class="cqc-list"></i> 투숙메모 </h2>
+                                    </div>
+                                    <div class="right">
+                                        <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+                                        <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-plus"></i> 삭제</button>
+                                    </div>
+                                </div>
+                                <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 120px;"></div>
                             </div>
                         </div>
                     </div>

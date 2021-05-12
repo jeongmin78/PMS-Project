@@ -34,6 +34,7 @@ public class ChkService extends BaseService<Chk, Long> {
         String filter = requestParams.getFilter();
 
         BooleanBuilder builder = new BooleanBuilder();
+
         if (isNotEmpty(rsvNum)){
             builder.and(qChk.rsvNum.eq(rsvNum));
         }
