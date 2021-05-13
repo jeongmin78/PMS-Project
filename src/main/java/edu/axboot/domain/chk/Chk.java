@@ -4,10 +4,7 @@ import com.chequer.axboot.core.annotations.ColumnPosition;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.guest.Guest;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -147,13 +144,18 @@ public class Chk extends BaseJpaModel<Long> {
 	@ColumnPosition(28)
 	private BigDecimal svcPrc;
 
-    @Override
+	@Transient
+	private List<Long> memoIdList = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@NotFound(action = NotFoundAction.IGNORE)
+	@JoinColumn(name="RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
+	private List<ChkMemo> memoList;
+
+	@Override
     public Long getId() {
         return id;
     }
-
-	@Transient
-	private List<Long> fileIdList = new ArrayList<>();
 
     @Builder
 	public Chk(Long id, String rsvDt, Integer sno, String rsvNum, Long guestId, String guestNm,
@@ -210,7 +212,8 @@ public class Chk extends BaseJpaModel<Long> {
     	this.sttusCd = "RSV_01";
 	}
 
-	@OneToMany(mappedBy = "chk")
-	private List<ChkMemo> memoList = new ArrayList<ChkMemo>();
 
+	public void 메모리스트_생성(List<ChkMemo> memoList) {
+		this.memoList = memoList;
+	}
 }

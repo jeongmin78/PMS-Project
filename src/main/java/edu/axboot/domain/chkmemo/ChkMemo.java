@@ -1,5 +1,6 @@
 package edu.axboot.domain.chkmemo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.SimpleJpaModel;
 import edu.axboot.domain.chk.Chk;
@@ -19,11 +20,12 @@ public class ChkMemo extends BaseJpaModel<Long> {
 
 	@Id
 	@Column(name = "ID", precision = 19, nullable = false)
-	@Comment(value = "ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "RSV_NUM", precision = 20, nullable = false)
 	@Comment(value = "투숙 ID")
+	@Setter
 	private String rsvNum;
 
 	@Column(name = "SNO", precision = 10, nullable = false)
@@ -36,6 +38,7 @@ public class ChkMemo extends BaseJpaModel<Long> {
 
 	@Column(name = "MEMO_DTTI", nullable = false)
 	@Comment(value = "메모 일시")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp memoDtti;
 
 	@Column(name = "MEMO_MAN", length = 100, nullable = false)
@@ -61,19 +64,6 @@ public class ChkMemo extends BaseJpaModel<Long> {
     	this.memoDtti = memoDtti;
     	this.memoMan = memoMan;
     	this.delYn = delYn;
-	}
-
-	@ManyToOne
-	@JoinColumn(name="RSV_NUM")
-	private Chk chk;
-
-    public void setChk(Chk chk){
-    	this.chk = chk;
-	}
-
-	public void 메모_생성(String rsvNum) {
-    	this.rsvNum = rsvNum;
-    	this.sno = Integer.valueOf(rsvNum.substring(rsvNum.length()-3, rsvNum.length()));
 	}
 
 }

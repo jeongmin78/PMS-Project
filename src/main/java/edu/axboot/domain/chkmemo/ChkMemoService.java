@@ -1,6 +1,7 @@
 package edu.axboot.domain.chkmemo;
 
 import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
+import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class ChkMemoService extends BaseService<ChkMemo, Long> {
 
     @Transactional
     public String saveUsingJpa(ChkMemoSaveRequestDto requestDto) {
-        return null;
+        ChkMemo entity = requestDto.toEntity();
+        return chkMemoRepository.save(entity).getRsvNum();
     }
 }

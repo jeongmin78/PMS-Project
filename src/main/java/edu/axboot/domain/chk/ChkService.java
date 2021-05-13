@@ -2,15 +2,19 @@ package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
+import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
 import edu.axboot.controllers.dto.ChkSaveRequestDto;
 import edu.axboot.domain.BaseService;
 import edu.axboot.domain.chkmemo.ChkMemo;
+import edu.axboot.domain.chkmemo.ChkMemoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,7 +22,11 @@ import java.util.List;
 public class ChkService extends BaseService<Chk, Long> {
     private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
+    @Autowired
+    private ChkMemoService chkMemoService;
+
     private final ChkRepository chkRepository;
+
     private static int sequence;
 
     public List<Chk> gets(RequestParams<Chk> requestParams) {
@@ -72,7 +80,15 @@ public class ChkService extends BaseService<Chk, Long> {
 
         Chk entity = requestDto.toEntity();
         entity.예약일_예약번호_예약상태_생성(sequence++);
+        if (entity.getMemoIdList().size() > 0) {
+            List<ChkMemo> memoList = new ArrayList<>();
+            for (Long memoId: entity.getMemoIdList()) {
+                ChkMemo chkMemo = chkMemoService.findOne(memoId);
+                chkMemo.setRsvNum(entity.getRsvNum());
+                memoList.add(chkMemo);
+            }
+            entity.메모리스트_생성(memoList);
+        }
         return chkRepository.save(entity).getRsvNum();
     }
-
 }

@@ -25,19 +25,19 @@
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">도착일</div>
                             <div data-ax-td-wrap>
-                                <input type="date" data-ax-path="arrDt" title="도착일" class="form-control js-arrDt">
+                                <input type="date" data-ax-path="arrDt" dataPath="arrDt" title="도착일" class="form-control js-arrDt">
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">숙박수</div>
                             <div data-ax-td-wrap>
-                                <input type="text" data-ax-path="nightCnt" title="숙박일" class="form-control js-nightCnt">
+                                <input type="text" data-ax-path="nightCnt" dataPath="nightCnt" title="숙박일" class="form-control js-nightCnt">
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">출발일</div>
                             <div data-ax-td-wrap>
-                                <input type="date" data-ax-path="depDt" title="출발일" class="form-control js-depDt">
+                                <input type="date" data-ax-path="depDt" dataPath="depDt" title="출발일" class="form-control js-depDt">
                             </div>
                         </div>
                     </div>
@@ -64,9 +64,10 @@
 
                     <div data-ax-tr>
                         <div data-ax-td style="width:100%">
-                            <div data-ax-td-label style="width:120px;">투숙객</div>
+                            <div data-ax-td-label style="width:120px;">투숙객<br>
+                                <button type="button" class="btn btn-default" data-grid-view-01-btn="modalsearch"><i class="cqc-circle-with-plus"></i> 검색</button>
+                            </div>
                             <div data-ax-td-wrap>
-                                
                                 <div data-ax-tr>
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">이름</div>

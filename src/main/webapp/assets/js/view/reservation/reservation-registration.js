@@ -1,12 +1,46 @@
+// function dateAddDel(sDate, nNum, type) {
+//     var yy = parseInt(sDate.substr(0, 4), 10);
+//     var mm = parseInt(sDate.substr(5, 2), 10);
+//     var dd = parseInt(sDate.substr(8), 10);
+    
+//     if (type == "d") {
+//         d = new Date(yy, mm - 1, dd + nNum);
+//     }
+//     else if (type == "m") {
+//         d = new Date(yy, mm - 1, dd + (nNum * 31));
+//     }
+//     else if (type == "y") {
+//         d = new Date(yy + nNum, mm - 1, dd);
+//     }
+ 
+//     yy = d.getFullYear();
+//     mm = d.getMonth() + 1; mm = (mm < 10) ? '0' + mm : mm;
+//     dd = d.getDate(); dd = (dd < 10) ? '0' + dd : dd;
+ 
+//     return '' + yy + '-' +  mm  + '-' + dd;
+// }
+// function dateDiff(_date1, _date2) {
+//     var diffDate_1 = _date1 instanceof Date ? _date1 : new Date(_date1);
+//     var diffDate_2 = _date2 instanceof Date ? _date2 : new Date(_date2);
+ 
+//     diffDate_1 = new Date(diffDate_1.getFullYear(), diffDate_1.getMonth()+1, diffDate_1.getDate());
+//     diffDate_2 = new Date(diffDate_2.getFullYear(), diffDate_2.getMonth()+1, diffDate_2.getDate());
+ 
+//     var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
+//     diff = Math.ceil(diff / (1000 * 3600 * 24));
+ 
+//     return diff;
+// }
+
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: '/api/v1/chkmemos',
+            url: '/api/v1/chk',
             // data: caller.gridView.getData(),
             callback: function (res) {
-                caller.gridView01.setData(res);
+                // caller.gridView01.setData(res);
             },
             options: {
                 // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
@@ -41,10 +75,24 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     ITEM_DEL: function (caller, act, data) {
         caller.gridView01.delRow("selected");
     },
-    DEP_CHANGE: function (caller, act, data) {
-        var item = caller.formView01.getData();
-        // 날짜계산
-        caller.formView01.setData(item);
+    MODAL_OPEN: function (caller, act, data) {
+        if (!data) data = {};
+
+        axboot.modal.open({
+            width: 780,
+            height: 450,
+            iframe: {
+                param: 'id=' + (data.id || ''),
+                url: 'reservation-registration-content.jsp',
+            },
+            header: { title: '모달등록' },
+            callback: function (data) {
+                if (data && data.dirty) {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                }
+                this.close();
+            },
+        });
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -76,7 +124,7 @@ fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, "data-page-btn", {
             "search": function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                ACTIONS.dispatch(ACTIONS.MODAL_OPEN);
             },
             "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
@@ -181,19 +229,50 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
             },
         });
     },
+    calcDepDt: function(value){
+        console.log('call calcDepDt...');
+        if(!value) return;
+        var arrDt = $('.js-arrDt').val();
+        if(!arrDt) return;
+        
+        var depDt= moment(arrDt).add(value, 'day').format('yyyy-MM-DD');
+        console.log('depDt', depDt);
+        this.model.set('depDt', depDt);
+    },
+    calcNigth: function(depDt){
+        console.log('call calcNigth...');
+        if(!depDt) return;
+        var arrDt = $('.js-arrDt').val();
+        if(!arrDt) return;
+        
+        var night = moment(arrDt).diff(moment(depDt), 'days');
+        console.log(arrDt, depDt);
+        console.log('night', night);
+        this.model.set('nightCnt',night);
+    },
     initView: function () {
         var _this = this; // fnObj.formView01
-
         _this.target = $('.js-form');
-
         this.model = new ax5.ui.binder();
         this.model.setModel({}, this.target);
-        // this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
-
         this.initEvent();
         
-        this.arrDt = $('.js-arrDt, .js-nightCnt').on('change', function () {
-            ACTIONS.dispatch(ACTIONS.DEP_CHANGE);
-        })
+        $('.js-nightCnt').on('change', function () {
+            _this.calcDepDt($(this).val());
+        });
+        
+        $('.js-depDt').on('change', function () {
+            _this.calcNigth($(this).val());
+        });
+        
+        $('.js-arrDt').on('change', function () {
+            _this.calcNigth($(this).val());
+        });
+        axboot.buttonClick(this, 'data-grid-view-01-btn', {
+            modalsearch: function () {
+                ACTIONS.dispatch(ACTIONS.MODAL_OPEN);
+            },
+        });
     },
+    
 });

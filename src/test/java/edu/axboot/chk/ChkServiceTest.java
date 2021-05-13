@@ -5,6 +5,7 @@ import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
 import edu.axboot.controllers.dto.ChkSaveRequestDto;
 import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkService;
+import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoService;
 import edu.axboot.domain.room.RoomService;
 import lombok.extern.java.Log;
@@ -12,6 +13,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.internal.verification.Times;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,11 +40,12 @@ public class ChkServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
     public static long testId = 0;
     public static String testRsvNum;
+    public static String testMemo;
 
     @Test
     public void test1_예약등록_저장하기() {
         //given
-        ChkSaveRequestDto saveDto = ChkSaveRequestDto.builder()
+        ChkSaveRequestDto saveRequestDto = ChkSaveRequestDto.builder()
                 .id(null)
                 .sno(null)
                 .rsvNum(null)
@@ -57,11 +62,35 @@ public class ChkServiceTest {
                 .srcCd("01")
                 .advnYn("Y")
                 .build();
+
         //when
-        testRsvNum = this.chkService.saveUsingJpa(saveDto);
+//        Long id = null;
+//        String rsvNum = saveRequestDto.getRsvNum();
+//        String memoCn = "A";
+//        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+//        String memoMan = "B";
+//        String delYn = "Y";
+//        Integer sno = 3;
+//        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn);
+
+        ChkMemoSaveRequestDto memoSaveDto = ChkMemoSaveRequestDto.builder()
+                .id(null)
+                .rsvNum(saveRequestDto.getRsvNum())
+                .sno(2)
+                .memoCn("memoCn")
+                .memoDtti(Timestamp.valueOf(LocalDateTime.now()))
+                .memoMan("memoMan")
+                .delYn("delYn")
+                .build();
+
+        testRsvNum = this.chkService.saveUsingJpa(saveRequestDto);
+        testMemo = this.chkMemoService.saveUsingJpa(memoSaveDto);
+
         logger.info("\n"+ "ID ===============> " + testRsvNum);
+        logger.info("\n"+ "ID ===============> " + testMemo);
         //then
         assertTrue(testRsvNum != null);
+        assertTrue(testMemo != null);
     }
 
     @Test
@@ -69,7 +98,7 @@ public class ChkServiceTest {
 
         //given
         ChkMemoSaveRequestDto memoSaveDto = ChkMemoSaveRequestDto.builder()
-                .id(null)
+                .id(33L)
                 .rsvNum("R20210512002")
                 .sno(2)
                 .memoCn("memoCn")
