@@ -4,7 +4,6 @@ import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
-import edu.axboot.controllers.dto.GuestListResponseDto;
 import edu.axboot.controllers.dto.RoomListResponseDto;
 import edu.axboot.controllers.dto.RoomSaveRequestDto;
 import edu.axboot.domain.room.Room;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import java.util.List;
 
 @RequiredArgsConstructor

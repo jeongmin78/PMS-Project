@@ -6,6 +6,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: "/api/v1/guest",
             data: caller.searchView.getData(),
             callback: function (res) {
+                // caller.formView01.clear();
                 caller.gridView01.setData(res);
             },
             options: {
@@ -19,21 +20,33 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData());
-        saveList = saveList.concat(caller.gridView01.getData("deleted"));
-
-        axboot.ajax({
-            type: "PUT",
-            url: "/api/v1/guest",
-            data: JSON.stringify(saveList),
-            callback: function (res) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
-            }
-        });
+        if (caller.formView01.validate()) {
+            var item = caller.formView01.getData();
+            // if (!item.id) item.__created__ = true;
+            axboot.ajax({
+                type: 'POST',
+                url: '/api/v1/guest/'+ item.id,
+                data: JSON.stringify(item),
+                callback: function (res) {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                    axToast.push("저장 되었습니다");
+                }
+            });
+        }
     },
     ITEM_CLICK: function (caller, act, data) {
-
+        var id = (data || {}).id;
+        if (!id) {
+            axDialog.alert('id는 필수입니다.');
+            return false;
+        }
+        axboot.ajax({
+            type: 'GET',
+            url: '/api/v1/guest/' + id,
+            callback: function (res) {
+                caller.formView01.setData(res);
+            },
+        });
     },
     ITEM_ADD: function (caller, act, data) {
         caller.gridView01.addRow();
@@ -135,6 +148,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             body: {
                 onClick: function () {
                     this.self.select(this.dindex, {selectedClear: true});
+                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 }
             }
         });
@@ -179,13 +193,11 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-02"]'),
             columns: [
-                {key: "guestNm", label: "이름", width: 160, align: "center", editor: "text"},
-                {key: "guestTel", label: "연락처", width: 200, align: "center", editor: "text"},
-                {key: "email", label: "이메일", width: 100, align: "center", editor: "text"},
-                {key: "gender", label: "성별", width: 100, align: "center", editor: "text"},
-                {key: "brth", label: "생년월일", width: 100, align: "center", editor: "text"},
-                {key: "langCd", label: "언어", width: 100, align: "center", editor: "text"},
-                {key: "rmk", label: "비고", width: 100, align: "center", editor: "text"}
+                {key: "guestNm", label: "투숙일", width: 160, align: "center", editor: "text"},
+                {key: "guestTel", label: "숙박수", width: 200, align: "center", editor: "text"},
+                {key: "email", label: "객실번호", width: 100, align: "center", editor: "text"},
+                {key: "gender", label: "객실타입", width: 100, align: "center", editor: "text"},
+                {key: "brth", label: "투숙번호", width: 100, align: "center", editor: "text"},
             ],
             body: {
                 onClick: function () {
@@ -225,22 +237,29 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
  * formView
  */
  fnObj.formView01 = axboot.viewExtend(axboot.formView, {
-
+    getData: function () {
+        var data = this.model.get(); // 모델의 값을 포멧팅 전 값으로 치환.
+        return $.extend({}, data);
+    },
     setData: function (data) {
-        if (typeof data === 'undefined') data = this.getDefaultData();
         data = $.extend({}, data);
 
         this.model.setModel(data);
-        this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+        // this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
+    validate: function () {
+        var item = this.model.get();
 
-    initEvent: function () {
-        axboot.buttonClick(this, 'data-form-view-01-btn', {
-            'form-clear': function () {
-                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-            },
-        });
+        var rs = this.model.validate();
+        if (rs.error) {
+            axDialog.alert(LANG('ax.script.form.validate', rs.error[0].jquery.attr('title')), function () {
+                rs.error[0].jquery.focus();
+            });
+            return false;
+        }
+        return true;
     },
+    
     initView: function () {
         var _this = this; // fnObj.formView01
 
@@ -249,6 +268,5 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         _this.model = new ax5.ui.binder();
         _this.model.setModel({}, _this.target);
 
-        // this.initEvent();
     },
 });

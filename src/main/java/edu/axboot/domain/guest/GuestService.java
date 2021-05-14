@@ -1,31 +1,33 @@
 package edu.axboot.domain.guest;
 
 import com.querydsl.core.BooleanBuilder;
-import edu.axboot.controllers.dto.GuestListResponseDto;
-import edu.axboot.controllers.dto.RoomListResponseDto;
-import edu.axboot.domain.room.Room;
+import edu.axboot.controllers.dto.GuestResponseDto;
+import edu.axboot.controllers.dto.GuestUpdateRequestDto;
+import edu.axboot.domain.chk.ChkService;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import edu.axboot.domain.BaseService;
-import javax.inject.Inject;
+
+import javax.transaction.Transactional;
+
 import com.chequer.axboot.core.parameter.RequestParams;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class GuestService extends BaseService<Guest, Long> {
-    private GuestRepository guestRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
-    @Inject
-    public GuestService(GuestRepository guestRepository) {
-        super(guestRepository);
-        this.guestRepository = guestRepository;
-    }
+    private final GuestRepository guestRepository;
 
     public List<Guest> gets(RequestParams<Guest> requestParams) {
         return findAll();
     }
 
-    public List<GuestListResponseDto> getListUsingQueryDsl(RequestParams<GuestListResponseDto> requestParams) {
+    public List<GuestResponseDto> getList(RequestParams<GuestResponseDto> requestParams) {
         String guestNm = requestParams.getString("guestNm","");
         String guestTel = requestParams.getString("guestTel","");
         String email = requestParams.getString("email", "");
@@ -47,8 +49,26 @@ public class GuestService extends BaseService<Guest, Long> {
                 .fetch();
 
         return entitis.stream()
-                .map(GuestListResponseDto::new)
+                .map(GuestResponseDto::new)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public Long update(Long id, GuestUpdateRequestDto requestDto) {
+        Guest entity = guestRepository.findOne(id);
+        if (entity == null) {
+            throw new IllegalArgumentException("해당 고객이 없습니다. id=" + id);
+        }
+        entity.고객정보_수정하기(requestDto);
+
+        return id;
+    }
+
+    public GuestResponseDto getOneById(Long id) {
+        Guest entity = guestRepository.findOne(id);
+        if (entity == null) {
+            throw new IllegalArgumentException("해당 거래처가 없습니다. id=" + id);
+        }
+        return new GuestResponseDto(entity);
+    }
 }

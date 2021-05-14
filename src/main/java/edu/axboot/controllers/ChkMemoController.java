@@ -39,7 +39,7 @@ public class ChkMemoController extends BaseController {
 
     @RequestMapping(value = "select", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public Responses.ListResponse list2(RequestParams<ChkMemo> requestParams) {
-        List<ChkMemo> list = chkMemoService.gets(requestParams);
+        List<ChkMemo> list = chkMemoService.getList(requestParams);
         return Responses.ListResponse.of(list);
     }
 }

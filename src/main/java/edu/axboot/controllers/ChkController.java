@@ -9,6 +9,7 @@ import edu.axboot.controllers.dto.RoomListResponseDto;
 import edu.axboot.controllers.dto.RoomSaveRequestDto;
 import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkService;
+import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.utils.MiscUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

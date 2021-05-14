@@ -3,6 +3,7 @@ package edu.axboot.domain.guest;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.axboot.controllers.dto.GuestUpdateRequestDto;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.chk.Chk;
 import lombok.Builder;
@@ -86,4 +87,14 @@ public class Guest extends BaseJpaModel<Long> {
     	this.rmk = rmk;
 	}
 
+	public void 고객정보_수정하기(GuestUpdateRequestDto requestDto) {
+		this.guestNm = requestDto.getGuestNm();
+		this.guestNmEng = requestDto.getGuestNmEng();
+		this.guestTel = requestDto.getGuestTel();
+		this.email = requestDto.getEmail();
+		this.brth = requestDto.getBrth();
+		this.gender = requestDto.getGender();
+		this.langCd = requestDto.getLangCd();
+		this.rmk = requestDto.getRmk();
+    }
 }

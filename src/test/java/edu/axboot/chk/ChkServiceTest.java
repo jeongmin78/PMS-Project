@@ -61,30 +61,31 @@ public class ChkServiceTest {
                 .sttusCd("01")
                 .srcCd("01")
                 .advnYn("Y")
+                .memoList(null)
                 .build();
 
         //when
-//        Long id = null;
-//        String rsvNum = saveRequestDto.getRsvNum();
-//        String memoCn = "A";
-//        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-//        String memoMan = "B";
-//        String delYn = "Y";
-//        Integer sno = 3;
-//        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn);
+        Long id = null;
+        String rsvNum = saveRequestDto.getRsvNum();
+        String memoCn = "A";
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+        String memoMan = "B";
+        String delYn = "Y";
+        Integer sno = 3;
+        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn);
 
-        ChkMemoSaveRequestDto memoSaveDto = ChkMemoSaveRequestDto.builder()
-                .id(null)
-                .rsvNum(saveRequestDto.getRsvNum())
-                .sno(2)
-                .memoCn("memoCn")
-                .memoDtti(Timestamp.valueOf(LocalDateTime.now()))
-                .memoMan("memoMan")
-                .delYn("delYn")
-                .build();
+//        ChkMemoSaveRequestDto memoSaveDto = ChkMemoSaveRequestDto.builder()
+//                .id(null)
+//                .rsvNum(saveRequestDto.getRsvNum())
+//                .sno(2)
+//                .memoCn("memoCn")
+//                .memoDtti(Timestamp.valueOf(LocalDateTime.now()))
+//                .memoMan("memoMan")
+//                .delYn("delYn")
+//                .build();
 
         testRsvNum = this.chkService.saveUsingJpa(saveRequestDto);
-        testMemo = this.chkMemoService.saveUsingJpa(memoSaveDto);
+//        testMemo = this.chkMemoService.saveUsingJpa(memoSaveDto);
 
         logger.info("\n"+ "ID ===============> " + testRsvNum);
         logger.info("\n"+ "ID ===============> " + testMemo);

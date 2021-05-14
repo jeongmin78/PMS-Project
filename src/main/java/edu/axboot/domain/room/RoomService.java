@@ -2,7 +2,6 @@ package edu.axboot.domain.room;
 
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
-import edu.axboot.controllers.dto.GuestListResponseDto;
 import edu.axboot.controllers.dto.RoomListResponseDto;
 import edu.axboot.controllers.dto.RoomSaveRequestDto;
 import edu.axboot.domain.BaseService;

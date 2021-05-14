@@ -1,5 +1,6 @@
 package edu.axboot.domain.chkmemo;
 
+import com.querydsl.core.BooleanBuilder;
 import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
 import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkService;
@@ -29,6 +30,18 @@ public class ChkMemoService extends BaseService<ChkMemo, Long> {
 
     public List<ChkMemo> gets(RequestParams<ChkMemo> requestParams) {
         return findAll();
+    }
+
+    public List<ChkMemo> getList(RequestParams<ChkMemo> requestParams) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        List<ChkMemo> list = select()
+                .from(qChkMemo)
+                .where(builder)
+                .orderBy(qChkMemo.id.asc())
+                .fetch();
+
+        return list;
     }
 
     @Transactional

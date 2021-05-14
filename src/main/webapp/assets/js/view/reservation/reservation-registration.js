@@ -37,9 +37,9 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: '/api/v1/chk',
-            // data: caller.gridView.getData(),
+            url: '/api/v1/chk/select',
             callback: function (res) {
+                console.log(res);
                 // caller.gridView01.setData(res);
             },
             options: {
@@ -54,7 +54,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     PAGE_SAVE: function (caller, act, data) {
         var item = caller.formView01.getData();
-        // console.log(item); return false;
+        var memos = [].concat(caller.gridView01.getData());
+        memos = memos.concat(caller.gridView01.getData('deleted'));
+        item.memoList = memos;
+        console.log(item); //return false;
         axboot.ajax({
             type: "POST",
             url: '/api/v1/chk',
@@ -64,7 +67,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axToast.push("저장 되었습니다");
             }
         });
-        var memo = caller.gridView01.getdata();
     },
     ITEM_CLICK: function (caller, act, data) {
 
@@ -160,22 +162,21 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  */
  fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     initView: function () {
+        var _this = this;
+        
         this.target = axboot.gridBuilder({
-            // onPageChange: function (pageNumber) {
-            //     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, { pageNumber: pageNumber });
-            // },
+
             showRowSelector: true,
             frozenColumnIndex: 0,
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                { key: 'memoDtti', label: "작성일", width: '30%', align: 'center' },
-                { key: 'memoCn', label: "메모", width: '70%', align: 'center' },
+                { key: 'memoDtti', label: "작성일", width: '30%', align: 'center', editor: { type: 'text' } },
+                { key: 'memoCn', label: "메모", width: '70%', align: 'center', editor: { type: 'text' } },
             ],
             body: {
                 onClick: function () {
                     this.self.select(this.dindex, { selectedClear: true });
-                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 },
             },
         });
@@ -187,6 +188,22 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
                 ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             },
         });
+    },
+    getData: function (_type) {
+        var list = [];
+        var _list = this.target.getList(_type);
+
+        if (_type == 'modified' || _type == 'deleted') {
+            list = ax5.util.filter(_list, function () {
+                return this.id;
+            });
+        } else {
+            list = _list;
+        }
+        return list;
+    },
+    addRow: function () {
+        this.target.addRow({ __created__: true}, 'last');
     },
 });
 

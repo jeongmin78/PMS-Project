@@ -79,20 +79,4 @@ public class Room extends BaseJpaModel<Long> {
 		this.__modified__ = isModified;
 		this.__deleted__ = isDeleted;
 	}
-
-	public Room toEntity() {
-		return Room.builder()
-				.id(id)
-				.roomNum(roomNum)
-				.roomTypCd(roomTypCd)
-				.dndYn(dndYn)
-				.ebYn(ebYn)
-				.roomSttusCd(roomSttusCd)
-				.clnSttusCd(clnSttusCd)
-				.svcSttusCd(svcSttusCd)
-				.isCreated(__created__)
-				.isModified(__modified__)
-				.isDeleted(__deleted__)
-				.build();
-	}
 }

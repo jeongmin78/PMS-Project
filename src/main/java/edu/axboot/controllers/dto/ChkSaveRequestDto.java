@@ -1,11 +1,13 @@
 package edu.axboot.controllers.dto;
 
 import edu.axboot.domain.chk.Chk;
+import edu.axboot.domain.chkmemo.ChkMemo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -36,6 +38,7 @@ public class ChkSaveRequestDto {
     private String gender;
     private String payCd;
     private String advnYn;
+    private List<ChkMemo> memoList;
     private BigDecimal salePrc;
     private BigDecimal svcPrc;
     private boolean __created__;
@@ -44,13 +47,14 @@ public class ChkSaveRequestDto {
 
     @Builder
     public ChkSaveRequestDto(Long id, String rsvDt, Integer sno, String rsvNum, Long guestId, String guestNm,
-               String guestNmEng, String guestTel, String email, String langCd,
-               String arrDt, String arrTime, String depDt, String depTime,
-               Integer nightCnt, String roomTypCd, String roomNum,
-               Integer adultCnt, Integer chldCnt, String saleTypCd,
-               String sttusCd, String srcCd, String brth, String gender,
-               String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
-               boolean __created__, boolean __modified__, boolean __deleted__) {
+                             String guestNmEng, String guestTel, String email, String langCd,
+                             String arrDt, String arrTime, String depDt, String depTime,
+                             Integer nightCnt, String roomTypCd, String roomNum,
+                             Integer adultCnt, Integer chldCnt, String saleTypCd,
+                             String sttusCd, String srcCd, String brth, String gender,
+                             String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
+                             List<ChkMemo> memoList,
+                             boolean __created__, boolean __modified__, boolean __deleted__) {
         this.id = id;
         this.rsvDt = rsvDt;
         this.sno = sno;
@@ -79,6 +83,7 @@ public class ChkSaveRequestDto {
         this.advnYn = advnYn;
         this.salePrc = salePrc;
         this.svcPrc = svcPrc;
+        this.memoList = memoList;
         this.__created__ = __created__;
         this.__modified__ = __modified__;
         this.__deleted__ = __deleted__;
@@ -113,6 +118,7 @@ public class ChkSaveRequestDto {
                 .advnYn(advnYn)
                 .salePrc(salePrc)
                 .svcPrc(svcPrc)
+                .memoList(memoList)
                 .isCreated(__created__)
                 .isModified(__modified__)
                 .isDeleted(__deleted__)

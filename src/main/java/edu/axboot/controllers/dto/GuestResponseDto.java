@@ -5,7 +5,7 @@ import edu.axboot.domain.room.Room;
 import lombok.Getter;
 
 @Getter
-public class GuestListResponseDto {
+public class GuestResponseDto {
     private Long id;
     private String guestNm;
     private String guestNmEng;
@@ -16,7 +16,7 @@ public class GuestListResponseDto {
     private String lang_Cd;
     private String rmk;
 
-    public GuestListResponseDto(Guest entity) {
+    public GuestResponseDto(Guest entity) {
         this.id = entity.getId();
         this.guestNm = entity.getGuestNm();
         this.guestNmEng = entity.getGuestNmEng();

@@ -115,7 +115,7 @@
                                 <h2><i class="cqc-news"></i> 투숙 이력 </h2>
                             </div>
                         </div>
-                        <div data-ax5grid="grid-view-02" data-fit-height-content="grid-view-02" style="height: 150px;"></div>
+                        <div data-ax5grid="grid-view-02" data-fit-height-content="grid-view-02" style="height: 200px;"></div>
                     </div>
                 </ax:split-layout>
             </ax:split-panel>

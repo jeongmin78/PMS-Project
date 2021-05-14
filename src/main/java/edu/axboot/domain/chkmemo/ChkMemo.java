@@ -1,5 +1,6 @@
 package edu.axboot.domain.chkmemo;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.SimpleJpaModel;
@@ -21,32 +22,38 @@ public class ChkMemo extends BaseJpaModel<Long> {
 	@Id
 	@Column(name = "ID", precision = 19, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ColumnPosition(1)
 	private Long id;
 
 	@Column(name = "RSV_NUM", precision = 20, nullable = false)
 	@Comment(value = "투숙 ID")
 	@Setter
+	@ColumnPosition(2)
 	private String rsvNum;
 
 	@Column(name = "SNO", precision = 10, nullable = false)
 	@Comment(value = "일련번호")
+	@ColumnPosition(3)
 	private Integer sno;
 
 	@Column(name = "MEMO_CN", length = 4000, nullable = false)
 	@Comment(value = "메모 내용")
+	@ColumnPosition(4)
 	private String memoCn;
 
 	@Column(name = "MEMO_DTTI", nullable = false)
 	@Comment(value = "메모 일시")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@ColumnPosition(5)
 	private Timestamp memoDtti;
 
 	@Column(name = "MEMO_MAN", length = 100, nullable = false)
 	@Comment(value = "메모 자")
+	@ColumnPosition(6)
 	private String memoMan;
 
 	@Column(name = "DEL_YN", length = 1, nullable = false)
 	@Comment(value = "삭제 여부")
+	@ColumnPosition(7)
 	private String delYn;
 
     @Override
@@ -65,5 +72,21 @@ public class ChkMemo extends BaseJpaModel<Long> {
     	this.memoMan = memoMan;
     	this.delYn = delYn;
 	}
-
+	public ChkMemo toEntity() {
+		return ChkMemo.builder()
+				.id(id)
+				.rsvNum(rsvNum)
+				.sno(sno)
+				.memoCn(memoCn)
+				.memoDtti(memoDtti)
+				.memoMan(memoMan)
+				.delYn(delYn)
+				.build();
+	}
+	public void 메모_기본값_생성(String rsvNum) {
+    	this.rsvNum = rsvNum;
+    	this.sno = Integer.valueOf(rsvNum.substring(10,12));
+		this.memoMan = "system"; // 이거 id값으로 해야하지 않나
+		this.delYn = "N"; // 무슨 값인가
+	}
 }

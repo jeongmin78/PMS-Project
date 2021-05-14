@@ -75,17 +75,34 @@ public class ChkService extends BaseService<Chk, Long> {
         return list;
     }
 
+//    @Transactional
+//    public String saveUsingJpa(ChkSaveRequestDto requestDto) {
+//
+//        Chk entity = requestDto.toEntity();
+//        entity.예약일_예약번호_예약상태_생성(sequence++);
+//        if (entity.getMemoIdList().size() > 0) {
+//            List<ChkMemo> memoList = new ArrayList<>();
+//            for (Long memoId: entity.getMemoIdList()) {
+//                ChkMemo chkMemo = chkMemoService.findOne(memoId);
+//                chkMemo.setRsvNum(entity.getRsvNum());
+//                memoList.add(chkMemo);
+//            }
+//            entity.메모리스트_생성(memoList);
+//        }
+//        return chkRepository.save(entity).getRsvNum();
+//    }
+
     @Transactional
     public String saveUsingJpa(ChkSaveRequestDto requestDto) {
 
         Chk entity = requestDto.toEntity();
         entity.예약일_예약번호_예약상태_생성(sequence++);
-        if (entity.getMemoIdList().size() > 0) {
+        if (entity.getMemoList().size() > 0) {
             List<ChkMemo> memoList = new ArrayList<>();
-            for (Long memoId: entity.getMemoIdList()) {
-                ChkMemo chkMemo = chkMemoService.findOne(memoId);
-                chkMemo.setRsvNum(entity.getRsvNum());
-                memoList.add(chkMemo);
+            for(ChkMemo memo : entity.getMemoList()) {
+                ChkMemo memoEntity = memo.toEntity();
+                memoEntity.메모_기본값_생성(entity.getRsvNum());
+                memoList.add(memoEntity);
             }
             entity.메모리스트_생성(memoList);
         }

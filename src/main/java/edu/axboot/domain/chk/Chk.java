@@ -144,9 +144,6 @@ public class Chk extends BaseJpaModel<Long> {
 	@ColumnPosition(28)
 	private BigDecimal svcPrc;
 
-	@Transient
-	private List<Long> memoIdList = new ArrayList<>();
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name="RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
@@ -165,6 +162,7 @@ public class Chk extends BaseJpaModel<Long> {
 			   Integer adultCnt, Integer chldCnt, String saleTypCd,
 			   String sttusCd, String srcCd, String brth, String gender,
 			   String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
+			   List<ChkMemo> memoList,
 			   boolean isCreated, boolean isModified, boolean isDeleted) {
     	this.id = id;
     	this.rsvDt = rsvDt;
@@ -194,6 +192,7 @@ public class Chk extends BaseJpaModel<Long> {
     	this.advnYn = advnYn;
     	this.salePrc = salePrc;
     	this.svcPrc = svcPrc;
+    	this.memoList = memoList;
 		this.__created__ = isCreated;
 		this.__modified__ = isModified;
 		this.__deleted__ = isDeleted;
@@ -211,7 +210,6 @@ public class Chk extends BaseJpaModel<Long> {
     	this.rsvNum = "R" + today.format(numbering) + leftpad;
     	this.sttusCd = "RSV_01";
 	}
-
 
 	public void 메모리스트_생성(List<ChkMemo> memoList) {
 		this.memoList = memoList;
