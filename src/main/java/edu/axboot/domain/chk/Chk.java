@@ -1,6 +1,7 @@
 package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
+import edu.axboot.controllers.dto.GuestSaveRequestDto;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.guest.Guest;
@@ -149,6 +150,10 @@ public class Chk extends BaseJpaModel<Long> {
 	@JoinColumn(name="RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
 	private List<ChkMemo> memoList;
 
+	@ManyToOne
+	@JoinColumn(name="GUEST_ID", insertable = false, updatable = false)
+	private Guest guest;
+
 	@Override
     public Long getId() {
         return id;
@@ -199,7 +204,7 @@ public class Chk extends BaseJpaModel<Long> {
 	}
 	private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
-	public void  예약일_예약번호_예약상태_생성(int sequence) {
+	public void 예약일_예약번호_예약상태_생성(Long guestId, int sequence) {
 		LocalDate today = LocalDate.now();
 		logger.info("\n===============================" + today);
 		String leftpad = StringUtils.leftPad(String.valueOf(sequence),3,"0");
@@ -209,7 +214,9 @@ public class Chk extends BaseJpaModel<Long> {
     	this.sno = sequence;
     	this.rsvNum = "R" + today.format(numbering) + leftpad;
     	this.sttusCd = "RSV_01";
+    	this.guestId = guestId;
 	}
+
 
 	public void 메모리스트_생성(List<ChkMemo> memoList) {
 		this.memoList = memoList;

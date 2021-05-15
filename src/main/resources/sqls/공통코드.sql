@@ -48,4 +48,12 @@ SELECT 'PMS_STAY_STATUS', '투숙상태',  'CHK_03', '체크인취소', 8, 'Y', 
 SELECT 'PMS_LANG', '언어',  'KO', '한국어', 1, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'PMS_LANG', '언어',  'EN', '영어', 2, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'PMS_LANG', '언어',  'CH', '중국어', 3, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
-SELECT 'PMS_LANG', '언어',  'JP', '일본어', 4, 'Y', sysdate(), 'system', sysdate(), 'system';
+SELECT 'PMS_LANG', '언어',  'JP', '일본어', 4, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
+
+-- 객실정보 - DND 여부
+SELECT 'DND_YN', 'DND 여부',  'Y', '사용', 1, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
+SELECT 'DND_YN', 'DND 여부',  'N', '사용안함', 2, 'Y', sysdate(), 'system', sysdate(), 'system'UNION ALL
+
+-- 객실정보 - EB 여부
+SELECT 'EB_YN', 'ExBed 여부',  'Y', '사용', 1, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
+SELECT 'EB_YN', 'ExBed 여부',  'N', '사용안함', 2, 'Y', sysdate(), 'system', sysdate(), 'system';

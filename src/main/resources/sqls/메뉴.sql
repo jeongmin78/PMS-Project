@@ -19,6 +19,7 @@ VALUES (202, 'SYSTEM_MANAGER', '예약현황', '{"ko":"예약현황","en":"Reser
 INSERT INTO AUTH_GROUP_MAP_M (GRP_AUTH_CD , MENU_ID, SCH_AH, SAV_AH, DEL_AH, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
 VALUES ('S0001', '202',  'Y', 'Y', 'Y', sysdate(), 'system', sysdate(), 'system');
 --
+
 INSERT INTO MENU_M (MENU_ID, MENU_GRP_CD, MENU_NM, MULTI_LANGUAGE, PARENT_ID, LEVEL, SORT, PROG_CD, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
 VALUES (300, 'SYSTEM_MANAGER', '프론트', '{"ko":"프론트","en":"Front"}',  null, 0, 99, null, sysdate(), 'system', sysdate(), 'system');
 -- 프로그램 생성
@@ -48,3 +49,26 @@ VALUES (303, 'SYSTEM_MANAGER', '체크아웃', '{"ko":"체크아웃","en":"Check
 -- 메뉴 권한
 INSERT INTO AUTH_GROUP_MAP_M (GRP_AUTH_CD , MENU_ID, SCH_AH, SAV_AH, DEL_AH, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
 VALUES ('S0001', '303',  'Y', 'Y', 'Y', sysdate(), 'system', sysdate(), 'system');
+
+---------------------
+
+INSERT INTO MENU_M (MENU_ID, MENU_GRP_CD, MENU_NM, MULTI_LANGUAGE, PARENT_ID, LEVEL, SORT, PROG_CD, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES (400, 'SYSTEM_MANAGER', '기준정보', '{"ko":"기준정보","en":"Information"}',  null, 0, 99, null, sysdate(), 'system', sysdate(), 'system');
+-- 프로그램 생성
+INSERT INTO PROG_M (PROG_CD, PROG_NM, PROG_PH, TARGET, AUTH_CHECK, SCH_AH, SAV_AH )
+VALUES ('Room Info', '객실정보', '/jsp/information/room-information.jsp', '_self', 'Y', 'Y', 'Y');
+-- 메뉴 생성
+INSERT INTO MENU_M (MENU_ID, MENU_GRP_CD, MENU_NM, MULTI_LANGUAGE, PARENT_ID, LEVEL, SORT, PROG_CD, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES (401, 'SYSTEM_MANAGER', '객실정보', '{"ko":"객실정보","en":"Room Info"}',  400, 1, 1, 'Room Info', sysdate(), 'system', sysdate(), 'system');
+-- 메뉴 권한
+INSERT INTO AUTH_GROUP_MAP_M (GRP_AUTH_CD , MENU_ID, SCH_AH, SAV_AH, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES ('S0001', '401',  'Y', 'Y', sysdate(), 'system', sysdate(), 'system');
+-- 프로그램 생성
+INSERT INTO PROG_M (PROG_CD, PROG_NM, PROG_PH, TARGET, AUTH_CHECK, SCH_AH, SAV_AH, DEL_AH )
+VALUES ('Guest Info', '투숙객정보', '/jsp/information/guest-information.jsp', '_self', 'Y', 'Y', 'Y', 'Y');
+-- 메뉴 생성
+INSERT INTO MENU_M (MENU_ID, MENU_GRP_CD, MENU_NM, MULTI_LANGUAGE, PARENT_ID, LEVEL, SORT, PROG_CD, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES (402, 'SYSTEM_MANAGER', '투숙객정보', '{"ko":"투숙객정보","en":"Guest Info"}',  400, 1, 2, 'Guest Info', sysdate(), 'system', sysdate(), 'system');
+-- 메뉴 권한
+INSERT INTO AUTH_GROUP_MAP_M (GRP_AUTH_CD , MENU_ID, SCH_AH, SAV_AH, DEL_AH, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES ('S0001', '402',  'Y', 'Y', 'Y', sysdate(), 'system', sysdate(), 'system');

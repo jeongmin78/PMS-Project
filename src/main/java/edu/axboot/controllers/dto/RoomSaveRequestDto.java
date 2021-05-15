@@ -21,8 +21,6 @@ public class RoomSaveRequestDto {
     private boolean __deleted__;
 
     @Builder
-//    public RoomSaveRequestDto(String roomNum, String roomTypCd, String dndYn, String ebYn,
-//                              String roomSttusCd, String clnSttusCd, String svcSttusCd){
     public RoomSaveRequestDto(Room entity){
         this.id = entity.getId();
         this.roomNum = entity.getRoomNum();

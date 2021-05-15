@@ -54,10 +54,6 @@
                         <h2><i class="cqc-list"></i>
                             투숙객 목록 </h2>
                     </div>
-                    <!-- <div class="right">
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-plus"></i> 삭제</button>
-                    </div> -->
                 </div>
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
             </ax:split-panel>
@@ -70,42 +66,66 @@
                         </div>
                     </div>
 
-                    <form name="form" class="js-form">
-                        <ax:tbl clazz="ax-form-tbl" minWidth="100px">
-                            <ax:tr labelWidth="100px">
-                                <ax:td label="이름" width="40%">
-                                    <input type="text" name="guestNm" data-ax-path="guestNm" class="form-control"/>
-                                </ax:td>
-                                <ax:td label="영문" width="40%">
-                                    <input type="text" name="guestNmEng" data-ax-path="guestNmEng" class="form-control"/>
-                                </ax:td>
-                            </ax:tr>
+                    <form name="form" class="js-form" onsubmit="return false;">
+                        <div data-ax-tbl class="ax-form-tbl">
 
-                            <ax:tr labelWidth="100px">
-                                <ax:td label="연락처" width="40%">
-                                    <input type="text" name="guestTel" data-ax-path="guestTel" class="form-control"/>
-                                </ax:td>
-                                <ax:td label="이메일" width="40%">
-                                    <input type="text" name="email" data-ax-path="email" class="form-control"  />
-                                </ax:td>
-                            </ax:tr>
-
-                            <ax:tr labelWidth="100px">
-                                <ax:td label="언어" width="40%">
-                                    <input type="text" name="langCd" data-ax-path="langCd" title="사업자번호" class="form-control"/>
-                                </ax:td>
-                                <ax:td label="생년월일" width="40%">
-                                    <input type="text" name="brth" data-ax-path="brth" class="form-control" />
-                                </ax:td>
-                            </ax:tr>
-                            
-                            <ax:tr labelWidth="100px">
-                                <ax:td label="비고" width="100%">
-                                    <textarea name="rmk" data-ax-path="rmk" rows="5" class="form-control"></textarea>
-                                </ax:td>
-                            </ax:tr>
-
-                        </ax:tbl>
+                            <div data-ax-tr>
+                                <div data-ax-td style="width:40%">
+                                    <div data-ax-td-label style="width:100px">이름</div>
+                                    <div data-ax-td-wrap>
+                                        <input type="text" name="guestNm" data-ax-path="guestNm" class="form-control">
+                                    </div>
+                                </div>
+                                <div data-ax-td style="width:40%">
+                                    <div data-ax-td-label style="width:100px">영문</div>
+                                    <div data-ax-td-wrap>
+                                        <input type="text" name="guestNmEng" data-ax-path="guestNmEng" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-ax-tr>
+                                <div data-ax-td style="width:40%">
+                                    <div data-ax-td-label style="width:100px">연락처</div>
+                                    <div data-ax-td-wrap>
+                                        <input type="text" name="guestTel" data-ax-path="guestTel" class="form-control">
+                                    </div>
+                                </div>
+                                <div data-ax-td style="width:40%">
+                                    <div data-ax-td-label style="width:100px">이메일</div>
+                                    <div data-ax-td-wrap>
+                                        <input type="text" name="email" data-ax-path="email" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-ax-tr>
+                                <div data-ax-td style="width:40%">
+                                    <div data-ax-td-label style="width:100px">언어</div>
+                                    <div data-ax-td-wrap>
+                                        <input type="text" name="langCd" data-ax-path="langCd" class="form-control">
+                                    </div>
+                                </div>
+                                <div data-ax-td style="width:60%">
+                                    <div data-ax-td-label style="width:100px">생년월일</div>
+                                    <div data-ax-td-wrap>
+                                        <input type="date" name="brth" data-ax-path="brth" class="form-control">
+                                    </div>
+                                    <div data-ax-td-wrap>
+                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="male">
+                                        <label for="male">남</label>
+                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="female">
+                                        <label for="female">여</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-ax-tr>
+                                <div data-ax-td style="width:80%">
+                                    <div data-ax-td-label style="width:100px">비고</div>
+                                    <div data-ax-td-wrap>
+                                        <textarea name="rmk" data-ax-path="rmk" rows="5" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <ax:split-layout name="ax1" orientation="horizontal">

@@ -9,6 +9,8 @@ import edu.axboot.domain.chk.Chk;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -68,7 +70,11 @@ public class Guest extends BaseJpaModel<Long> {
 	@ColumnPosition(9)
 	private String rmk;
 
-    @Override
+	@OneToMany
+	@JoinColumn(name="ID")
+	private List<Chk> chks = new ArrayList<>();
+
+	@Override
     public Long getId() {
         return id;
     }

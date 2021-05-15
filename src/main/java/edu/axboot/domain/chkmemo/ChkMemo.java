@@ -86,7 +86,7 @@ public class ChkMemo extends BaseJpaModel<Long> {
 	public void 메모_기본값_생성(String rsvNum) {
     	this.rsvNum = rsvNum;
     	this.sno = Integer.valueOf(rsvNum.substring(10,12));
-		this.memoMan = "system"; // 이거 id값으로 해야하지 않나
+		this.memoMan = "system"; // 이거 로그인한 사용자로 해야하지 않나??
 		this.delYn = "N"; // 무슨 값인가
 	}
 }

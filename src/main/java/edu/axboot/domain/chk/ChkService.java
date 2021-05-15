@@ -4,9 +4,12 @@ import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
 import edu.axboot.controllers.dto.ChkSaveRequestDto;
+import edu.axboot.controllers.dto.GuestSaveRequestDto;
 import edu.axboot.domain.BaseService;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoService;
+import edu.axboot.domain.guest.Guest;
+import edu.axboot.domain.guest.GuestRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +25,9 @@ import java.util.List;
 public class ChkService extends BaseService<Chk, Long> {
     private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
-    @Autowired
-    private ChkMemoService chkMemoService;
-
     private final ChkRepository chkRepository;
+
+    private final GuestRepository guestRepository;
 
     private static int sequence;
 
@@ -33,6 +35,10 @@ public class ChkService extends BaseService<Chk, Long> {
         return findAll();
     }
 
+    public Chk getOne(Long id) {
+        Chk chk = chkRepository.findOne(id);
+        return chk;
+    }
     public List<Chk> getList(RequestParams<Chk> requestParams) {
         String rsvNum = requestParams.getString("rsvNum","");
         String rsvDt = requestParams.getString("rsvDt","");
@@ -75,37 +81,27 @@ public class ChkService extends BaseService<Chk, Long> {
         return list;
     }
 
-//    @Transactional
-//    public String saveUsingJpa(ChkSaveRequestDto requestDto) {
-//
-//        Chk entity = requestDto.toEntity();
-//        entity.예약일_예약번호_예약상태_생성(sequence++);
-//        if (entity.getMemoIdList().size() > 0) {
-//            List<ChkMemo> memoList = new ArrayList<>();
-//            for (Long memoId: entity.getMemoIdList()) {
-//                ChkMemo chkMemo = chkMemoService.findOne(memoId);
-//                chkMemo.setRsvNum(entity.getRsvNum());
-//                memoList.add(chkMemo);
-//            }
-//            entity.메모리스트_생성(memoList);
-//        }
-//        return chkRepository.save(entity).getRsvNum();
-//    }
-
     @Transactional
-    public String saveUsingJpa(ChkSaveRequestDto requestDto) {
+    public Long saveUsingJpa(ChkSaveRequestDto requestDto) {
+        GuestSaveRequestDto guestDto = new GuestSaveRequestDto(null,
+                requestDto.getGuestNm(), requestDto.getGuestNmEng(), requestDto.getGuestTel(),
+                requestDto.getEmail(), requestDto.getBrth(), requestDto.getGender(),
+                requestDto.getLangCd(), null);
+        Guest guestEntity = guestDto.toEntity();
+        Long guestId = guestRepository.save(guestEntity).getId();
 
-        Chk entity = requestDto.toEntity();
-        entity.예약일_예약번호_예약상태_생성(sequence++);
-        if (entity.getMemoList().size() > 0) {
+        Chk chkEntity = requestDto.toEntity();
+        chkEntity.예약일_예약번호_예약상태_생성(guestId, sequence++);
+
+        if (chkEntity.getMemoList().size() > 0) {
             List<ChkMemo> memoList = new ArrayList<>();
-            for(ChkMemo memo : entity.getMemoList()) {
+            for(ChkMemo memo : chkEntity.getMemoList()) {
                 ChkMemo memoEntity = memo.toEntity();
-                memoEntity.메모_기본값_생성(entity.getRsvNum());
+                memoEntity.메모_기본값_생성(chkEntity.getRsvNum());
                 memoList.add(memoEntity);
             }
-            entity.메모리스트_생성(memoList);
+            chkEntity.메모리스트_생성(memoList);
         }
-        return chkRepository.save(entity).getRsvNum();
+        return chkRepository.save(chkEntity).getId();
     }
 }

@@ -25,19 +25,19 @@
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">도착일</div>
                             <div data-ax-td-wrap>
-                                <input type="date" data-ax-path="arrDt" dataPath="arrDt" title="도착일" class="form-control js-arrDt">
+                                <input type="date" data-ax-path="arrDt" title="도착일" class="form-control js-arrDt" data-ax-validate="required"/>
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">숙박수</div>
                             <div data-ax-td-wrap>
-                                <input type="text" data-ax-path="nightCnt" dataPath="nightCnt" title="숙박일" class="form-control js-nightCnt">
+                                <input type="text" data-ax-path="nightCnt" title="숙박일" class="form-control js-nightCnt" data-ax-validate="required"/>
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">출발일</div>
                             <div data-ax-td-wrap>
-                                <input type="date" data-ax-path="depDt" dataPath="depDt" title="출발일" class="form-control js-depDt">
+                                <input type="date" data-ax-path="depDt" title="출발일" class="form-control js-depDt" data-ax-validate="required"/>
                             </div>
                         </div>
                     </div>
@@ -51,13 +51,13 @@
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">성인수</div>
                             <div data-ax-td-wrap>
-                                <input type="text" data-ax-path="adultCnt" title="성인수" class="form-control js-adultCnt">
+                                <input type="text" data-ax-path="adultCnt" title="성인수" class="form-control js-adultCnt" data-ax-validate="required"/>
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">아동수</div>
                             <div data-ax-td-wrap>
-                                <input type="text" data-ax-path="chldCnt" title="아동수" class="form-control js-chldCnt">
+                                <input type="text" data-ax-path="chldCnt" title="아동수" class="form-control js-chldCnt" data-ax-validate="required"/>
                             </div>
                         </div>
                     </div>
@@ -108,7 +108,13 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">생년월일</div>
                                         <div data-ax-td-wrap>
-                                            <input type="date" class="form-control" />
+                                            <input type="date" data-ax-Path="brth" class="form-control"  />
+                                        </div>
+                                        <div data-ax-td-wrap>
+                                            <input type="radio" id="male" name="gender" data-ax-Path="gender" value="male">
+                                            <label for="male">남</label>
+                                            <input type="radio" id="female" name="gender" data-ax-Path="gender" value="female">
+                                            <label for="female">여</label>
                                         </div>
                                     </div>                                                                      
                                 </div>                                
@@ -147,7 +153,7 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">선수금 여부</div>
                                         <div data-ax-td-wrap>
-                                            <input type="checkbox" class="form-control js-advnYn" dataPath="advnYn" />
+                                            <input type="checkbox" dataPath="advnYn" class="form-control js-advnYn" />
                                         </div>
                                     </div>                                                                      
                                 </div>
@@ -156,13 +162,13 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">결제금액</div>
                                         <div data-ax-td-wrap>
-                                            <input type="text" class="form-control" />
+                                            <input type="text" data-ax-Path="salePrc" dataPath="salePrc" class="form-control js-salePrc" />
                                         </div>
                                     </div> 
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">서비스금액</div>
                                         <div data-ax-td-wrap>
-                                            <input type="text" class="form-control" />
+                                            <input type="text" data-ax-Path="svcPrc" dataPath="svcPrc" class="form-control js-svcPrc" />
                                         </div>
                                     </div>                                                                      
                                 </div>                                
