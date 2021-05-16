@@ -6,7 +6,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: '/api/v1/chk/select',
             callback: function (res) {
                 console.log(res);
-                // caller.gridView01.setData(res);
+                caller.formView01.setData(res);
             },
             options: {
                 // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
@@ -188,6 +188,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     setData: function (data) {
         data = $.extend({}, data);
+        console.log(data, data.rsvNum);
+        if (data.rsvNum) {
+            $('.js-rsvNum').text('예약번호 : ' + data.rsvNum);
+        }
         this.model.setModel(data);
     },
     validate: function () {

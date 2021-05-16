@@ -16,7 +16,9 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-
+        <div class='js-rsvNum'>
+            예약번호 : 
+        </div>
         <div role="page-header">
             <form name="form" class="js-form" onsubmit="return false;">
                 <div data-ax-tbl class="ax-form-tbl">

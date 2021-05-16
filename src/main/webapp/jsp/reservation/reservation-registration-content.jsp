@@ -1,14 +1,21 @@
+<%@ page import="com.chequer.axboot.core.utils.RequestUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
-
+<%
+    RequestUtils requestUtils = RequestUtils.of(request);
+    request.setAttribute("id", requestUtils.getString("id"));
+%>
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
 <ax:set key="page_auto_height" value="true"/>
 
 <ax:layout name="modal">
     <jsp:attribute name="script">
-        <script type="text/javascript" src="<c:url value='/assets/js/view/information/guest-information.js' />"></script>
+        <script>
+            var modalParams = {id:"${id}"};
+        </script>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/reservation/reservation-registration-content.js' />"></script>
     </jsp:attribute>
     <jsp:body>
         <ax:split-panel width="*" style="">
@@ -24,6 +31,7 @@
             <div data-fit-height-aside="form-view-01">
                 <form name="form" class="js-form">
                     <div data-ax-tbl class="ax-form-tbl">
+                        <input type="hidden" name="id" data-ax-path="id" class="form-control">
 
                         <div data-ax-tr>
                             <div data-ax-td style="width:40%">
@@ -86,13 +94,10 @@
             </div>
         </ax:split-panel>
         <ax:split-panel width="*" style="">
-            <!-- 버튼 -->
-            <div class="ax-button-group" data-fit-height-aside="grid-view-01">
-                <div class="right">
-                    <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
-                    <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-plus"></i> 삭제</button>
-                </div>
-            </div>
+            <ax:page-buttons class="bottom">
+                <button type="button" class="btn btn-info" data-page-btn="save"> 선택 </button>
+                <button type="button" class="btn btn-default" data-page-btn="close"> 닫기 </button>
+            </ax:page-buttons>
         </ax:split-panel>
     </jsp:body>
 </ax:layout>
