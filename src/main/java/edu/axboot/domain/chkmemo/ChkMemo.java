@@ -43,6 +43,7 @@ public class ChkMemo extends BaseJpaModel<Long> {
 
 	@Column(name = "MEMO_DTTI", nullable = false)
 	@Comment(value = "메모 일시")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'*'HH:mm:ss", timezone = "Asia/Seoul")
 	@ColumnPosition(5)
 	private Timestamp memoDtti;
 

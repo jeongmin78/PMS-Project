@@ -2,10 +2,7 @@ package edu.axboot.chk;
 
 import com.chequer.axboot.core.parameter.RequestParams;
 import edu.axboot.AXBootApplication;
-import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
-import edu.axboot.controllers.dto.ChkSaveRequestDto;
-import edu.axboot.controllers.dto.GuestSaveRequestDto;
-import edu.axboot.controllers.dto.RoomSaveRequestDto;
+import edu.axboot.controllers.dto.*;
 import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkRepository;
 import edu.axboot.domain.chk.ChkService;
@@ -63,10 +60,10 @@ public class ChkServiceTest {
                 .sno(null)
                 .rsvNum(null)
                 .rsvDt(null)
-                .guestNm("guestNm")
-                .arrDt("arrDt")
-                .depDt("depDt")
-                .nightCnt(2)
+                .guestNm("박형근")
+                .arrDt("2021-05-21")
+                .depDt("2021-05-24")
+                .nightCnt(3)
                 .roomTypCd("roomTypCd")
                 .adultCnt(2)
                 .chldCnt(0)
@@ -90,7 +87,21 @@ public class ChkServiceTest {
 
         Chk chk = this.chkService.getOne(30L);
         logger.info("============================== guestId : " + chk.getGuest().getId());
-        logger.info("============================== guestId : " + chk.getGuest().getGuestNm());
+        logger.info("============================== guestNm : " + chk.getGuest().getGuestNm());
+        logger.info("============================== sno : " + chk.getSno());
 
     }
+
+    @Test
+    public void test3_최근_예약등록_조회하기() {
+
+        ChkResponseDto entity = this.chkService.getOneByDesc();
+        logger.info("============================== RsvNum : " + entity.getRsvNum());
+    }
+//    @Test
+//    public void test4_시리얼_넘버_조회() {
+//
+//        Integer sno = this.chkService.시리얼_넘버();
+//        logger.info("============================== sno : " + sno);
+//    }
 }

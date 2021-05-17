@@ -2,21 +2,27 @@ package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
-import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
-import edu.axboot.controllers.dto.ChkSaveRequestDto;
-import edu.axboot.controllers.dto.GuestSaveRequestDto;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import edu.axboot.controllers.dto.*;
 import edu.axboot.domain.BaseService;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoService;
 import edu.axboot.domain.guest.Guest;
 import edu.axboot.domain.guest.GuestRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.dom4j.CDATA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +36,9 @@ public class ChkService extends BaseService<Chk, Long> {
     private final GuestRepository guestRepository;
 
     private static int sequence;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate today = LocalDate.now();
 
     public List<Chk> gets(RequestParams<Chk> requestParams) {
         return findAll();
@@ -83,25 +92,65 @@ public class ChkService extends BaseService<Chk, Long> {
 
     @Transactional
     public Long saveUsingJpa(ChkSaveRequestDto requestDto) {
-        GuestSaveRequestDto guestDto = new GuestSaveRequestDto(null,
-                requestDto.getGuestNm(), requestDto.getGuestNmEng(), requestDto.getGuestTel(),
-                requestDto.getEmail(), requestDto.getBrth(), requestDto.getGender(),
-                requestDto.getLangCd(), null);
-        Guest guestEntity = guestDto.toEntity();
-        Long guestId = guestRepository.save(guestEntity).getId();
-
-        Chk chkEntity = requestDto.toEntity();
-        chkEntity.예약일_예약번호_예약상태_생성(guestId, sequence++);
-
-        if (chkEntity.getMemoList().size() > 0) {
-            List<ChkMemo> memoList = new ArrayList<>();
-            for(ChkMemo memo : chkEntity.getMemoList()) {
-                ChkMemo memoEntity = memo.toEntity();
-                memoEntity.메모_기본값_생성(chkEntity.getRsvNum());
-                memoList.add(memoEntity);
+        if (requestDto.getId() == null || requestDto.getId() == 0) {
+            Long guestId;
+            if (requestDto.getGuestId() == null || requestDto.getGuestId() == 0) {
+                GuestSaveRequestDto guestDto = new GuestSaveRequestDto(null,
+                        requestDto.getGuestNm(), requestDto.getGuestNmEng(), requestDto.getGuestTel(),
+                        requestDto.getEmail(), requestDto.getBrth(), requestDto.getGender(),
+                        requestDto.getLangCd(), null);
+                Guest guestEntity = guestDto.toEntity();
+                guestId = guestRepository.save(guestEntity).getId();
+            } else {
+                guestId = requestDto.getGuestId();
             }
-            chkEntity.메모리스트_생성(memoList);
+            Chk chkEntity = requestDto.toEntity();
+            시리얼_넘버();
+            logger.info("****************************" + sequence);
+            chkEntity.예약일_예약번호_예약상태_생성(guestId, sequence);
+
+            if (chkEntity.getMemoList().size() > 0) {
+                List<ChkMemo> memoList = new ArrayList<>();
+                for (ChkMemo memo : chkEntity.getMemoList()) {
+                    ChkMemo memoEntity = memo.toEntity();
+                    memoEntity.메모_기본값_생성(chkEntity.getRsvNum());
+                    memoList.add(memoEntity);
+                }
+                chkEntity.메모리스트_생성(memoList);
+            }
+            return chkRepository.save(chkEntity).getId();
         }
-        return chkRepository.save(chkEntity).getId();
+        else
+            return null;
+    }
+
+    public ChkResponseDto getOneByDesc() {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        Chk chk = query.selectFrom(qChk)
+                .orderBy(qChk.id.desc())
+                .fetchFirst();
+        if (chk != null) {
+            return new ChkResponseDto(chk);
+        }
+        else
+            return null;
+    }
+
+    public void 시리얼_넘버() {
+        ChkResponseDto chkResponseDto = getOneByDesc();
+        if (chkResponseDto != null) {
+            String date = chkResponseDto.getRsvDt();
+            if (date.equals(String.valueOf(today))) {
+                logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@" + date + "@" + today);
+                logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@" + sequence);
+                sequence = chkResponseDto.getSno()+1;
+                logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@" + sequence);
+            } else {
+                sequence = 1;
+            }
+        } else {
+            sequence = 1;
+        }
     }
 }

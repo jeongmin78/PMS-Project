@@ -67,7 +67,7 @@ public class GuestService extends BaseService<Guest, Long> {
     public GuestResponseDto getOneById(Long id) {
         Guest entity = guestRepository.findOne(id);
         if (entity == null) {
-            throw new IllegalArgumentException("해당 거래처가 없습니다. id=" + id);
+            throw new IllegalArgumentException("해당 고객이 없습니다. id=" + id);
         }
         return new GuestResponseDto(entity);
     }

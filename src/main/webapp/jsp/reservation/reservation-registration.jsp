@@ -13,12 +13,10 @@
         <script type="text/javascript" src="<c:url value='/assets/js/view/reservation/reservation-registration.js' />"></script>
     </jsp:attribute>
     <jsp:body>
-
-        <ax:page-buttons></ax:page-buttons>
-
-        <div class='js-rsvNum'>
-            예약번호 : 
-        </div>
+        <ax:page-buttons>
+            <button type="button" class="btn btn-fn1" data-page-btn="reload" >신규등록</button>
+        </ax:page-buttons>
+        <div class='js-rsvNum'>예약번호 : </div>
         <div role="page-header">
             <form name="form" class="js-form" onsubmit="return false;">
                 <div data-ax-tbl class="ax-form-tbl">
@@ -95,7 +93,7 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">이메일</div>
                                         <div data-ax-td-wrap>
-                                            <input type="text" data-ax-path="email" class="form-control js-email" />
+                                            <input type="text" data-ax-path="email" class="form-control js-email" placeholder="x@x.xx"/>
                                         </div>
                                     </div>                                                                      
                                 </div>
