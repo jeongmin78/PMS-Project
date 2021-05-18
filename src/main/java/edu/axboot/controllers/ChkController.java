@@ -4,6 +4,8 @@ import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import edu.axboot.controllers.dto.*;
 import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.chk.ChkService;
@@ -24,11 +26,11 @@ public class ChkController extends BaseController {
 
     private final ChkService chkService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public Responses.ListResponse list(RequestParams<Chk> requestParams) {
-        List<Chk> list = chkService.gets(requestParams);
-        return Responses.ListResponse.of(list);
-    }
+//    @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
+//    public Responses.ListResponse list(RequestParams<Chk> requestParams) {
+//        List<Chk> list = chkService.gets(requestParams);
+//        return Responses.ListResponse.of(list);
+//    }
 
 //    @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
 //    public ApiResponse save(@RequestBody List<Chk> request) {
@@ -38,8 +40,8 @@ public class ChkController extends BaseController {
 
     //    ------------------------------------------------------------
 
-    @RequestMapping(value = "select", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public Responses.ListResponse list2(RequestParams<Chk> requestParams) {
+    @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public Responses.ListResponse list(RequestParams<Chk> requestParams) {
         List<Chk> list = chkService.getList(requestParams);
         return Responses.ListResponse.of(list);
     }

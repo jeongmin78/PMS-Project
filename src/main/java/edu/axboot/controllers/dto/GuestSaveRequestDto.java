@@ -1,9 +1,12 @@
 package edu.axboot.controllers.dto;
 
+import edu.axboot.domain.chk.Chk;
 import edu.axboot.domain.guest.Guest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -30,6 +33,7 @@ public class GuestSaveRequestDto {
         this.gender = gender;
         this.langCd = langCd;
         this.rmk = rmk;
+
     }
     public Guest toEntity() {
         return Guest.builder()

@@ -1,12 +1,22 @@
+<%@ page import="com.chequer.axboot.core.utils.RequestUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
+<%
+    RequestUtils requestUtils = RequestUtils.of(request);
+    request.setAttribute("guestNm", requestUtils.getString("guestNm"));
+    request.setAttribute("guestTel", requestUtils.getString("guestTel"));
+    request.setAttribute("email", requestUtils.getString("email"));
+%>
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
 <ax:set key="page_auto_height" value="true"/>
 
 <ax:layout name="modal">
     <jsp:attribute name="script">
+        <script>
+            var modalParams = {guestNm: "${guestNm}", guestTel: "${guestTel}",email: "${email}"};
+        </script>
         <script type="text/javascript" src="<c:url value='/assets/js/view/reservation/reservation-registration-content.js' />"></script>
     </jsp:attribute>
     <jsp:body>
@@ -44,13 +54,13 @@
                                 <div data-ax-td style="width:40%">
                                     <div data-ax-td-label style="width:100px">연락처</div>
                                     <div data-ax-td-wrap>
-                                        <input type="text" name="guestTel" data-ax-path="guestTel" class="form-control">
+                                        <input type="text" name="guestTel" data-ax-path="guestTel" class="form-control"  data-ax5formatter="phone">
                                     </div>
                                 </div>
                                 <div data-ax-td style="width:40%">
                                     <div data-ax-td-label style="width:100px">이메일</div>
                                     <div data-ax-td-wrap>
-                                        <input type="text" name="email" data-ax-path="email" class="form-control">
+                                        <input type="text" name="email" data-ax-path="email" class="form-control" placeholder="x@x.xx">
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +68,7 @@
                                 <div data-ax-td style="width:40%">
                                     <div data-ax-td-label style="width:100px">언어</div>
                                     <div data-ax-td-wrap>
-                                        <input type="text" name="langCd" data-ax-path="langCd" class="form-control">
+                                        <ax:common-code groupCd="PMS_LANG" dataPath="langCd" clazz="js-langCd" />
                                     </div>
                                 </div>
                                 <div data-ax-td style="width:60%">
@@ -67,9 +77,9 @@
                                         <input type="date" name="brth" data-ax-path="brth" class="form-control">
                                     </div>
                                     <div data-ax-td-wrap>
-                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="male">
+                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="남">
                                         <label for="male">남</label>
-                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="female">
+                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="여">
                                         <label for="female">여</label>
                                     </div>
                                 </div>

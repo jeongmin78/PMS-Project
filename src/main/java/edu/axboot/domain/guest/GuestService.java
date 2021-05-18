@@ -2,6 +2,7 @@ package edu.axboot.domain.guest;
 
 import com.querydsl.core.BooleanBuilder;
 import edu.axboot.controllers.dto.GuestResponseDto;
+import edu.axboot.controllers.dto.GuestSaveRequestDto;
 import edu.axboot.controllers.dto.GuestUpdateRequestDto;
 import edu.axboot.domain.chk.ChkService;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,14 @@ public class GuestService extends BaseService<Guest, Long> {
                 .collect(Collectors.toList());
     }
 
+    public GuestResponseDto getOneById(Long id) {
+        Guest entity = guestRepository.findOne(id);
+        if (entity == null) {
+            throw new IllegalArgumentException("해당 고객이 없습니다. id=" + id);
+        }
+        return new GuestResponseDto(entity);
+    }
+
     @Transactional
     public Long update(Long id, GuestUpdateRequestDto requestDto) {
         Guest entity = guestRepository.findOne(id);
@@ -64,11 +73,9 @@ public class GuestService extends BaseService<Guest, Long> {
         return id;
     }
 
-    public GuestResponseDto getOneById(Long id) {
-        Guest entity = guestRepository.findOne(id);
-        if (entity == null) {
-            throw new IllegalArgumentException("해당 고객이 없습니다. id=" + id);
-        }
-        return new GuestResponseDto(entity);
+    @Transactional
+    public Long save(GuestSaveRequestDto requestDto) {
+        return guestRepository.save(requestDto.toEntity()).getId();
     }
+
 }

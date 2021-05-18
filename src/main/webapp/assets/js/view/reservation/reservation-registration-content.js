@@ -1,3 +1,4 @@
+var modalParams = modalParams || {};
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_CLOSE: function (caller, act, data) {
@@ -6,22 +7,23 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }
     },
     PAGE_SEARCH: function (caller, act, data) {
-        axboot.ajax({
-            type: 'GET',
-            url: '/api/v1/guest/',
-            data: caller.searchView.getData(),
-            callback: function (res) {
-                caller.gridView01.setData(res);
-            },
-            options: {
-                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-                onError: function (err) {
-                    console.log(err);
+        if (modalParams) {
+            console.log(modalParams);
+            axboot.ajax({
+                type: 'GET',
+                url: '/api/v1/guest',
+                data: modalParams,
+                callback: function (res) {
+                    caller.gridView01.setData(res);
                 },
-            },
-        });
-
-        return false;
+                options: {
+                    // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                    onError: function (err) {
+                        console.log(err);
+                    },
+                },
+            });
+        }
     },
     PAGE_SAVE: function (caller, act, data) {
         var saveList = [].concat(caller.gridView01.getData('modified'));
@@ -179,13 +181,18 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
  * formView
  */
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
+    getDefaultData: function () {
+        return {};
+    },
     getData: function () {
-        var data = this.model.get();
+        var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
         return $.extend({}, data);
     },
     setData: function (data) {
         data = $.extend({}, data);
+
         this.model.setModel(data);
+        this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
     validate: function () {
         var item = this.model.get();
@@ -197,6 +204,25 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             });
             return false;
         }
+        // required 이외 벨리데이션 정의
+        var pattern;
+        if (item.email) {
+            pattern = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.(?:[A-Za-z0-9]{2,}?)$/i;
+            if (!pattern.test(item.email)) {
+                axDialog.alert('이메일 형식을 확인하세요.', function () {
+                    $('[data-ax-path="email"]').focus();
+                });
+                return false;
+            }
+        }
+
+        if (item.guestTel && !(pattern = /^([0-9]{3})\-?([0-9]{4})\-?([0-9]{4})$/).test(item.guestTel)) {
+            axDialog.alert('전화번호 형식을 확인하세요.'),
+                function () {
+                    $('[data-ax-path="guestTel"]').focus();
+                };
+            return false;
+        }
         return true;
     },
 
@@ -205,7 +231,8 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         _this.target = $('.js-form');
 
-        this.model = new ax5.ui.binder();
-        this.model.setModel({}, this.target);
+        _this.model = new ax5.ui.binder();
+        _this.model.setModel({}, _this.target);
+        this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
     },
 });

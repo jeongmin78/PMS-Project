@@ -87,7 +87,7 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">연락처</div>
                                         <div data-ax-td-wrap>
-                                            <input type="text" data-ax-path="guestTel" class="form-control js-guestTel" />
+                                            <input type="text" data-ax-path="guestTel" class="form-control js-guestTel" data-ax5formatter="phone" />
                                         </div>
                                     </div> 
                                     <div data-ax-td style="width:50%">
@@ -102,7 +102,7 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">언어</div>
                                         <div data-ax-td-wrap>
-                                            <ax:common-code groupCd="PMS_LANG" dataPath="lang" clazz="js-lang" />
+                                            <ax:common-code groupCd="PMS_LANG" dataPath="langCd" clazz="js-langCd" />
                                         </div>
                                     </div> 
                                     <div data-ax-td style="width:50%">
@@ -111,10 +111,10 @@
                                             <input type="date" data-ax-Path="brth" class="form-control"  />
                                         </div>
                                         <div data-ax-td-wrap>
-                                            <input type="radio" id="male" name="gender" data-ax-Path="gender" value="male">
-                                            <label for="male">남</label>
-                                            <input type="radio" id="female" name="gender" data-ax-Path="gender" value="female">
-                                            <label for="female">여</label>
+                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="남">
+                                        <label for="male">남</label>
+                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="여">
+                                        <label for="female">여</label>
                                         </div>
                                     </div>                                                                      
                                 </div>                                
@@ -162,13 +162,13 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">결제금액</div>
                                         <div data-ax-td-wrap>
-                                            <input type="text" data-ax-Path="salePrc" dataPath="salePrc" class="form-control js-salePrc" />
+                                            <input type="text" data-ax-Path="salePrc" dataPath="salePrc" class="form-control js-salePrc" data-ax5formatter="money"/>
                                         </div>
                                     </div> 
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">서비스금액</div>
                                         <div data-ax-td-wrap>
-                                            <input type="text" data-ax-Path="svcPrc" dataPath="svcPrc" class="form-control js-svcPrc" />
+                                            <input type="text" data-ax-Path="svcPrc" dataPath="svcPrc" class="form-control js-svcPrc" data-ax5formatter="money"/>
                                         </div>
                                     </div>                                                                      
                                 </div>                                

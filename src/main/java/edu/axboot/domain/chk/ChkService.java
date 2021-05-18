@@ -9,6 +9,7 @@ import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoService;
 import edu.axboot.domain.guest.Guest;
 import edu.axboot.domain.guest.GuestRepository;
+import edu.axboot.domain.guest.GuestService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.CDATA;
@@ -35,6 +36,8 @@ public class ChkService extends BaseService<Chk, Long> {
 
     private final GuestRepository guestRepository;
 
+    private final GuestService guestService;
+
     private static int sequence;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -43,7 +46,6 @@ public class ChkService extends BaseService<Chk, Long> {
     public List<Chk> gets(RequestParams<Chk> requestParams) {
         return findAll();
     }
-
     public Chk getOne(Long id) {
         Chk chk = chkRepository.findOne(id);
         return chk;
@@ -95,18 +97,21 @@ public class ChkService extends BaseService<Chk, Long> {
         if (requestDto.getId() == null || requestDto.getId() == 0) {
             Long guestId;
             if (requestDto.getGuestId() == null || requestDto.getGuestId() == 0) {
-                GuestSaveRequestDto guestDto = new GuestSaveRequestDto(null,
+                Guest guest = new GuestSaveRequestDto(null,
                         requestDto.getGuestNm(), requestDto.getGuestNmEng(), requestDto.getGuestTel(),
                         requestDto.getEmail(), requestDto.getBrth(), requestDto.getGender(),
-                        requestDto.getLangCd(), null);
-                Guest guestEntity = guestDto.toEntity();
-                guestId = guestRepository.save(guestEntity).getId();
+                        requestDto.getLangCd(), null).toEntity();
+                guestId = guestRepository.save(guest).getId();
             } else {
                 guestId = requestDto.getGuestId();
+                GuestUpdateRequestDto guestDto = new GuestUpdateRequestDto(requestDto.getGuestNm(),
+                        requestDto.getGuestNmEng(), requestDto.getGuestTel(), requestDto.getEmail(),
+                        requestDto.getBrth(), requestDto.getGender(),
+                        requestDto.getLangCd(), null);
+                guestService.update(guestId, guestDto);
             }
             Chk chkEntity = requestDto.toEntity();
             시리얼_넘버();
-            logger.info("****************************" + sequence);
             chkEntity.예약일_예약번호_예약상태_생성(guestId, sequence);
 
             if (chkEntity.getMemoList().size() > 0) {
@@ -142,10 +147,7 @@ public class ChkService extends BaseService<Chk, Long> {
         if (chkResponseDto != null) {
             String date = chkResponseDto.getRsvDt();
             if (date.equals(String.valueOf(today))) {
-                logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@" + date + "@" + today);
-                logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@" + sequence);
                 sequence = chkResponseDto.getSno()+1;
-                logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@" + sequence);
             } else {
                 sequence = 1;
             }

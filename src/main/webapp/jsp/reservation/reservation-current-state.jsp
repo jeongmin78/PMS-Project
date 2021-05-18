@@ -12,7 +12,10 @@
     </jsp:attribute>
     <jsp:body>
 
-        <ax:page-buttons></ax:page-buttons>
+        <ax:page-buttons>
+            <button type="button" class="btn btn-info" data-page-btn="search"><i class="cqc-magnifier"></i> 검색 </button>
+            <button type="button" class="btn btn-info" data-page-btn="fn1"> 검색선택초기화 </button>
+        </ax:page-buttons>
 
 
         <div role="page-header">
@@ -20,18 +23,18 @@
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
                         <ax:td label='검색어' width="300px">
-                            <input type="text" class="form-control" />
+                            <input type="text" class="form-control js-filter" />
                         </ax:td>
                         <ax:td label='예약번호' width="300px">
-                            <input type="text" class="form-control" />
+                            <input type="text" class="form-control js-rsvNum" />
                         </ax:td>
                         <ax:td label='예약일' width="300px">
-                            <input type="text" class="form-control" />
+                            <input type="date" class="form-control js-rsvDt" />
                         </ax:td>
                     </ax:tr>
                     <ax:tr>
                         <ax:td label='객실타입' width="300px">
-                            <select class="js-roomTypCd form-control">
+                            <select class="form-control js-roomTypCd">
                                 <option value="">전체</option>
                                 <option value="SB">SB</option>
                                 <option value="DB">DB</option>
@@ -39,15 +42,25 @@
                             </select>
                         </ax:td>
                         <ax:td label='도착일' width="300px">
-                            <input type="text" class="form-control" />
+                            <input type="date" class="form-control js-arrDt" />
                         </ax:td>
                         <ax:td label='출발일' width="300px">
-                            <input type="text" class="form-control" />
+                            <input type="date" class="form-control js-depDt" />
                         </ax:td>
                     </ax:tr>
                     <ax:tr>
-                        <ax:td label='상태' width="300px">
-                            <input type="text" class="form-control" />
+                        <ax:td label='상태' width="100%">
+                            <form class="js-SttusCd">
+                                <label><input type='checkbox' name='status' value='all' />  전체  </label>
+                                <label><input type='checkbox' name='status' value='RSV_01' />  예약  </label>
+                                <label><input type='checkbox' name='status' value='RSV_02' />  예약대기  </label>
+                                <label><input type='checkbox' name='status' value='RSV_03' />  예약확정  </label>
+                                <label><input type='checkbox' name='status' value='RSV_04' />  예약취소  </label>
+                                <label><input type='checkbox' name='status' value='RSV_05' />  노쇼  </label>
+                                <label><input type='checkbox' name='status' value='CHK_01' />  체크인  </label>
+                                <label><input type='checkbox' name='status' value='CHK_02' />  체크아웃  </label>
+                                <label><input type='checkbox' name='status' value='CHK_03' />  체크인취소  </label>
+                            </form>
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>

@@ -151,7 +151,8 @@ public class Chk extends BaseJpaModel<Long> {
 	private List<ChkMemo> memoList;
 
 	@ManyToOne
-	@JoinColumn(name="GUEST_ID", insertable = false, updatable = false)
+	@NotFound(action = NotFoundAction.IGNORE)
+	@JoinColumn(name="ID", insertable = false, updatable = false)
 	private Guest guest;
 
 	@Override

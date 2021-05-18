@@ -45,7 +45,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         item.guestNmEng = data.guestNmEng;
         item.guestTel = data.guestTel;
         item.email = data.email;
-        item.lang = data.lang;
+        item.gender = data.gender;
+        item.langCd = data.langCd;
         item.brth = data.brth;
         console.log(item.guestId, item);
         caller.formView01.setData(item);
@@ -59,12 +60,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     MODAL_OPEN: function (caller, act, data) {
         if (!data) data = {};
-
+        console.log(data);
         axboot.modal.open({
             width: 780,
             height: 500,
             iframe: {
-                // param: 'id=' + (data.id || ''),
+                param: { guestNm: data.guestNm, guestTel: data.guestTel, email: data.email },
                 url: 'reservation-registration-content.jsp',
             },
             header: { title: '투숙객조회' },
@@ -110,9 +111,9 @@ fnObj.pageResize = function () {};
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, 'data-page-btn', {
-            search: function () {
-                ACTIONS.dispatch(ACTIONS.MODAL_OPEN);
-            },
+            // search: function () {
+            //     ACTIONS.dispatch(ACTIONS.MODAL_OPEN);
+            // },
             save: function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             },
@@ -239,13 +240,12 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         }
 
         if (item.guestTel && !(pattern = /^([0-9]{3})\-?([0-9]{4})\-?([0-9]{4})$/).test(item.guestTel)) {
-            axDialog.alert('사업자번호 형식을 확인하세요.'),
+            axDialog.alert('전화번호 형식을 확인하세요.'),
                 function () {
                     $('[data-ax-path="guestTel"]').focus();
                 };
             return false;
         }
-
         return true;
     },
     calcDepDt: function (night) {
@@ -263,22 +263,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         var depDt = moment(arrDt).add(night, 'day').format('yyyy-MM-DD');
         console.log('depDt', depDt);
         this.model.set('depDt', depDt);
-    },
-    calcNigth: function (depDt) {
-        console.log('call calcNigth...');
-        if (!depDt) return;
-        var arrDt = $('.js-arrDt').val();
-        if (!arrDt) return;
-        var night = moment(depDt).diff(moment(arrDt), 'days');
-        console.log('night', night);
-        if (night < 0) {
-            axDialog.alert('도착일 이후의 날짜를 선택하세요.', function () {
-                $('[data-ax-path="nightCnt"]').val('');
-                $('[data-ax-path="depDt"]').val('').focus();
-            });
-            return;
-        }
-        this.model.set('nightCnt', night);
     },
     calcNigth: function (Dt) {
         console.log('call calcNigth...');
@@ -316,7 +300,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         });
         axboot.buttonClick(this, 'data-grid-view-01-btn', {
             modalsearch: function () {
-                ACTIONS.dispatch(ACTIONS.MODAL_OPEN);
+                ACTIONS.dispatch(ACTIONS.MODAL_OPEN, this.getData());
             },
         });
     },

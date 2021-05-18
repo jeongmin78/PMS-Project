@@ -70,9 +70,10 @@ public class Guest extends BaseJpaModel<Long> {
 	@ColumnPosition(9)
 	private String rmk;
 
-	@OneToMany
-	@JoinColumn(name="ID")
-	private List<Chk> chks = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@NotFound(action = NotFoundAction.IGNORE)
+	@JoinColumn(name = "GUEST_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+	private List<Chk> chkList;
 
 	@Override
     public Long getId() {

@@ -18,26 +18,16 @@ public class GuestUpdateRequestDto {
     private String rmk;
 
     @Builder
-    public GuestUpdateRequestDto(Guest entity) {
-        this.guestNm = entity.getGuestNm();
-        this.guestNmEng = entity.getGuestNmEng();
-        this.guestTel = entity.getGuestTel();
-        this.email = entity.getEmail();
-        this.brth = entity.getBrth();
-        this.gender = entity.getGender();
-        this.langCd = entity.getLangCd();
-        this.rmk = entity.getRmk();
+    public GuestUpdateRequestDto(String guestNm, String guestNmEng, String guestTel, String email,
+                                 String brth, String gender, String langCd, String rmk) {
+        this.guestNm = guestNm;
+        this.guestNmEng = guestNmEng;
+        this.guestTel = guestTel;
+        this.email = email;
+        this.brth = brth;
+        this.gender = gender;
+        this.langCd = langCd;
+        this.rmk = rmk;
     }
-//    public Guest toEntity() {
-//        return Guest.builder()
-//                .guestNm(guestNm)
-//                .guestNmEng(guestNmEng)
-//                .guestTel(guestTel)
-//                .email(email)
-//                .brth(brth)
-//                .gender(gender)
-//                .langCd(langCd)
-//                .rmk(rmk)
-//                .build();
-//    }
+
 }
