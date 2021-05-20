@@ -51,7 +51,7 @@ public class ChkServiceTest {
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         String memoMan = "B";
         String delYn = "Y";
-        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn);
+        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn, true,false,false);
         List<ChkMemo> memoList = new ArrayList<>();
         memoList.add(chkMemo);
 
@@ -85,11 +85,7 @@ public class ChkServiceTest {
     @Test
     public void test2_예약등록_조회하기() {
 
-        Chk chk = this.chkService.getOne(30L);
-        logger.info("============================== guestId : " + chk.getGuest().getId());
-        logger.info("============================== guestNm : " + chk.getGuest().getGuestNm());
-        logger.info("============================== sno : " + chk.getSno());
-
+        ChkResponseDto chk = this.chkService.getOneById(156L);
     }
 
     @Test

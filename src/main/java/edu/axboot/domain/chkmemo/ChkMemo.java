@@ -64,14 +64,19 @@ public class ChkMemo extends BaseJpaModel<Long> {
 
     @Builder
 	public ChkMemo(Long id, String rsvNum, Integer sno, String memoCn,
-				   Timestamp memoDtti, String memoMan, String delYn){
-    	this.id = id;
+				   Timestamp memoDtti, String memoMan, String delYn,
+				   boolean isCreated, boolean isModified, boolean isDeleted) {
+
+		this.id = id;
     	this.rsvNum = rsvNum;
     	this.sno = sno;
     	this.memoCn = memoCn;
     	this.memoDtti = memoDtti;
     	this.memoMan = memoMan;
     	this.delYn = delYn;
+		this.__created__ = isCreated;
+		this.__modified__ = isModified;
+		this.__deleted__ = isDeleted;
 	}
 	public ChkMemo toEntity() {
 		return ChkMemo.builder()
@@ -82,12 +87,19 @@ public class ChkMemo extends BaseJpaModel<Long> {
 				.memoDtti(memoDtti)
 				.memoMan(memoMan)
 				.delYn(delYn)
+				.isCreated(__created__)
+				.isModified(__modified__)
+				.isDeleted(__deleted__)
 				.build();
 	}
 	public void 메모_기본값_생성(String rsvNum) {
     	this.rsvNum = rsvNum;
     	this.sno = Integer.valueOf(rsvNum.substring(10,12));
-		this.memoMan = "system"; // 이거 로그인한 사용자로 해야하지 않나??
-		this.delYn = "N"; // 무슨 값인가
+		this.memoMan = "system";
+		this.delYn = "N";
+	}
+
+	public void 메모_delYn_변경() {
+    	this.delYn = "Y";
 	}
 }

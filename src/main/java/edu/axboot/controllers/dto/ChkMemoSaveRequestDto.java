@@ -17,10 +17,15 @@ public class ChkMemoSaveRequestDto {
     private Timestamp memoDtti;
     private String memoMan;
     private String delYn;
+    private boolean __created__;
+    private boolean __modified__;
+    private boolean __deleted__;
 
     @Builder
     public ChkMemoSaveRequestDto(Long id, String rsvNum, Integer sno, String memoCn,
-                                 Timestamp memoDtti, String memoMan, String delYn){
+                                 Timestamp memoDtti, String memoMan, String delYn,
+                                 boolean __created__, boolean __modified__, boolean __deleted__) {
+
         this.id = id;
         this.rsvNum = rsvNum;
         this.sno = sno;
@@ -28,6 +33,9 @@ public class ChkMemoSaveRequestDto {
         this.memoDtti = memoDtti;
         this.memoMan = memoMan;
         this.delYn = delYn;
+        this.__created__ = __created__;
+        this.__modified__ = __modified__;
+        this.__deleted__ = __deleted__;
     }
 
     public ChkMemo toEntity() {
@@ -39,6 +47,9 @@ public class ChkMemoSaveRequestDto {
                 .memoDtti(memoDtti)
                 .memoMan(memoMan)
                 .delYn(delYn)
+                .isCreated(__created__)
+                .isModified(__modified__)
+                .isDeleted(__deleted__)
                 .build();
     }
 }

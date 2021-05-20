@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import edu.axboot.controllers.dto.*;
 import edu.axboot.domain.BaseService;
 import edu.axboot.domain.chkmemo.ChkMemo;
+import edu.axboot.domain.chkmemo.ChkMemoRepository;
 import edu.axboot.domain.chkmemo.ChkMemoService;
 import edu.axboot.domain.guest.Guest;
 import edu.axboot.domain.guest.GuestRepository;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import system.DateTime;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -34,6 +36,8 @@ public class ChkService extends BaseService<Chk, Long> {
 
     private final ChkRepository chkRepository;
 
+    private final ChkMemoRepository chkmemoRepository;
+
     private final GuestRepository guestRepository;
 
     private final GuestService guestService;
@@ -46,18 +50,25 @@ public class ChkService extends BaseService<Chk, Long> {
     public List<Chk> gets(RequestParams<Chk> requestParams) {
         return findAll();
     }
-    public Chk getOne(Long id) {
-        Chk chk = chkRepository.findOne(id);
-        return chk;
+    public ChkResponseDto getOneById(Long id) {
+        Chk entity = chkRepository.findOne(id);
+        if (entity == null){
+            throw new IllegalArgumentException("해당 예약내역이 없습니다. id=" + id);
+        }
+        return new ChkResponseDto(entity);
     }
     public List<Chk> getList(RequestParams<Chk> requestParams) {
+        String filter = requestParams.getFilter();
         String rsvNum = requestParams.getString("rsvNum","");
         String rsvDt = requestParams.getString("rsvDt","");
+        String rsvDtEnd = requestParams.getString("rsvDtEnd","");
         String roomTypCd = requestParams.getString("roomTypCd","");
         String arrDt = requestParams.getString("arrDt","");
+        String arrDtEnd = requestParams.getString("arrDtEnd","");
         String depDt = requestParams.getString("depDt","");
+        String depDtEnd = requestParams.getString("depDtEnd","");
         String sttusCd = requestParams.getString("sttusCd","");
-        String filter = requestParams.getFilter();
+        String sttusCdArray[] = sttusCd.split(",");
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -65,19 +76,30 @@ public class ChkService extends BaseService<Chk, Long> {
             builder.and(qChk.rsvNum.eq(rsvNum));
         }
         if (isNotEmpty(rsvDt)){
-            builder.and(qChk.rsvDt.eq(rsvDt));
+            if (isNotEmpty(rsvDtEnd)){
+                builder.and(qChk.rsvDt.between(rsvDt,rsvDtEnd));
+            }else
+                builder.and(qChk.rsvDt.eq(rsvDt));
         }
         if (isNotEmpty(roomTypCd)){
             builder.and(qChk.roomTypCd.eq(roomTypCd));
         }
         if (isNotEmpty(arrDt)){
-            builder.and(qChk.arrDt.eq(arrDt));
+            if (isNotEmpty(arrDtEnd)) {
+                builder.and(qChk.arrDt.between(arrDt, arrDtEnd));
+            }else
+                builder.and(qChk.arrDt.eq(arrDt));
         }
         if (isNotEmpty(depDt)){
-            builder.and(qChk.depDt.eq(depDt));
+            if (isNotEmpty(depDtEnd)){
+                builder.and(qChk.depDt.between(depDt,depDtEnd));
+            }else
+                builder.and(qChk.depDt.eq(depDt));
         }
         if (isNotEmpty(sttusCd)){
-            builder.and(qChk.sttusCd.eq(sttusCd));
+            for (int i=0; i<sttusCdArray.length; i++){
+                builder.and(qChk.sttusCd.eq(sttusCdArray[i]));
+            }
         }
         if (isNotEmpty(filter)){
             builder.and(qChk.guestNm.contains(filter)
@@ -94,7 +116,7 @@ public class ChkService extends BaseService<Chk, Long> {
 
     @Transactional
     public Long saveUsingJpa(ChkSaveRequestDto requestDto) {
-        if (requestDto.getId() == null || requestDto.getId() == 0) {
+        if (requestDto.is__created__()) {
             Long guestId;
             if (requestDto.getGuestId() == null || requestDto.getGuestId() == 0) {
                 Guest guest = new GuestSaveRequestDto(null,
@@ -125,8 +147,7 @@ public class ChkService extends BaseService<Chk, Long> {
             }
             return chkRepository.save(chkEntity).getId();
         }
-        else
-            return null;
+        return null;
     }
 
     public ChkResponseDto getOneByDesc() {
@@ -154,5 +175,29 @@ public class ChkService extends BaseService<Chk, Long> {
         } else {
             sequence = 1;
         }
+    }
+
+    @Transactional
+    public Long update(Long id, ChkUpdateRequestDto requestDto) {
+        Chk chkEntity = chkRepository.findOne(id);
+        if (chkEntity == null) {
+            throw new IllegalArgumentException("해당 예약내역이 없습니다. id=" + id);
+        }
+
+        if (requestDto.getMemoList().size() > 0) {
+            List<ChkMemo> memoList = new ArrayList<>();
+            for (ChkMemo memo : requestDto.getMemoList()) {
+                if (memo.is__created__()){
+                    ChkMemo memoEntity = memo.toEntity();
+                    memoEntity.메모_기본값_생성(chkEntity.getRsvNum());
+                    memoList.add(memoEntity);
+                    chkmemoRepository.save(memoEntity);
+                }
+            }
+            chkEntity.메모리스트_생성(memoList);
+
+        }
+        chkEntity.예약정보_수정하기(requestDto);
+        return id;
     }
 }

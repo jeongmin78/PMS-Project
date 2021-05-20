@@ -2,7 +2,6 @@ var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         var paramObj = $.extend(caller.searchView.getData(), data);
-        console.log(paramObj);
         axboot.ajax({
             type: 'GET',
             url: '/api/v1/chk',
@@ -31,6 +30,24 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                 axToast.push('저장 되었습니다');
+            },
+        });
+    },
+    MODAL_OPEN: function (caller, act, data) {
+        if (!data) data = {};
+        axboot.modal.open({
+            width: 900,
+            height: 700,
+            iframe: {
+                param: { id: data.id || '' },
+                url: 'reservation-current-state-content.jsp',
+            },
+            header: { title: '예약 조회' },
+            callback: function (data) {
+                if (data && data.dirty) {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                }
+                this.close();
             },
         });
     },
@@ -86,27 +103,42 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.target = $(document['searchView0']);
         this.target.attr('onsubmit', 'return false;');
         this.filter = $('#filter');
-
         this.rsvNum = $('.js-rsvNum');
-        this.rsvDt = $('.js-rsvDt');
+
+        this.rsvDt = $('.js-rsvDt-start');
+        this.rsvDtEnd = $('.js-rsvDt-end');
+
         this.roomTypCd = $('.js-roomTypCd').on('change', function () {
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
         });
-        this.arrDt = $('.js-arrDt');
-        this.depDt = $('.js-depDt');
-        this.sttusCd = $('.js-sttusCd');
+        this.arrDt = $('.js-arrDt-start');
+        this.arrDtEnd = $('.js-arrDt-end');
+
+        this.depDt = $('.js-depDt-start');
+        this.depDtEnd = $('.js-depDt-end');
     },
     getData: function () {
+        var select_obj = '';
+        $("input[name='sttus']:checked").each(function (index) {
+            if (index != 0) {
+                select_obj += ',';
+            }
+            select_obj += $(this).val();
+        });
+        console.log(select_obj);
         return {
             pageNumber: this.pageNumber || 0,
             pageSize: this.pageSize || 50,
             filter: this.filter.val(),
             rsvNum: this.rsvNum.val(),
             rsvDt: this.rsvDt.val(),
+            rsvDtEnd: this.rsvDtEnd.val(),
             roomTypCd: this.roomTypCd.val(),
             arrDt: this.arrDt.val(),
+            arrDtEnd: this.arrDtEnd.val(),
             depDt: this.depDt.val(),
-            sttusCd: this.sttusCd.val(),
+            depDtEnd: this.depDtEnd.val(),
+            sttusCd: select_obj,
         };
     },
 });
@@ -124,20 +156,59 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                { key: 'rsvNum', label: '예약번호', width: 150, align: 'center', editor: 'text' },
-                { key: 'rsvDt', label: '예약일', width: 150, align: 'center', editor: { type: 'date' } },
-                { key: 'guestNm', label: '투숙객', width: 100, align: 'center', editor: 'text' },
-                { key: 'roomTypCd', label: '객실타입', width: 100, align: 'center', editor: 'text' },
-                { key: 'roomNum', label: '객실번호', width: 100, align: 'center', editor: 'text' },
-                { key: 'arrDt', label: '도착일', width: 150, align: 'center', editor: { type: 'date' } },
-                { key: 'depDt', label: '출발일', width: 150, align: 'center', editor: { type: 'date' } },
-                { key: 'srcCd', label: '예약경로', width: 100, align: 'center', editor: 'text' },
-                { key: 'saleTypCd', label: '판매유형', width: 100, align: 'center', editor: 'text' },
-                { key: 'sttusCd', label: '상태', width: 100, align: 'center', editor: 'text' },
+                { key: 'rsvNum', label: '예약번호', width: 150, align: 'center' },
+                { key: 'rsvDt', label: '예약일', width: 150, align: 'center' },
+                { key: 'guestNm', label: '투숙객', width: 100, align: 'center' },
+                {
+                    key: 'roomTypCd',
+                    label: '객실타입',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_ROOM_TYPE'].map[this.value];
+                    },
+                },
+                { key: 'roomNum', label: '객실번호', width: 100, align: 'center' },
+                { key: 'arrDt', label: '도착일', width: 150, align: 'center' },
+                { key: 'depDt', label: '출발일', width: 150, align: 'center' },
+                {
+                    key: 'srcCd',
+                    label: '예약경로',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_RESERVATION_ROUTE'].map[this.value];
+                    },
+                },
+                {
+                    key: 'saleTypCd',
+                    label: '판매유형',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_SALE_TYPE'].map[this.value];
+                    },
+                },
+                {
+                    key: 'sttusCd',
+                    label: '상태',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_STAY_STATUS'].map[this.value];
+                    },
+                },
             ],
             body: {
                 onClick: function () {
                     this.self.select(this.dindex, { selectedClear: true });
+                },
+                onDBLClick: function () {
+                    ACTIONS.dispatch(ACTIONS.MODAL_OPEN, this.item);
                 },
             },
         });

@@ -1,6 +1,7 @@
 package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
+import edu.axboot.controllers.dto.ChkUpdateRequestDto;
 import edu.axboot.controllers.dto.GuestSaveRequestDto;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.chkmemo.ChkMemo;
@@ -148,7 +149,7 @@ public class Chk extends BaseJpaModel<Long> {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name="RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
-	private List<ChkMemo> memoList;
+	private List<ChkMemo> memoList = new ArrayList<ChkMemo>();
 
 	@ManyToOne
 	@NotFound(action = NotFoundAction.IGNORE)
@@ -220,6 +221,38 @@ public class Chk extends BaseJpaModel<Long> {
 
 
 	public void 메모리스트_생성(List<ChkMemo> memoList) {
-		this.memoList = memoList;
+
+		this.memoList.addAll(memoList);
+	}
+
+	public void 예약정보_수정하기(ChkUpdateRequestDto requestDto) {
+		this.rsvDt = requestDto.getRsvDt();
+		this.sno = requestDto.getSno();
+		this.rsvNum = requestDto.getRsvNum();
+		this.guestId = requestDto.getGuestId();
+		this.guestNm = requestDto.getGuestNm();
+		this.guestNmEng = requestDto.getGuestNmEng();
+		this.guestTel = requestDto.getGuestTel();
+		this.email = requestDto.getEmail();
+		this.langCd = requestDto.getLangCd();
+		this.arrDt= requestDto.getArrDt();
+		this.arrTime = requestDto.getArrTime();
+		this.depDt = requestDto.getDepDt();
+		this.depTime = requestDto.getDepTime();
+		this.nightCnt = requestDto.getNightCnt();
+		this.roomTypCd = requestDto.getRoomTypCd();
+		this.roomNum = requestDto.getRoomNum();
+		this.adultCnt = requestDto.getAdultCnt();
+		this.chldCnt = requestDto.getChldCnt();
+		this.saleTypCd = requestDto.getSaleTypCd();
+		this.sttusCd = requestDto.getSttusCd();
+		this.srcCd = requestDto.getSrcCd();
+		this.brth = requestDto.getBrth();
+		this.gender = requestDto.getGender();
+		this.payCd = requestDto.getPayCd();
+		this.advnYn = requestDto.getAdvnYn();
+		this.salePrc = requestDto.getSalePrc();
+		this.svcPrc = requestDto.getSvcPrc();
+//		this.memoList = requestDto.getMemoList();
 	}
 }

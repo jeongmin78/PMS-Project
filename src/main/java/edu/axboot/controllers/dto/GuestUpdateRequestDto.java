@@ -1,6 +1,5 @@
 package edu.axboot.controllers.dto;
 
-import edu.axboot.domain.guest.Guest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

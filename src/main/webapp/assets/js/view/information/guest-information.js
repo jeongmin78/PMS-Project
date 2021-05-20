@@ -7,7 +7,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.formView01.clear();
-                // caller.gridView02.clear();
                 caller.gridView01.setData(res);
             },
             options: {

@@ -7,23 +7,21 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }
     },
     PAGE_SEARCH: function (caller, act, data) {
-        if (modalParams) {
-            console.log(modalParams);
-            axboot.ajax({
-                type: 'GET',
-                url: '/api/v1/guest',
-                data: modalParams,
-                callback: function (res) {
-                    caller.gridView01.setData(res);
+        if (!modalParams) return false;
+        axboot.ajax({
+            type: 'GET',
+            url: '/api/v1/guest',
+            data: modalParams,
+            callback: function (res) {
+                caller.gridView01.setData(res);
+            },
+            options: {
+                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                onError: function (err) {
+                    console.log(err);
                 },
-                options: {
-                    // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-                    onError: function (err) {
-                        console.log(err);
-                    },
-                },
-            });
-        }
+            },
+        });
     },
     PAGE_SAVE: function (caller, act, data) {
         var saveList = [].concat(caller.gridView01.getData('modified'));
@@ -189,7 +187,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         return $.extend({}, data);
     },
     setData: function (data) {
+        console.log(data);
+
         data = $.extend({}, data);
+        console.log(data);
 
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경

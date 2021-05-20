@@ -40,18 +40,30 @@ public class ChkController extends BaseController {
 
     //    ------------------------------------------------------------
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public ChkResponseDto view(@PathVariable Long id){
+        return chkService.getOneById(id);
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
     public Responses.ListResponse list(RequestParams<Chk> requestParams) {
         List<Chk> list = chkService.getList(requestParams);
         return Responses.ListResponse.of(list);
     }
+
     @RequestMapping(value = "max", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public ChkResponseDto view() {
         return chkService.getOneByDesc();
     }
+
     @RequestMapping(method = {RequestMethod.POST}, produces = APPLICATION_JSON)
     public ApiResponse save(@RequestBody ChkSaveRequestDto requestDto) {
         chkService.saveUsingJpa(requestDto);
+        return ok();
+    }
+    @RequestMapping(value = "/{id}", method = {RequestMethod.POST}, produces = APPLICATION_JSON)
+    public ApiResponse update(@PathVariable Long id, @RequestBody ChkUpdateRequestDto requestDto) {
+        chkService.update(id, requestDto);
         return ok();
     }
 }
