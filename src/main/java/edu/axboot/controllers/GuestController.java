@@ -3,11 +3,15 @@ package edu.axboot.controllers;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
+import com.chequer.axboot.core.utils.DateUtils;
+import com.chequer.axboot.core.utils.ExcelUtils;
 import com.wordnik.swagger.annotations.ApiImplicitParam;
 import com.wordnik.swagger.annotations.ApiImplicitParams;
+import com.wordnik.swagger.annotations.ApiOperation;
 import edu.axboot.controllers.dto.GuestResponseDto;
 import edu.axboot.controllers.dto.GuestSaveRequestDto;
 import edu.axboot.controllers.dto.GuestUpdateRequestDto;
+import edu.axboot.domain.chk.Chk;
 import edu.axboot.utils.MiscUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import edu.axboot.domain.guest.Guest;
 import edu.axboot.domain.guest.GuestService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -55,5 +62,11 @@ public class GuestController extends BaseController {
         return ok();
     }
 
+    @ApiOperation(value = "엑셀다운로드", notes = "/resources/excel/guest.xlsx")
+    @RequestMapping(value = "/exceldown", method = {RequestMethod.POST}, produces = APPLICATION_JSON)
+    public void excelDown(RequestParams<GuestResponseDto> requestParams, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<GuestResponseDto> list = guestService.getList(requestParams);
+        ExcelUtils.renderExcel("/excel/guest.xlsx", list, "guest_" + DateUtils.getYyyyMMddHHmmssWithDate(), request, response);
+    }
 
 }

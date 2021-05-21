@@ -1,11 +1,6 @@
 var modalParams = modalParams || {};
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_CLOSE: function (caller, act, data) {
-        if (parent) {
-            parent.axboot.modal.close(data);
-        }
-    },
     PAGE_SEARCH: function (caller, act, data) {
         if (!modalParams) return false;
         axboot.ajax({
@@ -13,6 +8,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: '/api/v1/guest',
             data: modalParams,
             callback: function (res) {
+                caller.gridView01.clear();
                 caller.gridView01.setData(res);
             },
             options: {
@@ -23,46 +19,74 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             },
         });
     },
-    PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData('modified'));
-        saveList = saveList.concat(caller.gridView01.getData('deleted'));
+    // PAGE_SAVE: function (caller, act, data) {
+    //     var saveList = [].concat(caller.gridView01.getData('modified'));
+    //     saveList = saveList.concat(caller.gridView01.getData('deleted'));
 
-        axboot.ajax({
-            type: 'PUT',
-            url: '/api/v1/guest/',
-            data: JSON.stringify(saveList),
-            callback: function (res) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push('저장 되었습니다');
-            },
-        });
-    },
+    //     axboot.ajax({
+    //         type: 'PUT',
+    //         url: '/api/v1/guest/',
+    //         data: JSON.stringify(saveList),
+    //         callback: function (res) {
+    //             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+    //             axToast.push('저장 되었습니다');
+    //         },
+    //     });
+    // },
     ITEM_CLICK: function (caller, act, data) {
-        var id = (data || {}).id;
-        if (!id) {
-            return false;
-        }
-        axboot.ajax({
-            type: 'GET',
-            url: '/api/v1/guest/' + id,
-            callback: function (res) {
-                caller.formView01.setData(res);
-            },
-        });
+        // var id = (data || {}).id;
+        // if (!id) {
+        //     return false;
+        // }
+        // axboot.ajax({
+        //     type: 'GET',
+        //     url: '/api/v1/guest/' + id,
+        //     callback: function (res) {
+        //         caller.formView01.setData(res);
+        //     },
+        // });
+        caller.formView01.setData(data || {});
+    },
+    // ITEM_SELECT: function (caller, act, data) {
+    //     var item = caller.formView01.getData();
+    //     axboot.ajax({
+    //         type: 'GET',
+    //         url: '/api/v1/guest/' + item.id,
+    //         callback: function (res) {
+    //             if (parent && parent.axboot && parent.axboot.modal) {
+    //                 parent.axboot.modal.callback({ dirty: true, res });
+    //             }
+    //         },
+    //     });
+    // },
+    PAGE_CLOSE: function (caller, act, data) {
+        var modal = fnObj.getModal();
+        if (modal) modal.close();
+        if (opener) window.close();
     },
     ITEM_SELECT: function (caller, act, data) {
-        var item = caller.formView01.getData();
-        axboot.ajax({
-            type: 'GET',
-            url: '/api/v1/guest/' + item.id,
-            callback: function (res) {
-                if (parent && parent.axboot && parent.axboot.modal) {
-                    parent.axboot.modal.callback({ dirty: true, res });
-                }
-            },
-        });
+        // var item = caller.formView01.getData();
+        // axboot.ajax({
+        //     type: 'GET',
+        //     url: '/api/v1/guest/' + item.id,
+        //     callback: function (res) {
+        //         var modal = fnObj.getModal();
+        //         if (modal) modal.callback(res);
+        //         if (opener) window.close();
+        //     },
+        // });
+        if (!data) {
+            var list = caller.gridView01.getData('selected');
+            if (list.length > 0) data = list[0];
+        }
+        if (data) {
+            var modal = fnObj.getModal();
+            if (modal) modal.callback(data);
+            if (opener) window.close();
+        } else {
+            alert('aa');
+        }
     },
-
     ITEM_ADD: function (caller, act, data) {
         caller.gridView01.addRow();
     },
@@ -79,6 +103,17 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }
     },
 });
+fnObj.getModal = function () {
+    var modalView;
+    console.log(modalParams.modalView);
+    if (parent && modalParams.modalView && (modalView = parent[axboot.def.pageFunctionName][modalParams.modalView])) {
+        return modalView;
+    } else if (opener && modalParams.modalView && (modalView = opener[axboot.def.pageFunctionName][modalParams.modalView])) {
+        return modalView;
+    } else if (parent && parent.axboot && parent.axboot.modal) {
+        return parent.axboot.modal;
+    }
+};
 
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {

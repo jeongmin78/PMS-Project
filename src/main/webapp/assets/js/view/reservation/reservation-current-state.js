@@ -19,20 +19,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
         return false;
     },
-    PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData());
-        saveList = saveList.concat(caller.gridView01.getData('deleted'));
-
-        axboot.ajax({
-            type: 'PUT',
-            url: '/api/v1/chk',
-            data: JSON.stringify(saveList),
-            callback: function (res) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push('저장 되었습니다');
-            },
-        });
-    },
     MODAL_OPEN: function (caller, act, data) {
         if (!data) data = {};
         axboot.modal.open({
@@ -51,12 +37,46 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             },
         });
     },
+    STTUS_CHANGE: function (caller, act, data) {
+        var item = caller.gridView01.getData('selected');
+        var sttusCd = $('.js-sttusCd').val();
+        console.log(item[0].id);
+        var ids = [];
+        $.each(item, function (i) {
+            ids.push(item[i].id);
+        });
+        console.log(ids);
+        axboot.ajax({
+            type: 'POST',
+            url: '/api/v1/chk/sttus' + '?ids=' + ids.join(',') + '&sttusCd=' + sttusCd,
+            callback: function (res) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+            },
+            options: {
+                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                onError: function (err) {
+                    console.log(err);
+                },
+            },
+        });
+    },
     ITEM_CLICK: function (caller, act, data) {},
     ITEM_ADD: function (caller, act, data) {
         caller.gridView01.addRow();
     },
     ITEM_DEL: function (caller, act, data) {
         caller.gridView01.delRow('selected');
+    },
+    SEARCH_CLEAR: function (caller, act, data) {
+        caller.searchView.clear();
+    },
+    EXCEL_DOWN: function (caller, act, data) {
+        // var frm = $('[data-ax5grid="grid-view-01"]').get(0);
+        var frm = $('.js-form').get(0);
+        console.log(frm);
+        frm.action = '/api/v1/chk/exceldown';
+        frm.enctype = 'application/x-www-form-urlencoded';
+        frm.submit();
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -89,7 +109,12 @@ fnObj.pageButtonView = axboot.viewExtend({
             save: function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             },
-            excel: function () {},
+            fn1: function () {
+                ACTIONS.dispatch(ACTIONS.SEARCH_CLEAR);
+            },
+            excel: function () {
+                ACTIONS.dispatch(ACTIONS.EXCEL_DOWN);
+            },
         });
     },
 });
@@ -140,6 +165,11 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
             depDtEnd: this.depDtEnd.val(),
             sttusCd: select_obj,
         };
+    },
+    clear: function () {
+        $(document['searchView0']).each(function () {
+            this.reset();
+        });
     },
 });
 
@@ -208,17 +238,19 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     this.self.select(this.dindex, { selectedClear: true });
                 },
                 onDBLClick: function () {
+                    console.log(this.item.id);
                     ACTIONS.dispatch(ACTIONS.MODAL_OPEN, this.item);
                 },
             },
         });
 
         axboot.buttonClick(this, 'data-grid-view-01-btn', {
-            add: function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
-            },
-            delete: function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
+            change: function () {
+                axDialog.confirm({ msg: '선택한 항목의 상태를 변경 하시겠습니까?' }, function () {
+                    if (this.key == 'ok') {
+                        ACTIONS.dispatch(ACTIONS.STTUS_CHANGE);
+                    }
+                });
             },
         });
     },

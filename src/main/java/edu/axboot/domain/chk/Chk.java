@@ -148,20 +148,20 @@ public class Chk extends BaseJpaModel<Long> {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name="RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
+	@JoinColumn(name = "RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
 	private List<ChkMemo> memoList = new ArrayList<ChkMemo>();
 
 	@ManyToOne
 	@NotFound(action = NotFoundAction.IGNORE)
-	@JoinColumn(name="ID", insertable = false, updatable = false)
+	@JoinColumn(name = "ID", insertable = false, updatable = false)
 	private Guest guest;
 
 	@Override
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    @Builder
+	@Builder
 	public Chk(Long id, String rsvDt, Integer sno, String rsvNum, Long guestId, String guestNm,
 			   String guestNmEng, String guestTel, String email, String langCd,
 			   String arrDt, String arrTime, String depDt, String depTime,
@@ -171,52 +171,53 @@ public class Chk extends BaseJpaModel<Long> {
 			   String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
 			   List<ChkMemo> memoList,
 			   boolean isCreated, boolean isModified, boolean isDeleted) {
-    	this.id = id;
-    	this.rsvDt = rsvDt;
-    	this.sno = sno;
-    	this.rsvNum = rsvNum;
-    	this.guestId = guestId;
-    	this.guestNm = guestNm;
-    	this.guestNmEng = guestNmEng;
-    	this.guestTel = guestTel;
-    	this.email = email;
-    	this.langCd = langCd;
-    	this.arrDt= arrDt;
-    	this.arrTime = arrTime;
-    	this.depDt = depDt;
-    	this.depTime = depTime;
-    	this.nightCnt = nightCnt;
-    	this.roomTypCd = roomTypCd;
-    	this.roomNum = roomNum;
-    	this.adultCnt = adultCnt;
-    	this.chldCnt = chldCnt;
-    	this.saleTypCd = saleTypCd;
-    	this.sttusCd = sttusCd;
-    	this.srcCd = srcCd;
-    	this.brth = brth;
-    	this.gender = gender;
-    	this.payCd = payCd;
-    	this.advnYn = advnYn;
-    	this.salePrc = salePrc;
-    	this.svcPrc = svcPrc;
-    	this.memoList = memoList;
+		this.id = id;
+		this.rsvDt = rsvDt;
+		this.sno = sno;
+		this.rsvNum = rsvNum;
+		this.guestId = guestId;
+		this.guestNm = guestNm;
+		this.guestNmEng = guestNmEng;
+		this.guestTel = guestTel;
+		this.email = email;
+		this.langCd = langCd;
+		this.arrDt = arrDt;
+		this.arrTime = arrTime;
+		this.depDt = depDt;
+		this.depTime = depTime;
+		this.nightCnt = nightCnt;
+		this.roomTypCd = roomTypCd;
+		this.roomNum = roomNum;
+		this.adultCnt = adultCnt;
+		this.chldCnt = chldCnt;
+		this.saleTypCd = saleTypCd;
+		this.sttusCd = sttusCd;
+		this.srcCd = srcCd;
+		this.brth = brth;
+		this.gender = gender;
+		this.payCd = payCd;
+		this.advnYn = advnYn;
+		this.salePrc = salePrc;
+		this.svcPrc = svcPrc;
+		this.memoList = memoList;
 		this.__created__ = isCreated;
 		this.__modified__ = isModified;
 		this.__deleted__ = isDeleted;
 	}
+
 	private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
 	public void 예약일_예약번호_예약상태_생성(Long guestId, int sequence) {
 		LocalDate today = LocalDate.now();
 		logger.info("\n===============================" + today);
-		String leftpad = StringUtils.leftPad(String.valueOf(sequence),3,"0");
+		String leftpad = StringUtils.leftPad(String.valueOf(sequence), 3, "0");
 		DateTimeFormatter numbering = DateTimeFormatter.ofPattern("yyyyMMdd");
 
 		this.rsvDt = String.valueOf(today);
-    	this.sno = sequence;
-    	this.rsvNum = "R" + today.format(numbering) + leftpad;
-    	this.sttusCd = "RSV_01";
-    	this.guestId = guestId;
+		this.sno = sequence;
+		this.rsvNum = "R" + today.format(numbering) + leftpad;
+		this.sttusCd = "RSV_01";
+		this.guestId = guestId;
 	}
 
 
@@ -235,7 +236,7 @@ public class Chk extends BaseJpaModel<Long> {
 		this.guestTel = requestDto.getGuestTel();
 		this.email = requestDto.getEmail();
 		this.langCd = requestDto.getLangCd();
-		this.arrDt= requestDto.getArrDt();
+		this.arrDt = requestDto.getArrDt();
 		this.arrTime = requestDto.getArrTime();
 		this.depDt = requestDto.getDepDt();
 		this.depTime = requestDto.getDepTime();
@@ -253,6 +254,9 @@ public class Chk extends BaseJpaModel<Long> {
 		this.advnYn = requestDto.getAdvnYn();
 		this.salePrc = requestDto.getSalePrc();
 		this.svcPrc = requestDto.getSvcPrc();
-//		this.memoList = requestDto.getMemoList();
+	}
+
+	public void 예약상태_수정하기(String sttusCd) {
+		this.sttusCd = sttusCd;
 	}
 }

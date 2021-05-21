@@ -61,6 +61,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     ITEM_DEL: function (caller, act, data) {
         caller.gridView01.delRow('selected');
     },
+    EXCEL_DOWN: function (caller, act, data) {
+        // var frm = $('[data-ax5grid="grid-view-01"]').get(0);
+        var frm = $('.js-form').get(0);
+        console.log(frm);
+        frm.action = '/api/v1/guest/exceldown';
+        frm.enctype = 'application/x-www-form-urlencoded';
+        frm.submit();
+    },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({ msg: LANG('ax.script.form.clearconfirm') }, function () {
             if (this.key == 'ok') {
@@ -102,7 +110,9 @@ fnObj.pageButtonView = axboot.viewExtend({
             save: function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             },
-            excel: function () {},
+            excel: function () {
+                ACTIONS.dispatch(ACTIONS.EXCEL_DOWN);
+            },
         });
     },
 });

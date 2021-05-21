@@ -7,25 +7,17 @@ import edu.axboot.controllers.dto.*;
 import edu.axboot.domain.BaseService;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoRepository;
-import edu.axboot.domain.chkmemo.ChkMemoService;
 import edu.axboot.domain.guest.Guest;
 import edu.axboot.domain.guest.GuestRepository;
 import edu.axboot.domain.guest.GuestService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.CDATA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
-import system.DateTime;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,9 +187,18 @@ public class ChkService extends BaseService<Chk, Long> {
                 }
             }
             chkEntity.메모리스트_생성(memoList);
-
         }
         chkEntity.예약정보_수정하기(requestDto);
         return id;
+    }
+
+    @Transactional
+    public void updateSttus(Long id, String sttusCd) {
+        Chk chkEntity = chkRepository.findOne(id);
+        if (chkEntity == null) {
+            throw new IllegalArgumentException("해당 예약내역이 없습니다. id=" + id);
+        }
+
+        chkEntity.예약상태_수정하기(sttusCd);
     }
 }

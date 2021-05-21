@@ -12,7 +12,10 @@
     </jsp:attribute>
     <jsp:body>
 
-        <ax:page-buttons></ax:page-buttons>
+        <ax:page-buttons>
+            <button type="button" class="btn btn-info" data-page-btn="excel"><i class="cqc-circle-with-excel"></i> 엑셀 다운로드</button>
+            
+        </ax:page-buttons>
 
         <div role="page-header">
             <ax:form name="searchView0">
@@ -128,11 +131,14 @@
                     <div>
                         <div class="" >
                             <!-- 목록 -->
+                        <form name="excelForm" class="js-form" method="post">
+                            
                             <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                                 <div class="left">
                                     <h2><i class="cqc-list"></i> 투숙 이력 </h2>
                                 </div>
                             </div>
+                    </form>
                             <div data-ax5grid="grid-view-02" style="height: 300px;"></div>
                         </div>
                     </div>

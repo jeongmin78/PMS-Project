@@ -15,8 +15,8 @@
         <ax:page-buttons>
             <button type="button" class="btn btn-info" data-page-btn="search"><i class="cqc-magnifier"></i> 검색 </button>
             <button type="button" class="btn btn-info" data-page-btn="fn1"> 검색선택초기화 </button>
+            <button type="button" class="btn btn-info" data-page-btn="excel"><i class="cqc-circle-with-excel"></i> 엑셀 다운로드</button>
         </ax:page-buttons>
-
 
         <div role="page-header">
             <form name="searchView0" id="searchView0" method="post" onsubmit="return false;" style="">
@@ -90,32 +90,26 @@
             </form>
                 <div class="H10"></div>
         </div>
-
-        <ax:split-layout name="ax1" orientation="horizontal">
-            <ax:split-panel width="*" style="">
-
-                <!-- 목록 -->
-                <div class="ax-button-group" data-fit-height-aside="grid-view-01">
-                    <div class="left">
-                        <h2><i class="cqc-list"></i>
-                            프로그램 목록 </h2>
-                    </div>
-                    <div class="right">
-                    <div data-ax-td-wrap="">
-                        <div class="form-inline">
-                            <div class="form-group">
+        <div class="container-fluid">
+            <div class="row">
+                <form name="excelForm" class="js-form" method="post">
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h2><i class="cqc-list"></i>
+                                프로그램 목록 </h2>
+                        </div>
+                        <div class="right">
+                            <div class="form-inline">
                                 <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"/>
                                 <button type="button" class="btn btn-default" data-grid-view-01-btn="change">상태변경</button>
                             </div>
                         </div>
                     </div>
-                    </div>
-                </div>
-                
+                </form>
+            </div>
+            <div class="row">
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
-
-            </ax:split-panel>
-        </ax:split-layout>
-
+            </div>
+        </div>
     </jsp:body>
 </ax:layout>

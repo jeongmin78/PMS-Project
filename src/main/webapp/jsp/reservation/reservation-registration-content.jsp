@@ -7,6 +7,7 @@
     request.setAttribute("guestNm", requestUtils.getString("guestNm"));
     request.setAttribute("guestTel", requestUtils.getString("guestTel"));
     request.setAttribute("email", requestUtils.getString("email"));
+    request.setAttribute("modalView", requestUtils.getString("modalView"));
 %>
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
@@ -15,7 +16,7 @@
 <ax:layout name="modal">
     <jsp:attribute name="script">
         <script>
-            var modalParams = {guestNm: "${guestNm}", guestTel: "${guestTel}",email: "${email}"};
+            var modalParams = {guestNm: "${guestNm}", guestTel: "${guestTel}",email: "${email}", modalView: "${modalView}"};
         </script>
         <script type="text/javascript" src="<c:url value='/assets/js/view/reservation/reservation-registration-content.js' />"></script>
     </jsp:attribute>
