@@ -37,19 +37,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             });
         }
     },
-    ITEM_SELECT: function (caller, act, data) {
-        var item = caller.formView01.getData();
-        item.guestId = data.id;
-        item.guestNm = data.guestNm;
-        item.guestNmEng = data.guestNmEng;
-        item.guestTel = data.guestTel;
-        item.email = data.email;
-        item.gender = data.gender;
-        item.langCd = data.langCd;
-        item.brth = data.brth;
-        console.log(item.guestId, item);
-        caller.formView01.setData(item);
-    },
     ITEM_CLICK: function (caller, act, data) {},
     ITEM_ADD: function (caller, act, data) {
         caller.gridView01.addRow();
@@ -58,23 +45,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         caller.gridView01.delRow('selected');
     },
     MODAL_OPEN: function (caller, act, data) {
-        if (!data) data = {};
-        console.log(data);
-        axboot.modal.open({
-            width: 780,
-            height: 500,
-            iframe: {
-                param: { guestNm: data.guestNm, guestTel: data.guestTel, email: data.email },
-                url: 'reservation-registration-content.jsp',
-            },
-            header: { title: '투숙객조회' },
-            callback: function (data) {
-                if (data && data.dirty) {
-                    ACTIONS.dispatch(ACTIONS.ITEM_SELECT, data.res);
-                }
-                this.close();
-            },
-        });
+        caller.guestModalView.open(data);
     },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({ msg: LANG('ax.script.form.clearconfirm') }, function () {
@@ -95,12 +66,39 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
 });
 
+fnObj.guestModalView = axboot.viewExtend({
+    open: function (data) {
+        var _this = this;
+        if (!data) data = {};
+        this.modal.open({
+            width: 760,
+            height: 600,
+            header: false,
+            iframe: {
+                param: { guestNm: data.guestNm, guestTel: data.guestTel, email: data.email, modalView: 'guestModalView' },
+                url: '/jsp/reservation/reservation-registration-content.jsp',
+            },
+        });
+    },
+    close: function () {
+        this.modal.close();
+    },
+    callback: function (data) {
+        // console.log('@@@@@@@@@@@' + data);
+        fnObj.formView01.setGuest(data);
+        this.modal.close();
+    },
+    initView: function () {
+        this.modal = new ax5.ui.modal();
+    },
+});
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
     this.pageButtonView.initView();
     this.searchView.initView();
     this.gridView01.initView();
     this.formView01.initView();
+    this.guestModalView.initView();
 
     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
 };
@@ -215,6 +213,13 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         }
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+    },
+    setGuest: function (data) {
+        this.model.set('guestId', data.id);
+        this.model.set('guestNm', data.guestNm);
+        this.model.set('guestNmEng', data.guestNmEng);
+        this.model.set('guestTel', data.guestTel);
+        this.model.set('email', data.email);
     },
     validate: function () {
         var item = this.model.get();

@@ -127,6 +127,14 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
         this.target = $(document['searchView0']);
         this.target.attr('onsubmit', 'return false;');
+
+        this.target.find('[data-ax5picker="date"]').ax5picker({
+            direction: 'auto',
+            content: {
+                type: 'date',
+            },
+        });
+
         this.filter = $('#filter');
         this.rsvNum = $('.js-rsvNum');
 

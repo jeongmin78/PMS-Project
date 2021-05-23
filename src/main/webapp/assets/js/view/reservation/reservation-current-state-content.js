@@ -1,11 +1,6 @@
 var modalParams = modalParams || {};
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_CLOSE: function (caller, act, data) {
-        if (parent) {
-            parent.axboot.modal.close(data);
-        }
-    },
     PAGE_SEARCH: function (caller, act, data) {
         console.log(modalParams.id);
         var id = modalParams.id;
@@ -47,22 +42,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             });
         }
     },
-    // ITEM_SELECT: function (caller, act, data) {
-    //     var item = caller.formView01.getData();
-    //     console.log(data);
-    //     return;
-    //     item.guestId = data.id;
-    //     item.guestNm = data.guestNm;
-    //     item.guestNmEng = data.guestNmEng;
-    //     item.guestTel = data.guestTel;
-    //     item.email = data.email;
-    //     item.gender = data.gender;
-    //     item.langCd = data.langCd;
-    //     item.brth = data.brth;
-    //     console.log(item.guestId, item);
-    //     caller.formView01.setData(item);
-    // },
 
+    PAGE_CLOSE: function (caller, act, data) {
+        if (parent) {
+            parent.axboot.modal.close(data);
+        }
+    },
     MODAL_OPEN: function (caller, act, data) {
         caller.guestModalView.open(data);
     },
@@ -104,7 +89,7 @@ fnObj.guestModalView = axboot.viewExtend({
     },
     callback: function (data) {
         // console.log('@@@@@@@@@@@' + data);
-        fnObj.formView01.setData(data);
+        fnObj.formView01.setGuest(data);
         this.modal.close();
     },
     initView: function () {
@@ -219,6 +204,13 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+    },
+    setGuest: function (data) {
+        this.model.set('guestId', data.id);
+        this.model.set('guestNm', data.guestNm);
+        this.model.set('guestNmEng', data.guestNmEng);
+        this.model.set('guestTel', data.guestTel);
+        this.model.set('email', data.email);
     },
     validate: function () {
         var item = this.model.get();
