@@ -30,7 +30,7 @@ public class RoomService extends BaseService<Room, Long> {
     }
 
     public List<Room> gets(RequestParams<Room> requestParams) {
-        return findAll();
+        return roomRepository.findAll();
     }
 
     @Transactional

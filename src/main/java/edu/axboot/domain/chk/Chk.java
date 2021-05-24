@@ -2,11 +2,12 @@ package edu.axboot.domain.chk;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import edu.axboot.controllers.dto.ChkUpdateRequestDto;
-import edu.axboot.controllers.dto.GuestSaveRequestDto;
 import edu.axboot.domain.BaseJpaModel;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.guest.Guest;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -15,19 +16,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
-@SequenceGenerator(
-		name="SNO_SEQ_GENERATOR",
-		sequenceName = "SNO",
-		initialValue = 1,
-		allocationSize = 50)
 @NoArgsConstructor
 @Table(name = "PMS_CHK")
 public class Chk extends BaseJpaModel<Long> {
@@ -149,7 +143,7 @@ public class Chk extends BaseJpaModel<Long> {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "RSV_NUM", referencedColumnName = "RSV_NUM", insertable = false, updatable = false)
-	private List<ChkMemo> memoList = new ArrayList<ChkMemo>();
+	private List<ChkMemo> memoList;
 
 	@ManyToOne
 	@NotFound(action = NotFoundAction.IGNORE)
@@ -168,9 +162,7 @@ public class Chk extends BaseJpaModel<Long> {
 			   Integer nightCnt, String roomTypCd, String roomNum,
 			   Integer adultCnt, Integer chldCnt, String saleTypCd,
 			   String sttusCd, String srcCd, String brth, String gender,
-			   String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
-			   List<ChkMemo> memoList,
-			   boolean isCreated, boolean isModified, boolean isDeleted) {
+			   String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc) {
 		this.id = id;
 		this.rsvDt = rsvDt;
 		this.sno = sno;
@@ -199,28 +191,26 @@ public class Chk extends BaseJpaModel<Long> {
 		this.advnYn = advnYn;
 		this.salePrc = salePrc;
 		this.svcPrc = svcPrc;
-		this.memoList = memoList;
-		this.__created__ = isCreated;
-		this.__modified__ = isModified;
-		this.__deleted__ = isDeleted;
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
-	public void 예약일_예약번호_예약상태_생성(Long guestId, int sequence) {
+	public void 예약일_예약번호_예약상태_생성(Long guestId, int sno) {
 		LocalDate today = LocalDate.now();
 		logger.info("\n===============================" + today);
-		String leftpad = StringUtils.leftPad(String.valueOf(sequence), 3, "0");
+		String leftpad = StringUtils.leftPad(String.valueOf(sno), 3, "0");
 		DateTimeFormatter numbering = DateTimeFormatter.ofPattern("yyyyMMdd");
 
 		this.rsvDt = String.valueOf(today);
-		this.sno = sequence;
+		this.sno = sno;
 		this.rsvNum = "R" + today.format(numbering) + leftpad;
 		this.sttusCd = "RSV_01";
 		this.guestId = guestId;
 	}
 
-
+	public void 투숙객번호갱신(Long guestId) {
+		this.guestId = guestId;
+	}
 	public void 메모리스트_생성(List<ChkMemo> memoList) {
 
 		this.memoList.addAll(memoList);

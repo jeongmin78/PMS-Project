@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -38,12 +39,10 @@ public class ChkSaveRequestDto {
     private String gender;
     private String payCd;
     private String advnYn;
-    private List<ChkMemo> memoList;
     private BigDecimal salePrc;
     private BigDecimal svcPrc;
-    private boolean __created__;
-    private boolean __modified__;
-    private boolean __deleted__;
+
+    private List<ChkMemoSaveRequestDto> memoList = new ArrayList<ChkMemoSaveRequestDto>();
 
     @Builder
     public ChkSaveRequestDto(Long id, String rsvDt, Integer sno, String rsvNum, Long guestId, String guestNm,
@@ -53,8 +52,7 @@ public class ChkSaveRequestDto {
                              Integer adultCnt, Integer chldCnt, String saleTypCd,
                              String sttusCd, String srcCd, String brth, String gender,
                              String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
-                             List<ChkMemo> memoList,
-                             boolean __created__, boolean __modified__, boolean __deleted__) {
+                             List<ChkMemoSaveRequestDto> memoList) {
         this.id = id;
         this.rsvDt = rsvDt;
         this.sno = sno;
@@ -84,9 +82,6 @@ public class ChkSaveRequestDto {
         this.salePrc = salePrc;
         this.svcPrc = svcPrc;
         this.memoList = memoList;
-        this.__created__ = __created__;
-        this.__modified__ = __modified__;
-        this.__deleted__ = __deleted__;
     }
 
     public Chk toEntity() {
@@ -118,10 +113,6 @@ public class ChkSaveRequestDto {
                 .advnYn(advnYn)
                 .salePrc(salePrc)
                 .svcPrc(svcPrc)
-                .memoList(memoList)
-                .isCreated(__created__)
-                .isModified(__modified__)
-                .isDeleted(__deleted__)
                 .build();
     }
 }

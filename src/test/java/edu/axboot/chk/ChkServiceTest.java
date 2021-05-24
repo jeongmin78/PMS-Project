@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +43,33 @@ public class ChkServiceTest {
     public static long testId = 0;
 
     @Test
+    public void test1_예약_등록하기_신규투숙객() {
+        //given
+        ChkSaveRequestDto saveDto = ChkSaveRequestDto.builder()
+                .arrDt("2021-05-20")
+                .depDt("2021-05-21")
+                .nightCnt(1)
+                .roomTypCd("SB")
+                .adultCnt(2)
+                .chldCnt(0)
+                .saleTypCd("01")
+                .srcCd("CMS")
+                .salePrc(new BigDecimal(50000))
+                .advnYn("N")
+                .guestNm("전만호")
+                .guestNmEng("michael")
+                .guestTel("010-7334-2143")
+                .email("okaymano@gmail.com")
+                .build();
+
+        //when
+        testId = chkService.saveUsingJpa(saveDto);
+
+        //then
+        assertTrue(testId > 0);
+    }
+
+    @Test
     public void test1_예약등록_저장하기() {
         //given
         Long id = null;
@@ -51,7 +79,7 @@ public class ChkServiceTest {
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         String memoMan = "B";
         String delYn = "Y";
-        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn, true,false,false);
+        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn, true, false, false);
         List<ChkMemo> memoList = new ArrayList<>();
         memoList.add(chkMemo);
 
@@ -71,7 +99,6 @@ public class ChkServiceTest {
                 .sttusCd("01")
                 .srcCd("01")
                 .advnYn("Y")
-                .memoList(memoList)
                 .build();
 
         //when
@@ -94,10 +121,41 @@ public class ChkServiceTest {
         ChkResponseDto entity = this.chkService.getOneByDesc();
         logger.info("============================== RsvNum : " + entity.getRsvNum());
     }
-//    @Test
-//    public void test4_시리얼_넘버_조회() {
-//
-//        Integer sno = this.chkService.시리얼_넘버();
-//        logger.info("============================== sno : " + sno);
-//    }
+
+    @Test
+    public void test3_예약_숙박메모_등록하기() {
+        //given
+        List<ChkMemoSaveRequestDto> memoList = new ArrayList<ChkMemoSaveRequestDto>();
+        memoList.add(ChkMemoSaveRequestDto.builder()
+                .memoCn("테스트입력")
+                .__created__(true)
+                .__modified__(false)
+                .__deleted__(false)
+                .build());
+
+        ChkSaveRequestDto saveDto = ChkSaveRequestDto.builder()
+                .arrDt("2021-05-21")
+                .depDt("2021-05-22")
+                .nightCnt(1)
+                .roomTypCd("SB")
+                .adultCnt(2)
+                .chldCnt(0)
+                .saleTypCd("01")
+                .srcCd("CMS")
+                .salePrc(new BigDecimal(50000))
+                .advnYn("N")
+                .guestId(1L)
+                .guestNm("전천호")
+                .guestNmEng("okaymano")
+                .guestTel("010-1111-2222")
+                .email("manojun@naver.com")
+                .memoList(memoList)
+                .build();
+
+        //when
+        testId = chkService.saveUsingJpa(saveDto);
+
+        //then
+        assertTrue(testId > 0);
+    }
 }

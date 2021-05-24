@@ -156,7 +156,18 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 { key: 'guestNm', label: '이름', width: 100, align: 'center' },
                 { key: 'guestTel', label: '연락처', width: 120, align: 'center' },
                 { key: 'email', label: '이메일', width: 120, align: 'center' },
-                { key: 'gender', label: '성별', width: 70, align: 'center' },
+                // { key: 'gender', label: '성별', width: 70, align: 'center' },
+                {
+                    key: 'gender',
+                    label: '성별',
+                    width: 70,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        if (this.value == 'F') return '여';
+                        else if (this.value == 'M') return '남';
+                    },
+                },
                 { key: 'brth', label: '생년월일', width: 100, align: 'center' },
                 {
                     key: 'langCd',

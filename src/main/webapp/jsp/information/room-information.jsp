@@ -35,7 +35,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            프로그램 목록 </h2>
+                            객실 목록 </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>

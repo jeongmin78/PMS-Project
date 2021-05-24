@@ -108,13 +108,20 @@
                                 <div data-ax-td style="width:60%">
                                     <div data-ax-td-label style="width:100px">생년월일</div>
                                     <div data-ax-td-wrap>
-                                        <input type="date" name="brth" data-ax-path="brth" class="form-control">
-                                    </div>
-                                    <div data-ax-td-wrap>
-                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="남">
-                                        <label for="male">남</label>
-                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="여">
-                                        <label for="female">여</label>
+                                        <div class="form-inline" >
+                                            <div class="input-group" data-ax5picker="date" style="width:100px">
+                                                <input type="text" data-ax-Path="brth" class="form-control js-brth" placeholder="yyyy-mm-dd">
+                                                <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="male">
+                                                    <input type="radio" id="male" name="gender" data-ax-Path="gender" value="M">남
+                                                </label>
+                                                <label for="female">
+                                                    <input type="radio" id="female" name="gender" data-ax-Path="gender" value="F">여
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

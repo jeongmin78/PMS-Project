@@ -37,7 +37,6 @@ public class ChkUpdateRequestDto {
     private String gender;
     private String payCd;
     private String advnYn;
-    private List<ChkMemo> memoList;
     private BigDecimal salePrc;
     private BigDecimal svcPrc;
 
@@ -48,8 +47,7 @@ public class ChkUpdateRequestDto {
                              Integer nightCnt, String roomTypCd, String roomNum,
                              Integer adultCnt, Integer chldCnt, String saleTypCd,
                              String sttusCd, String srcCd, String brth, String gender,
-                             String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc,
-                             List<ChkMemo> memoList) {
+                             String payCd, String advnYn, BigDecimal salePrc, BigDecimal svcPrc) {
         this.rsvDt = rsvDt;
         this.sno = sno;
         this.rsvNum = rsvNum;
@@ -77,7 +75,6 @@ public class ChkUpdateRequestDto {
         this.advnYn = advnYn;
         this.salePrc = salePrc;
         this.svcPrc = svcPrc;
-        this.memoList = memoList;
     }
 
     public Chk toEntity() {
@@ -108,7 +105,6 @@ public class ChkUpdateRequestDto {
                 .advnYn(advnYn)
                 .salePrc(salePrc)
                 .svcPrc(svcPrc)
-                .memoList(memoList)
                 .build();
     }
 }

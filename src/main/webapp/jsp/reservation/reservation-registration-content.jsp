@@ -75,13 +75,27 @@
                                 <div data-ax-td style="width:60%">
                                     <div data-ax-td-label style="width:100px">생년월일</div>
                                     <div data-ax-td-wrap>
-                                        <input type="date" name="brth" data-ax-path="brth" class="form-control">
+                                        <div class="form-inline">
+                                            <div class="input-group" data-ax5picker="date">
+                                                <input type="text" data-ax-Path="brth" class="form-control js-brth" placeholder="yyyy-mm-dd">
+                                                <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="male">
+                                                    <input type="radio" id="male" name="gender" data-ax-Path="gender" value="M">남
+                                                </label>
+                                                <label for="female">
+                                                    <input type="radio" id="female" name="gender" data-ax-Path="gender" value="F">여
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- <input type="date" name="brth" data-ax-path="brth" class="form-control">
                                     </div>
                                     <div data-ax-td-wrap>
-                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="남">
-                                        <label for="male">남</label>
-                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="여">
-                                        <label for="female">여</label>
+                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="M">
+                                            <label for="male">남</label>
+                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="F">
+                                            <label for="female">여</label> -->
                                     </div>
                                 </div>
                             </div>
@@ -98,8 +112,8 @@
                 </div>
             </ax:split-panel>
             <div class="button-warp"  style="text-align: center; padding-top: 10px;">
-                <button type="button" class="btn btn-info" data-page-btn="search"> 선택 </button>
-                <button type="button" class="btn btn-info" data-page-btn="fn1"> 닫기 </button>
+                <button type="button" class="btn btn-info" data-page-btn="choice"> 선택 </button>
+                <button type="button" class="btn btn-info" data-page-btn="close"> 닫기 </button>
             </div>
     </jsp:body>
 </ax:layout>

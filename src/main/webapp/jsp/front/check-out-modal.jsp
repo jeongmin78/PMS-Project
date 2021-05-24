@@ -15,7 +15,7 @@
         <script>
             var modalParams = {id : "${id}"};
         </script>
-        <script type="text/javascript" src="<c:url value='/assets/js/view/reservation/reservation-current-state-content.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/front/check-out-modal.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 
@@ -25,20 +25,11 @@
                     <form name="form" class="js-form">
                         <div class="left">
                             <div class="form-inline">
-                                <!-- <div class="js-rsvNum"></div> -->
                                 <div class="form-inline">
                                     <span class="js-rsvNum"></span>
-                                    <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"  /> 
+                                    <input type="text" data-ax-path="roomNum" class="form-control js-roomNum" style="width:100px"/>
                                 </div>
 
-                            </div>
-                        </div>
-                        <div data-ax-td="" id="" class="" style=";width:200px">
-                            <div data-ax-td-wrap="">
-                                <!-- <div class="form-inline">
-                                    <div class="js-rsvNum"></div>
-                                    <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"  />
-                                </div> -->
                             </div>
                         </div>
                         <div data-ax-tbl class="ax-form-tbl">
@@ -227,7 +218,6 @@
                 </div>
             </ax:split-panel>
             <div class="button-warp"  style="text-align: center; padding-top: 10px;">
-                <button type="button" class="btn btn-info" data-page-btn="save"> 저장 </button>
                 <button type="button" class="btn btn-info" data-page-btn="close"> 닫기 </button>
             </div>
     </jsp:body>

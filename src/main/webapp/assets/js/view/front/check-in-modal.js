@@ -1,23 +1,24 @@
+var modalParams = modalParams || {};
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-        if (data == 'save') {
-            axboot.ajax({
-                type: 'GET',
-                url: '/api/v1/chk/max',
-                callback: function (res) {
-                    caller.formView01.clear();
-                    caller.formView01.setData(res);
+        var id = modalParams.id;
+        if (!id) return false;
+        axboot.ajax({
+            type: 'GET',
+            url: '/api/v1/chk/' + id,
+            callback: function (res) {
+                console.log(res.memoList);
+                caller.formView01.setData(res);
+                caller.gridView01.setData(res.memoList);
+            },
+            options: {
+                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                onError: function (err) {
+                    console.log(err);
                 },
-                options: {
-                    // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-                    onError: function (err) {
-                        console.log(err);
-                    },
-                },
-            });
-        }
-        return false;
+            },
+        });
     },
     PAGE_SAVE: function (caller, act, data) {
         if (caller.formView01.validate()) {
@@ -25,17 +26,33 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             var memos = [].concat(caller.gridView01.getData());
             memos = memos.concat(caller.gridView01.getData('deleted'));
             item.memoList = memos;
-            console.log(item); //return false;
+            item.sttusCd = 'CHK_01';
+            console.log(memos);
             axboot.ajax({
                 type: 'POST',
-                url: '/api/v1/chk',
+                url: '/api/v1/chk/' + item.id,
                 data: JSON.stringify(item),
                 callback: function (res) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, 'save');
-                    axToast.push('저장 되었습니다');
+                    axDialog.alert('저장 되었습니다', function () {
+                        if (parent && parent.axboot && parent.axboot.modal) {
+                            parent.axboot.modal.callback({ dirty: true });
+                        }
+                    });
                 },
             });
         }
+    },
+
+    PAGE_CLOSE: function (caller, act, data) {
+        if (parent) {
+            parent.axboot.modal.close(data);
+        }
+    },
+    MODAL_OPEN: function (caller, act, data) {
+        caller.guestModalView.open(data);
+    },
+    ROOM_MODAL_OPEN: function (caller, act, data) {
+        caller.roomModalView.open(data);
     },
     ITEM_CLICK: function (caller, act, data) {},
     ITEM_ADD: function (caller, act, data) {
@@ -44,17 +61,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     ITEM_DEL: function (caller, act, data) {
         caller.gridView01.delRow('selected');
     },
-    MODAL_OPEN: function (caller, act, data) {
-        caller.guestModalView.open(data);
-    },
-    FORM_CLEAR: function (caller, act, data) {
-        axDialog.confirm({ msg: LANG('ax.script.form.clearconfirm') }, function () {
-            if (this.key == 'ok') {
-                caller.formView01.clear();
-                $('[data-ax-path="arrDt"]').focus();
-            }
-        });
-    },
+
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
         if (result != 'error') {
@@ -68,6 +75,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
 fnObj.guestModalView = axboot.viewExtend({
     open: function (data) {
+        console.log(data);
+
         var _this = this;
         if (!data) data = {};
         this.modal.open({
@@ -92,15 +101,47 @@ fnObj.guestModalView = axboot.viewExtend({
         this.modal = new ax5.ui.modal();
     },
 });
+fnObj.roomModalView = axboot.viewExtend({
+    open: function (data) {
+        console.log('roomModalView: ' + data);
+        var _this = this;
+        if (!data) data = {};
+        this.modal.open({
+            width: 760,
+            height: 500,
+            header: false,
+            iframe: {
+                // $('.js-roomTypCd').val()
+                param: { roomTypCd: data.roomTypCd, modalView: 'roomModalView' },
+                url: '/jsp/front/room-select-modal.jsp',
+            },
+        });
+    },
+    close: function () {
+        this.modal.close();
+    },
+    callback: function (data) {
+        // console.log('@@@@@@@@@@@' + data);
+        fnObj.formView01.setRoomNum(data);
+        this.modal.close();
+    },
+    initView: function () {
+        this.modal = new ax5.ui.modal();
+    },
+});
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
-    this.pageButtonView.initView();
-    this.searchView.initView();
-    this.gridView01.initView();
-    this.formView01.initView();
-    this.guestModalView.initView();
+    var _this = this;
 
-    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+    this.pageButtonView.initView();
+    this.formView01.initView();
+    this.gridView01.initView();
+    this.guestModalView.initView();
+    this.roomModalView.initView();
+
+    if (modalParams.id) {
+        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+    }
 };
 
 fnObj.pageResize = function () {};
@@ -108,38 +149,25 @@ fnObj.pageResize = function () {};
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, 'data-page-btn', {
-            // search: function () {
-            //     ACTIONS.dispatch(ACTIONS.MODAL_OPEN);
-            // },
             save: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+                if ($('.js-roomNum').val()) {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+                } else {
+                    axDialog.confirm({ msg: '객실번호 선택은 필수입니다.' }, function () {
+                        if (this.key == 'ok') {
+                            $('.js-roomNum').focus();
+                        }
+                    });
+                }
             },
-            reload: function () {
-                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+            close: function () {
+                ACTIONS.dispatch(ACTIONS.PAGE_CLOSE);
             },
         });
     },
 });
 
 //== view 시작
-/**
- * searchView
- */
-fnObj.searchView = axboot.viewExtend(axboot.searchView, {
-    initView: function () {
-        this.target = $(document['searchView0']);
-        this.target.attr('onsubmit', 'return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);');
-        this.filter = $('#filter');
-    },
-    getData: function () {
-        return {
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
-            filter: this.filter.val(),
-        };
-    },
-});
-
 /**
  * gridView
  */
@@ -189,7 +217,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         this.target.addRow({ memoDtti: moment().format('yyyy-MM-DD*HH:mm:ss'), __created__: true }, 'last');
     },
 });
-
 /**
  * formView
  */
@@ -200,9 +227,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getData: function () {
         var _this = this;
         var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
-        if ($('.js-advnYn').is(':checked') == true) {
+        if ($('input:checkbox[name=advnYn]').is(':checked') == true) {
             data.advnYn = 'Y';
         } else data.advnYn = 'N';
+
         data.gender = $(':input:radio[name=gender]:checked').val();
         return $.extend({}, data);
     },
@@ -211,6 +239,11 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         if (data.rsvNum) {
             $('.js-rsvNum').text('예약번호: ' + data.rsvNum);
         }
+        if (data.advnYn == 'Y') {
+            $('input:checkbox[name=advnYn]').prop('checked', true);
+        }
+        console.log('********' + data.sttusCd);
+
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
@@ -221,11 +254,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.set('guestTel', data.guestTel);
         this.model.set('email', data.email);
         this.model.set('brth', data.brth);
-        if (data.gender == 'F') {
-            $(":input:radio[name=gender]:radio[value='F']").prop('checked', true);
-        } else if (data.gender == 'M') {
-            $(":input:radio[name=gender]:radio[value='M']").prop('checked', true);
+        if (data.gender == '여') {
+            $(":input:radio[name=gender]:radio[value='여']").prop('checked', true);
+        } else if (data.gender == '남') {
+            $(":input:radio[name=gender]:radio[value='남']").prop('checked', true);
         }
+    },
+    setRoomNum: function (data) {
+        this.model.set('roomNum', data.roomNum);
     },
     validate: function () {
         var item = this.model.get();
@@ -292,13 +328,9 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     initView: function () {
         var _this = this; // fnObj.formView01
+
         _this.target = $('.js-form');
-        _this.target.find('[data-ax5picker="date"]').ax5picker({
-            direction: 'auto',
-            content: {
-                type: 'date',
-            },
-        });
+
         this.model = new ax5.ui.binder();
         this.model.setModel({}, this.target);
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
@@ -314,9 +346,13 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         $('.js-arrDt').on('change', function () {
             _this.calcNigth($(this).val());
         });
+
         axboot.buttonClick(this, 'data-grid-view-01-btn', {
-            modalsearch: function () {
+            guestSearch: function () {
                 ACTIONS.dispatch(ACTIONS.MODAL_OPEN, this.getData());
+            },
+            roomSearch: function () {
+                ACTIONS.dispatch(ACTIONS.ROOM_MODAL_OPEN, this.getData());
             },
         });
     },

@@ -33,14 +33,9 @@ public class GuestController extends BaseController {
     private final GuestService guestService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="guestNm", value="이름", dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name="guestTel", value="전화번호", dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name="email", value="이메일", dataType = "String", paramType = "query"),
-    })
-    public Responses.PageResponse list(RequestParams<GuestResponseDto> requestParams) {
-        List<GuestResponseDto> list = guestService.getList(requestParams);
-        Page<GuestResponseDto> page = MiscUtils.toPage(list, requestParams.getPageable());
+    public Responses.PageResponse list(RequestParams<Guest> requestParams) {
+        List<Guest> list = guestService.getList(requestParams);
+        Page<Guest> page = MiscUtils.toPage(list, requestParams.getPageable());
         return Responses.PageResponse.of(page);
     }
 
@@ -64,8 +59,8 @@ public class GuestController extends BaseController {
 
     @ApiOperation(value = "엑셀다운로드", notes = "/resources/excel/guest.xlsx")
     @RequestMapping(value = "/exceldown", method = {RequestMethod.POST}, produces = APPLICATION_JSON)
-    public void excelDown(RequestParams<GuestResponseDto> requestParams, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<GuestResponseDto> list = guestService.getList(requestParams);
+    public void excelDown(RequestParams<Guest> requestParams, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<Guest> list = guestService.getList(requestParams);
         ExcelUtils.renderExcel("/excel/guest.xlsx", list, "guest_" + DateUtils.getYyyyMMddHHmmssWithDate(), request, response);
     }
 

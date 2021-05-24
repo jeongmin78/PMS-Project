@@ -127,7 +127,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 {
                     key: 'roomTypCd',
                     label: '객실타입',
-                    width: 100,
+                    width: 150,
                     align: 'center',
                     formatter: function () {
                         if (!this.value) return '';
@@ -245,7 +245,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 {
                     key: 'svcSttusCd',
                     label: '서비스상태',
-                    width: 100,
+                    width: 150,
                     align: 'center',
                     formatter: function () {
                         if (!this.value) return '';

@@ -25,7 +25,11 @@
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">도착일</div>
                             <div data-ax-td-wrap>
-                                <input type="date" data-ax-path="arrDt" title="도착일" class="form-control js-arrDt" data-ax-validate="required"/>
+                                <div class="input-group" data-ax5picker="date">
+                                    <input type="text" data-ax-path="arrDt" class="form-control js-arrDt" placeholder="yyyy-mm-dd">
+                                    <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                                </div>
+                                <!-- <input type="date" data-ax-path="arrDt" title="도착일" class="form-control js-arrDt" data-ax-validate="required"/> -->
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
@@ -37,7 +41,11 @@
                         <div data-ax-td style="width:30%">
                             <div data-ax-td-label style="width:120px;">출발일</div>
                             <div data-ax-td-wrap>
-                                <input type="date" data-ax-path="depDt" title="출발일" class="form-control js-depDt" data-ax-validate="required"/>
+                                <div class="input-group" data-ax5picker="date">
+                                    <input type="text" data-ax-path="depDt" class="form-control js-depDt" placeholder="yyyy-mm-dd">
+                                    <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                                </div>
+                                <!-- <input type="date" data-ax-path="depDt" title="출발일" class="form-control js-depDt" data-ax-validate="required"/> -->
                             </div>
                         </div>
                     </div>
@@ -65,7 +73,7 @@
                     <div data-ax-tr>
                         <div data-ax-td style="width:100%">
                             <div data-ax-td-label style="width:120px;">투숙객<br>
-                                <button type="button" class="btn btn-default" data-grid-view-01-btn="modalsearch"><i class="cqc-circle-with-plus"></i> 검색</button>
+                                <button type="button" class="btn btn-default" data-grid-view-01-btn="modalsearch"><i class="cqc-magnifier"></i> 검색</button>
                             </div>
                             <div data-ax-td-wrap>
                                 <div data-ax-tr>
@@ -108,17 +116,23 @@
                                     <div data-ax-td style="width:50%">
                                         <div data-ax-td-label style="width:120px; background-color: #fff; background-image: none;">생년월일</div>
                                         <div data-ax-td-wrap>
-                                            <input type="date" data-ax-Path="brth" class="form-control"  />
-                                        </div>
-                                        <div data-ax-td-wrap>
-                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="남">
-                                        <label for="male">남</label>
-                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="여">
-                                        <label for="female">여</label>
+                                            <div class="form-inline">
+                                                <div class="input-group" data-ax5picker="date">
+                                                    <input type="text" data-ax-Path="brth" class="form-control js-brth" placeholder="yyyy-mm-dd">
+                                                    <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="male">
+                                                        <input type="radio" id="male" name="gender" data-ax-Path="gender" value="M">남
+                                                    </label>
+                                                    <label for="female">
+                                                        <input type="radio" id="female" name="gender" data-ax-Path="gender" value="F">여
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>                                                                      
                                 </div>                                
-                           
                             </div>
                         </div>
                     </div>

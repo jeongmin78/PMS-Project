@@ -22,7 +22,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     MODAL_OPEN: function (caller, act, data) {
         if (!data) data = {};
         axboot.modal.open({
-            width: 900,
+            width: 1000,
             height: 700,
             iframe: {
                 param: { id: data.id || '' },
@@ -39,6 +39,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     STTUS_CHANGE: function (caller, act, data) {
         var item = caller.gridView01.getData('selected');
+
         var sttusCd = $('.js-sttusCd').val();
         console.log(item[0].id);
         var ids = [];
@@ -69,6 +70,9 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     SEARCH_CLEAR: function (caller, act, data) {
         caller.searchView.clear();
+        $('input[name="sttus"]').each(function () {
+            $(this).prop('checked', false).attr('disabled', false);
+        });
     },
     EXCEL_DOWN: function (caller, act, data) {
         // var frm = $('[data-ax5grid="grid-view-01"]').get(0);
@@ -109,7 +113,7 @@ fnObj.pageButtonView = axboot.viewExtend({
             save: function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             },
-            fn1: function () {
+            refresh: function () {
                 ACTIONS.dispatch(ACTIONS.SEARCH_CLEAR);
             },
             excel: function () {
@@ -149,6 +153,19 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
 
         this.depDt = $('.js-depDt-start');
         this.depDtEnd = $('.js-depDt-end');
+
+        $("input[name='sttusAll']").change(function () {
+            var checked = $(this).prop('checked'); // checked 상태 (true, false)
+            if (checked) {
+                $('input[name="sttus"]').each(function () {
+                    $(this).prop('checked', true).attr('disabled', true);
+                });
+            } else {
+                $('input[name="sttus"]').each(function () {
+                    $(this).prop('checked', false).attr('disabled', false);
+                });
+            }
+        });
     },
     getData: function () {
         var select_obj = '';
@@ -194,8 +211,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                { key: 'rsvNum', label: '예약번호', width: 150, align: 'center' },
-                { key: 'rsvDt', label: '예약일', width: 150, align: 'center' },
+                { key: 'rsvNum', label: '예약번호', width: 120, align: 'center' },
+                { key: 'rsvDt', label: '예약일', width: 100, align: 'center' },
                 { key: 'guestNm', label: '투숙객', width: 100, align: 'center' },
                 {
                     key: 'roomTypCd',
@@ -208,8 +225,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     },
                 },
                 { key: 'roomNum', label: '객실번호', width: 100, align: 'center' },
-                { key: 'arrDt', label: '도착일', width: 150, align: 'center' },
-                { key: 'depDt', label: '출발일', width: 150, align: 'center' },
+                { key: 'arrDt', label: '도착일', width: 100, align: 'center' },
+                { key: 'depDt', label: '출발일', width: 100, align: 'center' },
                 {
                     key: 'srcCd',
                     label: '예약경로',
@@ -254,11 +271,16 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
 
         axboot.buttonClick(this, 'data-grid-view-01-btn', {
             change: function () {
-                axDialog.confirm({ msg: '선택한 항목의 상태를 변경 하시겠습니까?' }, function () {
-                    if (this.key == 'ok') {
-                        ACTIONS.dispatch(ACTIONS.STTUS_CHANGE);
-                    }
-                });
+                var item = fnObj.gridView01.getData('selected');
+                if (item.length) {
+                    axDialog.confirm({ msg: '선택한 항목의 상태를 변경 하시겠습니까?' }, function () {
+                        if (this.key == 'ok') {
+                            ACTIONS.dispatch(ACTIONS.STTUS_CHANGE);
+                        }
+                    });
+                } else {
+                    axDialog.alert({ msg: '선택한 항목이 없습니다' }, function () {});
+                }
             },
         });
     },

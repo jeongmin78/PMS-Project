@@ -99,7 +99,11 @@ public class ChkMemo extends BaseJpaModel<Long> {
 		this.delYn = "N";
 	}
 
-	public void 메모_delYn_변경() {
-    	this.delYn = "Y";
+	public void update(String memoCn) {
+		this.memoCn = memoCn;
+	}
+
+	public void delete() {
+		this.delYn = "Y";
 	}
 }

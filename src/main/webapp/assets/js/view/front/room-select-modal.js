@@ -2,15 +2,13 @@ var modalParams = modalParams || {};
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-        var paramObj = $.extend(caller.searchView.getData(), modalParams);
         if (!modalParams) return false;
-        console.log(paramObj);
+        console.log(modalParams);
         axboot.ajax({
             type: 'GET',
-            url: '/api/v1/guest',
-            data: paramObj,
+            url: '/api/v1/room/select',
+            data: modalParams,
             callback: function (res) {
-                console.log(res);
                 caller.gridView01.clear();
                 caller.gridView01.setData(res);
             },
@@ -22,9 +20,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             },
         });
     },
-    ITEM_CLICK: function (caller, act, data) {
-        caller.formView01.setData(data || {});
-    },
+    ITEM_CLICK: function (caller, act, data) {},
+
     PAGE_CLOSE: function (caller, act, data) {
         var modal = fnObj.getModal();
         if (modal) modal.close();
@@ -76,7 +73,6 @@ fnObj.pageStart = function () {
     this.pageButtonView.initView();
     this.searchView.initView();
     this.gridView01.initView();
-    this.formView01.initView();
 
     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
 };
@@ -103,7 +99,7 @@ fnObj.pageButtonView = axboot.viewExtend({
 fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
         this.target = $(document['searchView0']);
-        this.target.attr('onsubmit', 'return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);');
+        this.target.attr('onsubmit', 'return false;');
     },
     getData: function () {
         return {
@@ -120,43 +116,75 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         this.target = axboot.gridBuilder({
             showRowSelector: true,
             frozenColumnIndex: 0,
-            multipleSelect: true,
+            multipleSelect: false,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                { key: 'guestNm', label: '이름', width: 160, align: 'center', editor: 'text' },
-                { key: 'guestTel', label: '연락처', width: 200, align: 'center', editor: 'text' },
-                { key: 'email', label: '이메일', width: 100, align: 'center', editor: 'text' },
+                { key: 'roomNum', label: '객실번호', width: 100, align: 'center', editor: 'text' },
                 {
-                    key: 'gender',
-                    label: '성별',
+                    key: 'roomTypCd',
+                    label: '객실타입',
                     width: 100,
                     align: 'center',
-                    editor: 'text',
                     formatter: function () {
                         if (!this.value) return '';
-                        if (this.value == 'F') return '여';
-                        else if (this.value == 'M') return '남';
+                        return parent.COMMON_CODE['PMS_ROOM_TYPE'].map[this.value];
                     },
                 },
-                { key: 'brth', label: '생년월일', width: 100, align: 'center', editor: 'text' },
-                { key: 'langCd', label: '언어', width: 100, align: 'center', editor: 'text' },
-                { key: 'rmk', label: '비고', width: 100, align: 'center', editor: 'text' },
+                {
+                    key: 'dndYn',
+                    label: 'DND 여부',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['DND_YN'].map[this.value];
+                    },
+                },
+                {
+                    key: 'ebYn',
+                    label: 'ExBed 여부',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['EB_YN'].map[this.value];
+                    },
+                },
+                {
+                    key: 'roomSttusCd',
+                    label: '객실상태',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_ROOM_STATUS'].map[this.value];
+                    },
+                },
+                {
+                    key: 'clnSttusCd',
+                    label: '청소상태',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_CLEAN_STATUS'].map[this.value];
+                    },
+                },
+                {
+                    key: 'svcSttusCd',
+                    label: '서비스상태',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        if (!this.value) return '';
+                        return parent.COMMON_CODE['PMS_SVC_STATUS'].map[this.value];
+                    },
+                },
             ],
-            columnsDefs: [{ targets: [0], visible: false }],
             body: {
                 onClick: function () {
                     this.self.select(this.dindex, { selectedClear: true });
-                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 },
-            },
-        });
-
-        axboot.buttonClick(this, 'data-grid-view-01-btn', {
-            add: function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
-            },
-            delete: function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             },
         });
     },

@@ -211,6 +211,12 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.set('guestNmEng', data.guestNmEng);
         this.model.set('guestTel', data.guestTel);
         this.model.set('email', data.email);
+        this.model.set('brth', data.brth);
+        if (data.gender == '여') {
+            $(":input:radio[name=gender]:radio[value='여']").prop('checked', true);
+        } else if (data.gender == '남') {
+            $(":input:radio[name=gender]:radio[value='남']").prop('checked', true);
+        }
     },
     validate: function () {
         var item = this.model.get();
@@ -297,8 +303,8 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         });
 
         axboot.buttonClick(this, 'data-grid-view-01-btn', {
-            modalsearch: function () {
-                ACTIONS.dispatch(ACTIONS.MODAL_OPEN, this.modal);
+            guestSearch: function () {
+                ACTIONS.dispatch(ACTIONS.MODAL_OPEN, this.getData());
             },
         });
     },

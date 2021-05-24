@@ -28,10 +28,11 @@ public class GuestService extends BaseService<Guest, Long> {
         return findAll();
     }
 
-    public List<GuestResponseDto> getList(RequestParams<GuestResponseDto> requestParams) {
+    public List<Guest> getList(RequestParams<Guest> requestParams) {
         String guestNm = requestParams.getString("guestNm","");
         String guestTel = requestParams.getString("guestTel","");
         String email = requestParams.getString("email", "");
+
         BooleanBuilder builder = new BooleanBuilder();
 
         if (isNotEmpty(guestNm)) {
@@ -43,15 +44,13 @@ public class GuestService extends BaseService<Guest, Long> {
         if (isNotEmpty(email)) {
             builder.and(qGuest.email.contains(email));
         }
-        List<Guest> entitis = select()
+        List<Guest> list = select()
                 .from(qGuest)
                 .where(builder)
                 .orderBy(qGuest.guestNm.asc())
                 .fetch();
 
-        return entitis.stream()
-                .map(GuestResponseDto::new)
-                .collect(Collectors.toList());
+        return list;
     }
 
     public GuestResponseDto getOneById(Long id) {
