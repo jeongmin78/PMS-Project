@@ -23,41 +23,39 @@
             <ax:split-panel width="*" style="padding-top: 5px;">
                 <div role="page-header">
                     <form name="form" class="js-form">
-                        <div class="left">
-                            <div class="form-inline">
-                                <!-- <div class="js-rsvNum"></div> -->
+                        <div class="ax-button-group" data-fit-height-aside="grid-view-01">
+                            <div class="left" style="width: 300px;">
                                 <div class="form-inline">
-                                    <span class="js-rsvNum"></span>
-                                    <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"  /> 
-                                </div>
+                                    <div class="form-group">
+                                        <span class='js-rsvNum' style="font-weight:bold">예약번호 : </span>
+                                    </div>
+                                    <div class="form-group">
+                                        <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"  /> 
+                                    </div>
+                                </div>                                                                
+                            </div>
+                            <div class="right">
+                                <span style="color:red;">*</span>표시는 필수 항목 체크 부분
+                            </div>
+                        </div>
 
-                            </div>
-                        </div>
-                        <div data-ax-td="" id="" class="" style=";width:200px">
-                            <div data-ax-td-wrap="">
-                                <!-- <div class="form-inline">
-                                    <div class="js-rsvNum"></div>
-                                    <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"  />
-                                </div> -->
-                            </div>
-                        </div>
                         <div data-ax-tbl class="ax-form-tbl">
         
                             <div data-ax-tr>
                                 <div data-ax-td style="width:30%">
-                                    <div data-ax-td-label style="width:120px;">도착일</div>
+                                    <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>도착일</div>
                                     <div data-ax-td-wrap>
                                         <input type="date" data-ax-path="arrDt" title="도착일" class="form-control js-arrDt" data-ax-validate="required"/>
                                     </div>
                                 </div>
                                 <div data-ax-td style="width:30%">
-                                    <div data-ax-td-label style="width:120px;">숙박수</div>
+                                    <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>숙박수</div>
                                     <div data-ax-td-wrap>
                                         <input type="text" data-ax-path="nightCnt" title="숙박일" class="form-control js-nightCnt" data-ax-validate="required"/>
                                     </div>
                                 </div>
                                 <div data-ax-td style="width:30%">
-                                    <div data-ax-td-label style="width:120px;">출발일</div>
+                                    <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>출발일</div>
                                     <div data-ax-td-wrap>
                                         <input type="date" data-ax-path="depDt" title="출발일" class="form-control js-depDt" data-ax-validate="required"/>
                                     </div>
@@ -65,19 +63,19 @@
                             </div>
                             <div data-ax-tr>
                                 <div data-ax-td style="width:30%">
-                                    <div data-ax-td-label style="width:120px;">객실타입</div>
+                                    <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>객실타입</div>
                                     <div data-ax-td-wrap>
                                         <ax:common-code groupCd="PMS_ROOM_TYPE" dataPath="roomTypCd" clazz="js-roomTypCd" />
                                     </div>
                                 </div>
                                 <div data-ax-td style="width:30%">
-                                    <div data-ax-td-label style="width:120px;">성인수</div>
+                                    <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>성인수</div>
                                     <div data-ax-td-wrap>
                                         <input type="text" data-ax-path="adultCnt" title="성인수" class="form-control js-adultCnt" data-ax-validate="required"/>
                                     </div>
                                 </div>
                                 <div data-ax-td style="width:30%">
-                                    <div data-ax-td-label style="width:120px;">아동수</div>
+                                    <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>아동수</div>
                                     <div data-ax-td-wrap>
                                         <input type="text" data-ax-path="chldCnt" title="아동수" class="form-control js-chldCnt" data-ax-validate="required"/>
                                     </div>

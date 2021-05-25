@@ -46,19 +46,20 @@ public class ChkServiceTest {
     public void test1_예약_등록하기_신규투숙객() {
         //given
         ChkSaveRequestDto saveDto = ChkSaveRequestDto.builder()
-                .arrDt("2021-05-20")
-                .depDt("2021-05-21")
+                .arrDt("2021-05-25")
+                .depDt("2021-05-26")
                 .nightCnt(1)
                 .roomTypCd("SB")
                 .adultCnt(2)
                 .chldCnt(0)
                 .saleTypCd("01")
                 .srcCd("CMS")
-                .salePrc(new BigDecimal(50000))
+                .salePrc(new BigDecimal(126000))
+                .svcPrc(new BigDecimal(20000))
                 .advnYn("N")
                 .guestNm("전만호")
                 .guestNmEng("michael")
-                .guestTel("010-7334-2143")
+                .guestTel("01073342143")
                 .email("okaymano@gmail.com")
                 .build();
 
@@ -157,5 +158,26 @@ public class ChkServiceTest {
 
         //then
         assertTrue(testId > 0);
+    }
+
+    @Test
+    public void test4() {
+
+        BigDecimal arr[] = new BigDecimal[4];
+        arr[0] = new BigDecimal(10);
+        arr[1] = new BigDecimal(30);
+        arr[2] = null;
+        arr[3] = new BigDecimal(20);
+
+        BigDecimal b = new BigDecimal(0);
+
+        for (BigDecimal a: arr) {
+            if (a != null)
+                b = b.add(a);
+            logger.info("BigDecimal===>" + b);
+        }
+        logger.info("BigDecimal===>" + b);
+
+//        chkService.getArrDtTotalCount();
     }
 }

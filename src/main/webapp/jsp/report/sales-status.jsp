@@ -12,25 +12,38 @@
     </jsp:attribute>
     <jsp:body>
 
-        <ax:page-buttons></ax:page-buttons>
-
+        <ax:page-buttons>
+            <button type="button" class="btn btn-info" data-page-btn="search"><i class="cqc-magnifier"></i> 검색 </button>
+            <button type="button" class="btn btn-info" data-page-btn="excel"><i class="cqc-circle-with-excel"></i> 엑셀 다운로드</button>
+        </ax:page-buttons>
 
         <div role="page-header">
-            <ax:form name="searchView0">
-                <ax:tbl clazz="ax-search-tbl" minWidth="500px">
-                    <ax:tr>
-                        <ax:td label='검색조건' width="300px">
-                            <input type="text" class="form-control" />
-                        </ax:td>
-                        <ax:td label='검색조건 1' width="300px">
-                            <input type="text" class="form-control" />
-                        </ax:td>
-                        <ax:td label='검색조건 2' width="300px">
-                            <input type="text" class="form-control" />
-                        </ax:td>
-                    </ax:tr>
-                </ax:tbl>
-            </ax:form>
+            <form name="searchView0" id="searchView0" method="post" onsubmit="return false;">
+                <div data-ax-tbl class="ax-search-tbl">
+                    <div data-ax-tr>
+                        <di data-ax-td style="width:100%">
+                            <div data-ax-td-label>조회날짜</div>
+                            <div data-ax-td-wrap>
+                                <div class="form-inline">
+                                    <button type="button" class="btn btn-default js-today" data-search-view-btn="today">오늘</button>
+                                    <button type="button" class="btn btn-default js-yesterday" data-search-view-btn="yesterday">어제</button>
+                                    <button type="button" class="btn btn-default js-threedays" data-search-view-btn="threedays">3일</button>
+                                    <button type="button" class="btn btn-default js-sevendays" data-search-view-btn="sevendays">7일</button>
+                                    <button type="button" class="btn btn-default js-onemonth" data-search-view-btn="onemonth">1개월</button>
+                                    <button type="button" class="btn btn-default js-sixmonth" data-search-view-btn="sixmonth">6개월</button>
+                                    <button type="button" class="btn btn-default js-oneyear" data-search-view-btn="oneyear">1년</button>
+                                    <div class="input-group" data-ax5picker="date">
+                                        <input type="text" class="form-control js-arrDt" placeholder="yyyy-mm-dd">
+                                        <span class="input-group-addon">~</span>
+                                        <input type="text" class="form-control js-arrDt-end" placeholder="yyyy-mm-dd">
+                                        <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <div class="H10"></div>
         </div>
 
@@ -41,12 +54,9 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            프로그램 목록 </h2>
+                            보고서 </h2>
                     </div>
-                    <div class="right">
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-plus"></i> 삭제</button>
-                    </div>
+
                 </div>
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
 

@@ -20,7 +20,7 @@
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
                         <ax:td label='객실타입' width="300px">
-                            <ax:common-code groupCd="PMS_ROOM_TYPE" clazz="js-roomTypCd" emptyText="전체" />
+                            <select class="form-control js-test"></select>
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>

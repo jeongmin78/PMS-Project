@@ -43,11 +43,6 @@
                                     <input type="text" class="form-control js-rsvDt-end" placeholder="yyyy-mm-dd">
                                     <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                                 </div>
-                                <!-- <input type="date" class="form-control js-rsvDt-start" width="140px">
-                            </div>
-                            <div data-ax-td-wrap="">
-                                <input type="date" class="form-control js-rsvDt-end" width="140px">
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -67,10 +62,6 @@
                                     <input type="text" class="form-control js-arrDt-end" placeholder="yyyy-mm-dd">
                                     <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                                 </div>
-                                <!-- <input type="date" class="form-control js-arrDt-start">
-                            </div>
-                            <div data-ax-td-wrap>
-                                <input type="date" class="form-control js-arrDt-end"> -->
                             </div>
                         </div>
                     <div data-ax-td style=";width:400px">
@@ -82,10 +73,6 @@
                                 <input type="text" class="form-control js-depDt-end" placeholder="yyyy-mm-dd">
                                 <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                             </div>
-                            <!-- <input type="date" class="form-control js-depDt-start">
-                        </div>
-                        <div data-ax-td-wrap>
-                            <input type="date" class="form-control js-depDt-end"> -->
                         </div>
                     </div>
                 </div>
@@ -115,7 +102,7 @@
                     <div class="ax-button-group">
                         <div class="left">
                             <h2><i class="cqc-list"></i>
-                                프로그램 목록 </h2>
+                                예약 목록 </h2>
                         </div>
                         <div class="right">
                             <div class="form-inline">

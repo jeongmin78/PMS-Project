@@ -6,6 +6,7 @@ import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.chequer.axboot.core.utils.DateUtils;
 import com.chequer.axboot.core.utils.ExcelUtils;
+import com.querydsl.core.Tuple;
 import com.wordnik.swagger.annotations.ApiOperation;
 import edu.axboot.controllers.dto.*;
 import edu.axboot.domain.chk.Chk;
@@ -28,20 +29,6 @@ public class ChkController extends BaseController {
 
     private final ChkService chkService;
 
-//    @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-//    public Responses.ListResponse list(RequestParams<Chk> requestParams) {
-//        List<Chk> list = chkService.gets(requestParams);
-//        return Responses.ListResponse.of(list);
-//    }
-
-//    @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
-//    public ApiResponse save(@RequestBody List<Chk> request) {
-//        chkService.save(request);
-//        return ok();
-//    }
-
-    //    ------------------------------------------------------------
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public ChkResponseDto view(@PathVariable Long id){
         return chkService.getOneById(id);
@@ -56,6 +43,12 @@ public class ChkController extends BaseController {
     @RequestMapping(value = "max", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public ChkResponseDto view() {
         return chkService.getOneByDesc();
+    }
+
+    @RequestMapping(value = "total", method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public Responses.ListResponse view2(RequestParams<ChkReportListResponseDto> requestParams) {
+        List<ChkReportListResponseDto> list = chkService.getArrDtTotalCount(requestParams);
+        return Responses.ListResponse.of(list);
     }
 
     @RequestMapping(method = {RequestMethod.POST}, produces = APPLICATION_JSON)

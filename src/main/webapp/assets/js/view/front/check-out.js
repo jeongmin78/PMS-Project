@@ -47,7 +47,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 param: { id: data.id || '' },
                 url: 'check-out-modal.jsp',
             },
-            header: { title: '예약 조회' },
+            header: { title: '투숙 정보' },
             callback: function (data) {
                 if (data && data.dirty) {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);

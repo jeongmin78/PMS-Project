@@ -26,7 +26,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             var memos = [].concat(caller.gridView01.getData());
             memos = memos.concat(caller.gridView01.getData('deleted'));
             item.memoList = memos;
-            item.sttusCd = 'CHK_01';
+            item.sttusCd = data;
             console.log(memos);
             axboot.ajax({
                 type: 'POST',
@@ -151,7 +151,18 @@ fnObj.pageButtonView = axboot.viewExtend({
         axboot.buttonClick(this, 'data-page-btn', {
             save: function () {
                 if ($('.js-roomNum').val()) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+                    ACTIONS.dispatch(ACTIONS.PAGE_SAVE, 'CHK_02');
+                } else {
+                    axDialog.confirm({ msg: '객실번호 선택은 필수입니다.' }, function () {
+                        if (this.key == 'ok') {
+                            $('.js-roomNum').focus();
+                        }
+                    });
+                }
+            },
+            cancle: function () {
+                if ($('.js-roomNum').val()) {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SAVE, 'CHK_03');
                 } else {
                     axDialog.confirm({ msg: '객실번호 선택은 필수입니다.' }, function () {
                         if (this.key == 'ok') {
@@ -242,8 +253,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         if (data.advnYn == 'Y') {
             $('input:checkbox[name=advnYn]').prop('checked', true);
         }
-        this.model.set('roomNum', data.roomNum);
-
         console.log('********' + data.sttusCd);
 
         this.model.setModel(data);

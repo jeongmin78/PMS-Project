@@ -15,7 +15,7 @@
         <script>
             var modalParams = {id : "${id}"};
         </script>
-        <script type="text/javascript" src="<c:url value='/assets/js/view/front/check-in-modal.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/front/in-house-modal.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 
@@ -23,7 +23,16 @@
             <ax:split-panel width="*" style="padding-top: 5px;">
                 <div role="page-header">
                     <form name="form" class="js-form">
+                        <!-- <div class="left">
+                            <div class="form-inline">
+                                <div class="form-inline">
+                                    <span class="js-rsvNum" style="font-weight:bold">예약번호: </span>
+                                    <input type="text" data-ax-path="roomNum" class="form-control js-roomNum" style="width:100px"/>
+                                    <button type="button" class="btn btn-default" data-grid-view-01-btn="roomSearch"><i class="cqc-magnifier"></i> 객실배정</button>
+                                </div>
 
+                            </div>
+                        </div> -->
                         <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                             <div class="left" style="width: 600px;">
                                 <div class="form-inline">
@@ -226,7 +235,8 @@
                 </div>
             </ax:split-panel>
             <div class="button-warp"  style="text-align: center; padding-top: 10px;">
-                <button type="button" class="btn btn-info" data-page-btn="save"> 체크인 </button>
+                <button type="button" class="btn btn-info" data-page-btn="save"> 체크아웃 </button>
+                <button type="button" class="btn btn-info" data-page-btn="cancle"> 체크인 취소 </button>
                 <button type="button" class="btn btn-info" data-page-btn="close"> 닫기 </button>
             </div>
     </jsp:body>

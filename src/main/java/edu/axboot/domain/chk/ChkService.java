@@ -19,10 +19,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,10 +35,6 @@ public class ChkService extends BaseService<Chk, Long> {
     private final ChkMemoRepository chkmemoRepository;
 
     private final GuestRepository guestRepository;
-
-    private final GuestService guestService;
-
-    private static int sequence;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate today = LocalDate.now();
@@ -213,20 +209,6 @@ public class ChkService extends BaseService<Chk, Long> {
             return null;
     }
 
-    public void 시리얼_넘버() {
-        ChkResponseDto chkResponseDto = getOneByDesc();
-        if (chkResponseDto != null) {
-            String date = chkResponseDto.getRsvDt();
-            if (date.equals(String.valueOf(today))) {
-                sequence = chkResponseDto.getSno()+1;
-            } else {
-                sequence = 1;
-            }
-        } else {
-            sequence = 1;
-        }
-    }
-
     @Transactional
     public Long update(Long id, ChkUpdateRequestDto requestDto) {
         Chk chkEntity = chkRepository.findOne(id);
@@ -234,18 +216,6 @@ public class ChkService extends BaseService<Chk, Long> {
             throw new IllegalArgumentException("해당 예약내역이 없습니다. id=" + id);
         }
 
-//        if (requestDto.getMemoList().size() > 0) {
-//            List<ChkMemo> memoList = new ArrayList<>();
-//            for (ChkMemo memo : requestDto.getMemoList()) {
-//                if (memo.is__created__()){
-//                    ChkMemo memoEntity = memo.toEntity();
-//                    memoEntity.메모_기본값_생성(chkEntity.getRsvNum());
-//                    memoList.add(memoEntity);
-//                    chkmemoRepository.save(memoEntity);
-//                }
-//            }
-//            chkEntity.메모리스트_생성(memoList);
-//        }
         chkEntity.예약정보_수정하기(requestDto);
         return id;
     }
@@ -258,5 +228,45 @@ public class ChkService extends BaseService<Chk, Long> {
         }
 
         chkEntity.예약상태_수정하기(sttusCd);
+    }
+
+    public List<ChkReportListResponseDto> getArrDtTotalCount(RequestParams<ChkReportListResponseDto> requestParams) {
+        String arrDt = requestParams.getString("arrDt","");
+        String arrDtEnd = requestParams.getString("arrDtEnd","");
+
+        logger.info("arrDt ====> " + arrDt);
+        logger.info("arrDtEnd ====> " + arrDtEnd);
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (isNotEmpty(arrDt)){
+            if (isNotEmpty(arrDtEnd)){
+                builder.and(qChk.arrDt.between(arrDt,arrDtEnd));
+            }else
+                builder.and(qChk.arrDt.between(arrDt, String.valueOf(today)));
+        }
+
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        List<ChkReportListResponseDto> chkReportList = queryFactory.selectFrom(qChk)
+                .where(builder)
+                .groupBy(qChk.arrDt)
+                .select(Projections.constructor(ChkReportListResponseDto.class, qChk.arrDt, qChk.rsvNum.count(), qChk.salePrc.sum(), qChk.svcPrc.sum()))
+                .orderBy(qChk.rsvNum.count().desc())
+                .fetch();
+
+        long count=0;
+        BigDecimal salePrc = BigDecimal.ZERO;
+        BigDecimal svcPrc = BigDecimal.ZERO;
+        for (ChkReportListResponseDto chkReport : chkReportList){
+            logger.info("===============> " + chkReport.getSalePrc());
+            logger.info("===============> " + chkReport.getSvcPrc());
+            count += chkReport.getRoomCount();
+            if (chkReport.getSalePrc() != null) salePrc = salePrc.add(chkReport.getSalePrc());
+            if (chkReport.getSvcPrc() != null) svcPrc = svcPrc.add(chkReport.getSvcPrc());
+        }
+        ChkReportListResponseDto reportDto = new ChkReportListResponseDto("합계", count, salePrc,svcPrc);
+        chkReportList.add(0, reportDto);
+        return chkReportList;
     }
 }

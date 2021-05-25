@@ -13,33 +13,39 @@
         <script type="text/javascript" src="<c:url value='/assets/js/view/reservation/reservation-registration.js' />"></script>
     </jsp:attribute>
     <jsp:body>
-        <ax:page-buttons>
-            <button type="button" class="btn btn-fn1" data-page-btn="reload" >신규등록</button>
-        </ax:page-buttons>
-        <div class='js-rsvNum'>예약번호 : </div>
+        
+        <div data-page-buttons>
+            <div class="button-warp">
+                <span style="color:red">*</span><span>표시는 필수 항목 체크 부분</span>
+                <button type="button" class="btn btn-default" data-page-btn="reload" onclick="window.location.reload();"><i class="cqc-cw"></i></button>
+                <button type="button" class="btn btn-info" data-page-btn="save"><i class="cqc-save"></i> 저장</button>
+                <button type="button" class="btn btn-fn1" data-page-btn="reload">신규등록</button>
+            </div>
+        </div>
+
+        <div class='js-rsvNum' style="font-weight:bold">예약번호 : </div>
         <div role="page-header">
             <form name="form" class="js-form" onsubmit="return false;">
                 <div data-ax-tbl class="ax-form-tbl">
 
                     <div data-ax-tr>
                         <div data-ax-td style="width:30%">
-                            <div data-ax-td-label style="width:120px;">도착일</div>
+                            <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>도착일</div>
                             <div data-ax-td-wrap>
                                 <div class="input-group" data-ax5picker="date">
                                     <input type="text" data-ax-path="arrDt" class="form-control js-arrDt" placeholder="yyyy-mm-dd">
                                     <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                                 </div>
-                                <!-- <input type="date" data-ax-path="arrDt" title="도착일" class="form-control js-arrDt" data-ax-validate="required"/> -->
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
-                            <div data-ax-td-label style="width:120px;">숙박수</div>
+                            <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>숙박수</div>
                             <div data-ax-td-wrap>
                                 <input type="text" data-ax-path="nightCnt" title="숙박일" class="form-control js-nightCnt" data-ax-validate="required"/>
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
-                            <div data-ax-td-label style="width:120px;">출발일</div>
+                            <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>출발일</div>
                             <div data-ax-td-wrap>
                                 <div class="input-group" data-ax5picker="date">
                                     <input type="text" data-ax-path="depDt" class="form-control js-depDt" placeholder="yyyy-mm-dd">
@@ -51,19 +57,19 @@
                     </div>
                     <div data-ax-tr>
                         <div data-ax-td style="width:30%">
-                            <div data-ax-td-label style="width:120px;">객실타입</div>
+                            <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>객실타입</div>
                             <div data-ax-td-wrap>
                                 <ax:common-code groupCd="PMS_ROOM_TYPE" dataPath="roomTypCd" clazz="js-roomTypCd" />
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
-                            <div data-ax-td-label style="width:120px;">성인수</div>
+                            <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>성인수</div>
                             <div data-ax-td-wrap>
                                 <input type="text" data-ax-path="adultCnt" title="성인수" class="form-control js-adultCnt" data-ax-validate="required"/>
                             </div>
                         </div>
                         <div data-ax-td style="width:30%">
-                            <div data-ax-td-label style="width:120px;">아동수</div>
+                            <div data-ax-td-label style="width:120px;"><span style="color:red">*</span>아동수</div>
                             <div data-ax-td-wrap>
                                 <input type="text" data-ax-path="chldCnt" title="아동수" class="form-control js-chldCnt" data-ax-validate="required"/>
                             </div>
