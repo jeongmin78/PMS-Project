@@ -1,10 +1,10 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-        if (data == 'save') {
+        if (data) {
             axboot.ajax({
                 type: 'GET',
-                url: '/api/v1/chk/max',
+                url: '/api/v1/chk/' + data,
                 callback: function (res) {
                     caller.formView01.clear();
                     caller.formView01.setData(res);
@@ -31,7 +31,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 url: '/api/v1/chk',
                 data: JSON.stringify(item),
                 callback: function (res) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, 'save');
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, res.map.chkId);
                     axToast.push('저장 되었습니다');
                 },
             });

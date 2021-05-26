@@ -36,7 +36,7 @@ SELECT 'PMS_PAY_METHOD', '결재방법',  'CREDIT', '신용카드', 2, 'Y', sysd
 SELECT 'PMS_PAY_METHOD', '결재방법',  'BANK', '계좌이체', 3, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'PMS_PAY_METHOD', '결재방법',  'EXTERNAL_POST_PAYMENT', '대외후불', 4, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 -- 에약현황 - 상태
-SELECT 'PMS_STAY_STATUS', '투숙상태',  'RSV_01', '얘약', 1, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
+SELECT 'PMS_STAY_STATUS', '투숙상태',  'RSV_01', '예약', 1, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'PMS_STAY_STATUS', '투숙상태',  'RSV_02', '예약대기', 2, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'PMS_STAY_STATUS', '투숙상태',  'RSV_03', '예약확정', 3, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'PMS_STAY_STATUS', '투숙상태',  'RSV_04', '예약취소', 4, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
@@ -57,3 +57,4 @@ SELECT 'DND_YN', 'DND 여부',  'N', '사용안함', 2, 'Y', sysdate(), 'system'
 -- 객실정보 - EB 여부
 SELECT 'EB_YN', 'ExBed 여부',  'Y', '사용', 1, 'Y', sysdate(), 'system', sysdate(), 'system' UNION ALL
 SELECT 'EB_YN', 'ExBed 여부',  'N', '사용안함', 2, 'Y', sysdate(), 'system', sysdate(), 'system';
+

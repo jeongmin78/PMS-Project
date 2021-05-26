@@ -10,7 +10,6 @@ import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoRepository;
 import edu.axboot.domain.guest.Guest;
 import edu.axboot.domain.guest.GuestRepository;
-import edu.axboot.domain.guest.GuestService;
 import edu.axboot.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -96,7 +95,8 @@ public class ChkService extends BaseService<Chk, Long> {
         }
         if (isNotEmpty(filter)){
             builder.and(qChk.guestNm.contains(filter)
-                    .or(qChk.guestNmEng.contains(filter)));
+                    .or(qChk.guestNmEng.contains(filter))
+            );
         }
         List<Chk> list = select()
                 .from(qChk)
@@ -143,21 +143,6 @@ public class ChkService extends BaseService<Chk, Long> {
         if (requestDto.getMemoList() != null)
             this.saveToMemo(chk.getRsvNum(), requestDto.getMemoList());
 
-//            시리얼_넘버();
-//            chk.예약일_예약번호_예약상태_생성(guestId, sequence);
-//
-//            this.saveToMemo(chk.getRsvNum(), requestDto.getMemoList());
-//            if (chkEntity.getMemoList().size() > 0) {
-//                List<ChkMemo> memoList = new ArrayList<>();
-//                for (ChkMemo memo : chkEntity.getMemoList()) {
-//                    ChkMemo memoEntity = memo.toEntity();
-//                    memoEntity.메모_기본값_생성(chkEntity.getRsvNum());
-//                    memoList.add(memoEntity);
-//                }
-//                chkEntity.메모리스트_생성(memoList);
-//            }
-//            return chkRepository.save(chk).getId();
-//        }
         return id;
     }
 
@@ -183,8 +168,6 @@ public class ChkService extends BaseService<Chk, Long> {
                         .memoMan(SessionUtils.getCurrentLoginUserCd())
                         .delYn("N")
                         .build();
-//                        memo.toEntity();
-//                memoEntity.메모_기본값_생성(rsvNum);
 
                 chkmemoRepository.save(memoEntity);
             } else if (memoDto.is__modified__()) {
@@ -233,9 +216,6 @@ public class ChkService extends BaseService<Chk, Long> {
     public List<ChkReportListResponseDto> getArrDtTotalCount(RequestParams<ChkReportListResponseDto> requestParams) {
         String arrDt = requestParams.getString("arrDt","");
         String arrDtEnd = requestParams.getString("arrDtEnd","");
-
-        logger.info("arrDt ====> " + arrDt);
-        logger.info("arrDtEnd ====> " + arrDtEnd);
 
         BooleanBuilder builder = new BooleanBuilder();
 

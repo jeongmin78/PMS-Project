@@ -6,6 +6,7 @@ import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.chequer.axboot.core.utils.DateUtils;
 import com.chequer.axboot.core.utils.ExcelUtils;
+import com.chequer.axboot.core.utils.MessageUtils;
 import com.querydsl.core.Tuple;
 import com.wordnik.swagger.annotations.ApiOperation;
 import edu.axboot.controllers.dto.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -52,9 +54,12 @@ public class ChkController extends BaseController {
     }
 
     @RequestMapping(method = {RequestMethod.POST}, produces = APPLICATION_JSON)
-    public ApiResponse save(@RequestBody ChkSaveRequestDto requestDto) {
-        chkService.saveUsingJpa(requestDto);
-        return ok();
+    public Responses.MapResponse save(@RequestBody ChkSaveRequestDto requestDto, HttpServletRequest request) {
+        Long id = chkService.saveUsingJpa(requestDto);
+        HashMap<String, Object> map = new HashMap<String ,Object>();
+        map.put("chkId", id);
+        map.put("message", MessageUtils.getMessage(request, "ax.script.onsave"));
+        return Responses.MapResponse.of(map);
     }
     @RequestMapping(value = "/{id}", method = {RequestMethod.POST}, produces = APPLICATION_JSON)
     public ApiResponse update(@PathVariable Long id, @RequestBody ChkUpdateRequestDto requestDto) {
@@ -74,11 +79,11 @@ public class ChkController extends BaseController {
         return ok();
     }
 
-    @ApiOperation(value = "엑셀다운로드", notes = "/resources/excel/reservation.xlsx")
+    @ApiOperation(value = "엑셀다운로드", notes = "/resources/excel/pms_reservation.xlsx")
     @RequestMapping(value = "/exceldown", method = {RequestMethod.POST}, produces = APPLICATION_JSON)
     public void excelDown(RequestParams<Chk> requestParams, HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<Chk> list = chkService.getList(requestParams);
-        ExcelUtils.renderExcel("/excel/reservation.xlsx", list, "reservation_" + DateUtils.getYyyyMMddHHmmssWithDate(), request, response);
-    }
+        ExcelUtils.renderExcel("/excel/pms_reservation.xlsx", list, "PMS_Reservation_" + DateUtils.getYyyyMMddHHmmssWithDate(), request, response);
 
+    }
 }

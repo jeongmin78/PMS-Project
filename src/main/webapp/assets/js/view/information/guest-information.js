@@ -1,6 +1,7 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
+        console.log(caller.searchView.getData());
         axboot.ajax({
             type: 'GET',
             url: '/api/v1/guest',

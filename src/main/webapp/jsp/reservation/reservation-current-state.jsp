@@ -47,13 +47,13 @@
                     </div>
                 </div>
                 <div data-ax-tr>
-                    <div data-ax-td style=";width:300px">
+                    <div data-ax-td style="width:300px">
                         <div data-ax-td-label>객실타입</div>
                         <div data-ax-td-wrap>
                             <ax:common-code groupCd="PMS_ROOM_TYPE" dataPath="roomTypCd" clazz="js-roomTypCd" emptyText="전체" />
                         </div>
                     </div>
-                    <div data-ax-td style=";width:400px">
+                    <div data-ax-td style="width:400px">
                         <div data-ax-td-label>도착일</div>
                             <div data-ax-td-wrap>
                                 <div class="input-group" data-ax5picker="date">
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         </div>
-                    <div data-ax-td style=";width:400px">
+                    <div data-ax-td style="width:400px">
                         <div data-ax-td-label>출발일</div>
                         <div data-ax-td-wrap>
                             <div class="input-group" data-ax5picker="date">
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div data-ax-tr>
-                    <div data-ax-td style=";width:100%">
+                    <div data-ax-td style="width:100%">
                         <div data-ax-td-label>상태</div>
                             <div data-ax-td-wrap>
                                 <label><input type="checkbox" name="sttusAll" value="">  전체  </label>

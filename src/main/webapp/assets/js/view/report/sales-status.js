@@ -81,12 +81,24 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
             },
         });
 
+        this.model = new ax5.ui.binder();
+        this.model.setModel({}, this.target);
+
         this.arrDt = $('.js-arrDt');
         this.arrDtEnd = $('.js-arrDt-end');
 
+        console.log(this);
+
+        $('.js-today').onClick = function () {
+            this.model.set('arrDt', moment().format('yyyy-MM-DD'));
+            this.model.set('arrDtEnd', '');
+        };
         axboot.buttonClick(this, 'data-search-view-btn', {
             today: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().format('yyyy-MM-DD'));
+                console.log(this.model);
+                this.model.set('arrDt', moment().format('yyyy-MM-DD'));
+                this.model.set('arrDtEnd', '');
+                // ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().format('yyyy-MM-DD'));
             },
             yesterday: function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-1, 'days').format('yyyy-MM-DD'));

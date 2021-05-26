@@ -139,7 +139,7 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
             },
         });
 
-        this.filter = $('#filter');
+        this.filter = $('.js-filter');
         this.rsvNum = $('.js-rsvNum');
 
         this.rsvDt = $('.js-rsvDt-start');

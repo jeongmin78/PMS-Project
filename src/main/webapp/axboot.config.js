@@ -70,16 +70,15 @@
      * axboot.selectGenerator = function(groupCd, targetId, options) {
      * selector에 select를 넘긴다.
      * ex)
-     * axboot.selectGenerator('.class', 'USE_YN', {});
+     * axboot.selectGenerator('USE_YN', '.class', {});
      */
     axboot.selectGenerator = function (groupCd, targetId, options) {
-        if (!groupCd) throw new Error('메시지');
-        if (!targetId) throw new Error('메시지');
+        if (!groupCd) throw new Error('에러 메시지');
+        if (!targetId) throw new Error('에러 메시지');
         if (!options) options = {};
         if (parent) {
             var codes = parent.COMMON_CODE[groupCd] || [];
             var sb = [];
-            // sb.push('<select class="form-control "');
             codes.forEach(function (code) {
                 // <option value="dog">Dog</option>;
                 sb.push('<option value="' + (code.value || '') + '">' + (code.name || '') + '</option>');

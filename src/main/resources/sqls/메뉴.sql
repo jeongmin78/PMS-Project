@@ -72,3 +72,16 @@ VALUES (402, 'SYSTEM_MANAGER', '투숙객정보', '{"ko":"투숙객정보","en":
 -- 메뉴 권한
 INSERT INTO AUTH_GROUP_MAP_M (GRP_AUTH_CD , MENU_ID, SCH_AH, SAV_AH, DEL_AH, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
 VALUES ('S0001', '402',  'Y', 'Y', 'Y', sysdate(), 'system', sysdate(), 'system');
+
+
+INSERT INTO MENU_M (MENU_ID, MENU_GRP_CD, MENU_NM, MULTI_LANGUAGE, PARENT_ID, LEVEL, SORT, PROG_CD, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES (500, 'SYSTEM_MANAGER', '공통코드2', '{"ko":"공통코드2","en":"common-code2"}',  null, 0, 99, null, sysdate(), 'system', sysdate(), 'system');
+-- 프로그램 생성
+INSERT INTO PROG_M (PROG_CD, PROG_NM, PROG_PH, TARGET, AUTH_CHECK, SCH_AH, SAV_AH, DEL_AH )
+VALUES ('common-code2', '공통코드2', '/jsp/common-code/common-code.jsp', '_self', 'Y', 'Y', 'Y', 'Y');
+-- 메뉴 생성
+INSERT INTO MENU_M (MENU_ID, MENU_GRP_CD, MENU_NM, MULTI_LANGUAGE, PARENT_ID, LEVEL, SORT, PROG_CD, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES (501, 'SYSTEM_MANAGER', '공통코드2', '{"ko":"공통코드2","en":"common-code2"}',  500, 1, 1, 'common-code2', sysdate(), 'system', sysdate(), 'system');
+-- 메뉴 권한
+INSERT INTO AUTH_GROUP_MAP_M (GRP_AUTH_CD , MENU_ID, SCH_AH, SAV_AH, DEL_AH, CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY )
+VALUES ('S0001', '501',  'Y', 'Y', 'Y', sysdate(), 'system', sysdate(), 'system');

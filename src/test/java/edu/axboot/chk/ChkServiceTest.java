@@ -71,54 +71,13 @@ public class ChkServiceTest {
     }
 
     @Test
-    public void test1_예약등록_저장하기() {
-        //given
-        Long id = null;
-        String rsvNum = null;
-        Integer sno = null;
-        String memoCn = "A";
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-        String memoMan = "B";
-        String delYn = "Y";
-        ChkMemo chkMemo = new ChkMemo(id, rsvNum, sno, memoCn, timestamp, memoMan, delYn, true, false, false);
-        List<ChkMemo> memoList = new ArrayList<>();
-        memoList.add(chkMemo);
-
-        ChkSaveRequestDto saveRequestDto = ChkSaveRequestDto.builder()
-                .id(null)
-                .sno(null)
-                .rsvNum(null)
-                .rsvDt(null)
-                .guestNm("박형근")
-                .arrDt("2021-05-21")
-                .depDt("2021-05-24")
-                .nightCnt(3)
-                .roomTypCd("roomTypCd")
-                .adultCnt(2)
-                .chldCnt(0)
-                .saleTypCd("saleTypCd")
-                .sttusCd("01")
-                .srcCd("01")
-                .advnYn("Y")
-                .build();
-
-        //when
-        testId = this.chkService.saveUsingJpa(saveRequestDto);
-        logger.info("\n" + "ID ===============> " + testId);
-
-        //then
-        assertTrue(testId > 0);
-    }
-
-    @Test
     public void test2_예약등록_조회하기() {
 
-        ChkResponseDto chk = this.chkService.getOneById(156L);
+        ChkResponseDto chk = this.chkService.getOneById(testId);
     }
 
     @Test
     public void test3_최근_예약등록_조회하기() {
-
         ChkResponseDto entity = this.chkService.getOneByDesc();
         logger.info("============================== RsvNum : " + entity.getRsvNum());
     }
@@ -148,7 +107,7 @@ public class ChkServiceTest {
                 .guestId(1L)
                 .guestNm("전천호")
                 .guestNmEng("okaymano")
-                .guestTel("010-1111-2222")
+                .guestTel("01011112222")
                 .email("manojun@naver.com")
                 .memoList(memoList)
                 .build();
@@ -178,6 +137,5 @@ public class ChkServiceTest {
         }
         logger.info("BigDecimal===>" + b);
 
-//        chkService.getArrDtTotalCount();
     }
 }
