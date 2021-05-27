@@ -90,4 +90,49 @@
         console.log($(targetId));
         return $(targetId).html(html);
     };
+
+    axboot.commonCodeGenerator = function (selector, options) {
+        if (!selector) throw new Error('Invalid call : selector required');
+
+        var $elements = $(selector);
+        if (!$elements.length) throw new Error('Not found selector : ' + selector);
+
+        console.log(selector);
+        return $elements.each(function () {
+            var $this = $(this);
+            var config, sb, codes, type, groupCd;
+
+            config = $.extend({}, $this.data(), options);
+            type = (config.type || 'select').toLowerCase();
+            groupCd = config.groupCd;
+            if (!groupCd) groupCd = config.commonCode;
+            if (!groupCd) throw new Error('groupCd is requierd option');
+
+            if (parent && parent.COMMON_CODE) {
+                codes = parent.COMMON_CODE[groupCd] || [];
+            } else if (COMMON_CODE) {
+                codes = COMMON_CODE[groupCd] || [];
+            } else codes = [];
+
+            sb = [];
+            if (type == 'select') {
+                if (typeof config.empty !== 'undefined') sb.push('<option value="">' + config.empty + '</option>');
+                codes.forEach(function (code) {
+                    sb.push('<option value="' + (code.code || '') + '">' + (code.name || '') + '</option>');
+                });
+                var html = sb.join('');
+                // console.log(html);
+                $(this).html(html);
+            } else if (type == 'checkbox') {
+                // <!-- <label><input type="checkbox" name="sttus" value="RSV_01">  예약  </label>
+                codes.forEach(function (code) {
+                    sb.push('<label><input type="checkbox" name="' + config.name + '" value="' + code.code + '"> ' + (code.name || '') + ' </label>');
+                });
+
+                var html = sb.join('');
+                console.log(html);
+                $(this).replaceWith(html);
+            }
+        });
+    };
 })();
