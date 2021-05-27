@@ -3,6 +3,7 @@ package edu.axboot.domain;
 import edu.axboot.domain.chk.QChk;
 import edu.axboot.domain.chkmemo.QChkMemo;
 import edu.axboot.domain.code.QCommonCode;
+import edu.axboot.domain.code.codegroup.QCommonCodeGroup;
 import edu.axboot.domain.file.QCommonFile;
 import edu.axboot.domain.guest.QGuest;
 import edu.axboot.domain.program.QProgram;
@@ -32,6 +33,8 @@ public class BaseService<T, ID extends Serializable> extends AXBootBaseService<T
     protected QRoom qRoom = QRoom.room;
     protected QGuest qGuest = QGuest.guest;
     protected QChkMemo qChkMemo = QChkMemo.chkMemo;
+    protected QCommonCodeGroup qCommonCodeGroup = QCommonCodeGroup.commonCodeGroup;
+
 
     protected AXBootJPAQueryDSLRepository<T, ID> repository;
 

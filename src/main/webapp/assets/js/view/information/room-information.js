@@ -97,7 +97,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.roomTypCd = $('.js-roomTypCd').on('change', function () {
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
         });
-        axboot.selectGenerator('PMS_ROOM_TYPE', '.js-test', {});
+        // axboot.selectGenerator('PMS_ROOM_TYPE', '.js-test', {});
+        axboot.commonCodeGenerator('.js-roomTypCd');
     },
     getData: function () {
         return {

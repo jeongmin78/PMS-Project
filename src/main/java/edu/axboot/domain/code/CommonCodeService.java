@@ -4,6 +4,7 @@ import edu.axboot.domain.BaseService;
 import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
+import edu.axboot.domain.code.codegroup.CommonCodeGroup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +52,21 @@ public class CommonCodeService extends BaseService<CommonCode, CommonCodeId> {
     @Transactional
     public void saveCommonCode(List<CommonCode> basicCodes) {
         save(basicCodes);
+    }
+
+
+    public List<CommonCode> findCodeList(String groupCd) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (isNotEmpty(groupCd)) {
+            builder.and(qCommonCode.groupCd.eq(groupCd));
+        }
+        List<CommonCode> list = select()
+                .from(qCommonCode)
+                .where(builder)
+                .orderBy(qCommonCode.groupNm.asc(), qCommonCode.sort.asc())
+                .fetch();
+
+        return list;
     }
 }

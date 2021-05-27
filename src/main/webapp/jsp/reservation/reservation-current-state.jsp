@@ -80,15 +80,17 @@
                     <div data-ax-td style="width:100%">
                         <div data-ax-td-label>상태</div>
                             <div data-ax-td-wrap>
-                                <label><input type="checkbox" name="sttusAll" value="">  전체  </label>
-                                <label><input type="checkbox" name="sttus" value="RSV_01">  예약  </label>
+                                <label><input type="checkbox" name="sttusCdAll" value="">전체</label>
+                                <div data-type="checkbox" data-common-code="PMS_STAY_STATUS" data-name="sttusCd" class="js-sttusCd" ></div>
+                                <!-- <label><input type="checkbox" name="sttusAll" value="">  전체  </label> -->
+                                <!-- <label><input type="checkbox" name="sttus" value="RSV_01">  예약  </label>
                                 <label><input type="checkbox" name="sttus" value="RSV_02">  예약대기  </label>
                                 <label><input type="checkbox" name="sttus" value="RSV_03">  예약확정  </label>
                                 <label><input type="checkbox" name="sttus" value="RSV_04">  예약취소  </label>
                                 <label><input type="checkbox" name="sttus" value="RSV_05">  노쇼  </label>
                                 <label><input type="checkbox" name="sttus" value="CHK_01">  체크인  </label>
                                 <label><input type="checkbox" name="sttus" value="CHK_02">  체크아웃  </label>
-                                <label><input type="checkbox" name="sttus" value="CHK_03">  체크인취소  </label>
+                                <label><input type="checkbox" name="sttus" value="CHK_03">  체크인취소  </label> -->
                             </div>
                     </div>
                     </div>
@@ -106,7 +108,7 @@
                         </div>
                         <div class="right">
                             <div class="form-inline">
-                                <ax:common-code groupCd="PMS_STAY_STATUS" dataPath="sttusCd" clazz="js-sttusCd"/>
+                                <select data-common-code="PMS_STAY_STATUS" name="sttusCd" class="form-control js-sttusCd"></select> 
                                 <button type="button" class="btn btn-default" data-grid-view-01-btn="change">상태변경</button>
                             </div>
                         </div>

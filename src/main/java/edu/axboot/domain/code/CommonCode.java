@@ -3,6 +3,8 @@ package edu.axboot.domain.code;
 import edu.axboot.domain.BaseJpaModel;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.code.AXBootTypes;
+import edu.axboot.domain.code.codegroup.CommonCodeGroup;
+import edu.axboot.domain.program.Program;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

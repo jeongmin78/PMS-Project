@@ -10,6 +10,7 @@ import com.chequer.axboot.core.parameter.RequestParams;
 import com.wordnik.swagger.annotations.ApiImplicitParam;
 import com.wordnik.swagger.annotations.ApiImplicitParams;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,5 +48,11 @@ public class CommonCodeController extends BaseController {
     @RequestMapping(value = "/getAllByMap", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public Map<String, List<CommonCode>> getAllByMap() {
         return CommonCodeUtils.getAllByMap();
+    }
+
+    @RequestMapping(value = "/{groupCd}", method = {RequestMethod.GET}, produces = APPLICATION_JSON)
+    public Responses.ListResponse codeList(@PathVariable String groupCd) {
+        List<CommonCode> list = basicCodeService.findCodeList(groupCd);
+        return Responses.ListResponse.of(list);
     }
 }

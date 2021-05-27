@@ -70,7 +70,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     SEARCH_CLEAR: function (caller, act, data) {
         caller.searchView.clear();
-        $('input[name="sttus"]').each(function () {
+        $('input[name="sttusCd"]').each(function () {
             $(this).prop('checked', false).attr('disabled', false);
         });
     },
@@ -138,6 +138,7 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
                 type: 'date',
             },
         });
+        axboot.commonCodeGenerator('.js-sttusCd');
 
         this.filter = $('.js-filter');
         this.rsvNum = $('.js-rsvNum');
@@ -154,14 +155,14 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.depDt = $('.js-depDt-start');
         this.depDtEnd = $('.js-depDt-end');
 
-        $("input[name='sttusAll']").change(function () {
+        $("input[name='sttusCdAll']").change(function () {
             var checked = $(this).prop('checked'); // checked 상태 (true, false)
             if (checked) {
-                $('input[name="sttus"]').each(function () {
+                $('input[name="sttusCd"]').each(function () {
                     $(this).prop('checked', true).attr('disabled', true);
                 });
             } else {
-                $('input[name="sttus"]').each(function () {
+                $('input[name="sttusCd"]').each(function () {
                     $(this).prop('checked', false).attr('disabled', false);
                 });
             }
@@ -169,7 +170,7 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         var select_obj = '';
-        $("input[name='sttus']:checked").each(function (index) {
+        $("input[name='sttusCd']:checked").each(function (index) {
             if (index != 0) {
                 select_obj += ',';
             }
