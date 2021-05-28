@@ -30,6 +30,7 @@
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
+                        <button type="button" class="btn btn-default" data-tree-view-01-btn="save"><i class="cqc-save"></i> <ax:lang id="ax.admin.save"/></button>
                     </div>
                 </div>
 
@@ -83,8 +84,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- 이거 지우면 에러남 -->
-                        
                     </form>
 
                     <div class="H20"></div>
@@ -95,7 +94,9 @@
                                 코드 목록</h2>
                         </div>
                         <div class="right">
-
+                            <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
+                            <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-minus"></i> <ax:lang id="ax.admin.delete"/></button>
+                            <button type="button" class="btn btn-default" data-grid-view-01-btn="save"><i class="cqc-save"></i> <ax:lang id="ax.admin.save"/></button>
                         </div>
                     </div>
                 </div>

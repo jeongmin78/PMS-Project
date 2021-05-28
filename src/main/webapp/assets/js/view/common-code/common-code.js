@@ -8,8 +8,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: '/api/v1/commoncodegroup',
             data: searchData,
             callback: function (res) {
-                console.log(searchData);
-                console.log(res.list);
                 caller.treeView01.setData(searchData, res.list, data);
             },
         });
@@ -18,70 +16,81 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     PAGE_SAVE: function (caller, act, data) {
         var formData = caller.formView01.getData();
-
         var obj = {
             list: caller.treeView01.getData(),
             deletedList: caller.treeView01.getDeletedList(),
         };
 
-        axboot
-            .call({
+        axboot.ajax({
+            type: 'PUT',
+            url: '/api/v1/commoncodegroup',
+            data: JSON.stringify(obj),
+            callback: function (res) {
+                caller.treeView01.clearDeletedList();
+                // axToast.push('공통코드 카테고리가 저장 되었습니다');
+            },
+        });
+        if (formData.groupId) {
+            axboot.ajax({
                 type: 'PUT',
-                url: '/api/v1/commoncodegroup',
-                data: JSON.stringify(obj),
-                callback: function (res) {
-                    caller.treeView01.clearDeletedList();
-                    axToast.push(LANG('ax.script.menu.category.saved')); //*//
-                },
-            })
-            .call({
-                type: 'PUT',
-                url: '/api/v1/commoncodegroup/' + formData.groupId,
+                url: '/api/v1/commoncodegroup' + formData.groupId,
                 data: JSON.stringify(formData),
-                callback: function (res) {},
+                callback: function (res) {
+                    caller.formView01.setData(res);
+                },
             });
-        ///여기
-        // .done(function () {
-        //     if (data && data.callback) {
-        //         data.callback();
-        //     } else {
-        //         ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, { groupId: caller.formView01.getData().groupId });
-
-        //         if (formData.progCd) {
-        //             axboot.ajax({
-        //                 type: 'PUT',
-        //                 url: ['commoncodegroup', 'auth'],
-        //                 data: JSON.stringify(caller.gridView01.getData()),
-        //                 callback: function (res) {
-        //                     axToast.push(LANG('ax.script.menu.authgroup.saved'));
-        //                     ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, { menuId: caller.formView01.getData().menuId });
-        //                 },
-        //             });
-        //         } else {
-        //         }
-        //     }
-        // });
+        }
     },
     TREEITEM_CLICK: function (caller, act, data) {
         console.log(data);
         if (typeof data.groupId === 'undefined') {
             caller.formView01.clear();
-            if (confirm('신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?')) {
+            if (confirm('신규 생성된 코드 그룹은 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?')) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             }
             return;
         }
+        console.log(data.groupCd);
+        axboot
+            .call({
+                type: 'GET',
+                url: '/api/v1/commoncodegroup/' + data.groupId,
+                data: {},
+                callback: function (res) {
+                    caller.formView01.setData(res);
+                    console.log(res);
+                },
+            })
+            .call({
+                type: 'GET',
+                url: '/api/v1/commonCodes/' + data.groupCd,
+                data: {},
+                callback: function (res) {
+                    console.log(res);
+                    caller.gridView01.setData(res);
+                },
+            })
+            .done(function () {
+                if (data && data.callback) {
+                    data.callback();
+                }
+                // else {
+                //     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, { groupId: caller.formView01.getData().groupId });
 
-        axboot.ajax({
-            type: 'GET',
-            url: '/api/v1/commonCodes/' + data.groupCd,
-            data: {},
-            callback: function (res) {
-                console.log(res);
-                caller.gridView01.setData(res);
-                caller.formView01.setData(res);
-            },
-        });
+                //     if (formData.rootCd) {
+                //         axboot.ajax({
+                //             type: 'PUT',
+                //             url: ['commoncodegroup', 'auth'],
+                //             data: JSON.stringify(caller.gridView01.getData()),
+                //             callback: function (res) {
+                //                 axToast.push('공통코드 권한그룹 정보가 저장 되었습니다');
+                //                 ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, { groupId: caller.formView01.getData().groupId });
+                //             },
+                //         });
+                //     } else {
+                //     }
+                // }
+            });
     },
     TREEITEM_DESELECTE: function (caller, act, data) {
         caller.formView01.clear();
@@ -191,6 +200,27 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         caller.formView01.clear();
         caller.formView01.setData(data);
     },
+    ITEM_ADD: function (caller, act, data) {
+        caller.gridView01.addRow();
+    },
+    ITEM_DEL: function (caller, act, data) {
+        caller.gridView01.delRow('selected');
+    },
+    ITEM_SAVE: function (caller, act, data) {
+        var saveList = [].concat(caller.gridView01.getData());
+        saveList = saveList.concat(caller.gridView01.getData('deleted'));
+
+        console.log(saveList);
+        axboot.ajax({
+            type: 'PUT',
+            url: '/api/v1/commonCodes',
+            data: JSON.stringify(saveList),
+            callback: function (res) {
+                // ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                axToast.push('저장 되었습니다');
+            },
+        });
+    },
 });
 var CODE = {};
 
@@ -299,10 +329,10 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         // root
         treeNode = _this.target.zTree.addNodes(null, {
             id: '_isnew_' + ++_this.newCount,
-            pId: 0,
+            pId: _this.param.groupId || 0,
             name: 'New Item',
             __created__: true,
-            menuGrpCd: _this.param.menuGrpCd,
+            rootCd: _this.param.groupCd,
         });
 
         if (treeNode) {
@@ -343,8 +373,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                                     pId: treeNode.id,
                                     name: 'New Item',
                                     __created__: true,
-                                    menuGrpCd: _this.param.menuGrpCd,
+                                    rootCd: _this.target.zNodes[0].groupCd,
                                 });
+
                                 _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
                                 _this.target.editName();
                                 fnObj.treeView01.deselectNode();
@@ -388,7 +419,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         this.param = $.extend({}, _searchData);
         this.target.setData(_tree);
 
-        if (_data && typeof _data.menuId !== 'undefined') {
+        if (_data && typeof _data.groupId !== 'undefined') {
             // selectNode
             (function (_tree, _keyName, _key) {
                 var nodes = _tree.getNodes();
@@ -404,7 +435,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     }
                 };
                 findNode(nodes);
-            })(this.target.zTree, 'menuId', _data.menuId);
+            })(this.target.zTree, 'groupId', _data.groupId);
         }
     },
     getData: function () {
@@ -419,23 +450,23 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     item = {
                         __created__: n.__created__,
                         __modified__: n.__modified__,
-                        menuId: n.menuId,
-                        menuGrpCd: _this.param.menuGrpCd,
-                        menuNm: n.name,
-                        parentId: n.parentId,
+                        groupId: n.groupId,
+                        rootCd: _this.param.rootCd,
+                        groupNm: n.name, //
+                        parentId: n.pId,
                         sort: nidx,
-                        progCd: n.progCd,
+                        groupCd: n.groupCd,
                         level: n.level,
                         multiLanguageJson: n.multiLanguageJson,
                     };
                 } else {
                     item = {
-                        menuId: n.menuId,
-                        menuGrpCd: n.menuGrpCd,
-                        menuNm: n.name,
+                        groupId: n.groupId,
+                        rootCd: n.rootCd,
+                        groupNm: n.name, //
                         parentId: n.parentId,
                         sort: nidx,
-                        progCd: n.progCd,
+                        groupCd: n.groupCd,
                         level: n.level,
                         multiLanguageJson: n.multiLanguageJson,
                     };
@@ -460,7 +491,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
     updateNode: function (data) {
         var treeNodes = this.target.getSelectedNodes();
         if (treeNodes[0]) {
-            treeNodes[0].progCd = data.progCd;
+            treeNodes[0].groupCd = data.groupCd;
         }
     },
     deselectNode: function () {
@@ -494,7 +525,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             target: $('#split-panel-form'),
             content: COL('ax.admin.menu.form.d1'),
         });
-        this.mask.open();
+        // this.mask.open();
 
         this.initEvent();
 
@@ -509,16 +540,16 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             onExpand: function (callBack) {
                 axboot.ajax({
                     type: 'GET',
-                    url: '/api/v1/programs',
+                    url: '/api/v1/commoncodegroup',
                     data: '',
                     callback: function (res) {
                         var programList = [];
                         res.list.forEach(function (n) {
                             programList.push({
-                                value: n.progCd,
-                                text: n.progNm + '(' + n.progCd + ')',
-                                progCd: n.progCd,
-                                progNm: n.progNm,
+                                value: n.groupCd,
+                                text: n.groupNm + '(' + n.groupCd + ')',
+                                groupCd: n.groupCd,
+                                groupNm: n.groupNm,
                                 data: n,
                             });
                         });
@@ -533,16 +564,16 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             },
             onChange: function () {
                 if (this.value[0]) {
-                    _this.model.set('progCd', this.value[0].progCd);
-                    _this.model.set('progNm', this.value[0].progNm);
+                    _this.model.set('groupCd', this.value[0].groupCd);
+                    _this.model.set('groupNm', this.value[0].groupNm);
                     // console.log(this.value[0].data);
 
                     ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
                     ACTIONS.dispatch(ACTIONS.SELECT_PROG, this.value[0]);
                 } else {
-                    if (_this.model.get('progCd')) {
-                        _this.model.set('progCd', '');
-                        _this.model.set('progNm', '');
+                    if (_this.model.get('groupCd')) {
+                        _this.model.set('groupCd', '');
+                        _this.model.set('groupNm', '');
                         _this.combobox.ax5combobox('close');
 
                         ACTIONS.dispatch(ACTIONS.SELECT_PROG, '');
@@ -560,7 +591,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         return data;
     },
     setData: function (data) {
-        this.mask.close();
+        // this.mask.close();
 
         data = $.extend({}, data);
 
@@ -568,7 +599,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
     clear: function () {
-        this.mask.open();
+        // this.mask.open();
         this.model.setModel(this.getDefaultData());
     },
 });
@@ -590,11 +621,11 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 //menuId
                 { key: 'groupCd', label: '분류코드', width: 160, align: 'center' },
                 { key: 'groupNm', label: '분류명', width: 100, align: 'center' },
-                { key: 'code', label: '코드', width: 80, align: 'center' },
-                { key: 'name', label: '코드값', width: 100, align: 'center' },
-                { key: 'sort', label: '정렬', width: 80, align: 'center' },
+                { key: 'code', label: '코드', width: 80, align: 'center', editor: 'text' },
+                { key: 'name', label: '코드값', width: 100, align: 'center', editor: 'text' },
+                { key: 'sort', label: '정렬', width: 80, align: 'center', editor: 'text' },
                 { key: 'useYn', label: '사용여부', width: 80, align: 'center' },
-                { key: 'rmk', label: '비고', width: 100, align: 'center' },
+                { key: 'rmk', label: '비고', width: 100, align: 'center', editor: 'text' },
                 /// --> 이것들을 list로 담아서  [PUT] "/api/v2/menu/auth"
             ],
             body: {
@@ -612,6 +643,9 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             delete: function () {
                 ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             },
+            save: function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_SAVE);
+            },
         });
     },
     getData: function (_type) {
@@ -628,6 +662,10 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         return list;
     },
     addRow: function () {
-        this.target.addRow({ __created__: true, useYn: 'N' }, 'last');
+        var formData = fnObj.formView01.getData();
+        this.target.addRow(
+            { __created__: true, useYn: 'Y', groupCd: formData.groupCd, groupNm: formData.groupNm, groupId: formData.groupId },
+            'last'
+        );
     },
 });

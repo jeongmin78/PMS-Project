@@ -133,6 +133,7 @@ public class CommonCodeGroupService extends BaseService<CommonCodeGroup, Long> {
     public void updateGruop(Long id, CommonCodeGroup request) {
         CommonCodeGroup exist = findOne(id);
         exist.setGroupNm(request.getGroupNm());
+        exist.setGroupCd(request.getGroupCd());
         save(exist);
     }
 
@@ -142,20 +143,24 @@ public class CommonCodeGroupService extends BaseService<CommonCodeGroup, Long> {
     }
 
     @Transactional
-    private void saveGroup(List<CommonCodeGroup> groups) {
+    public void saveGroup(List<CommonCodeGroup> groups) {
         if (ArrayUtils.isNotEmpty(groups)) {
             groups.forEach(m -> {
                 if (isEmpty(m.getGroupCd())) {
-                    m.setGroupCd(null);
+                    m.setGroupCd("New Item");
                 }
                 if (m.getLevel() == 0) {
                     m.setParentId(null);
                 }
+                if (m.getUseYn() == null) {
+                    m.setUseYn("Y");
+                }
+
             });
 
             save(groups);
             groups.stream().filter(group-> isNotEmpty(group.getChildren())).forEach(group -> {
-                group.getChildren().forEach(m->m.setParentId(group.getParentId()));
+                group.getChildren().forEach(m->m.setParentId(group.getGroupId()));
                 saveGroup(group.getChildren());
             });
         }

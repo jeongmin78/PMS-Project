@@ -1,23 +1,19 @@
 package edu.axboot.controllers;
 
+import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
-import edu.axboot.domain.code.CommonCode;
 import edu.axboot.domain.code.CommonCodeService;
-import edu.axboot.domain.code.codegroup.CommonCodeRequestVO;
-import edu.axboot.domain.program.menu.Menu;
-import edu.axboot.domain.user.auth.menu.AuthGroupMenu;
-import edu.axboot.domain.user.auth.menu.AuthGroupMenuService;
-import edu.axboot.domain.user.auth.menu.AuthGroupMenuVO;
-import org.springframework.stereotype.Controller;
-import com.chequer.axboot.core.api.response.ApiResponse;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import edu.axboot.domain.code.codegroup.CommonCodeGroup;
 import edu.axboot.domain.code.codegroup.CommonCodeGroupService;
+import edu.axboot.domain.code.codegroup.CommonCodeRequestVO;
+import edu.axboot.domain.user.auth.menu.AuthGroupMenu;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -55,6 +51,11 @@ public class CommonCodeGroupController extends BaseController {
         return commonCodeGroupService.findOne(id);
     }
 
+    @RequestMapping(value = "/group", method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
+    public ApiResponse save(@RequestBody List<CommonCodeGroup> commonCodeGroupList) {
+        commonCodeGroupService.saveGroup(commonCodeGroupList);
+        return ok();
+    }
 
 //    @RequestMapping(value = "/auth", method = RequestMethod.GET, produces = APPLICATION_JSON)
 //    public AuthGroupMenuVO authMapList(RequestParams requestParams) {

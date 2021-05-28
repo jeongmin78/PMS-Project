@@ -3,8 +3,6 @@ package edu.axboot.domain.code.codegroup;
 import com.chequer.axboot.core.annotations.Comment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.axboot.domain.BaseJpaModel;
-import edu.axboot.domain.code.CommonCode;
-import edu.axboot.domain.program.menu.Menu;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
