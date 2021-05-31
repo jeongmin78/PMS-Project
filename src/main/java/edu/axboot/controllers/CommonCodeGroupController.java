@@ -4,11 +4,14 @@ import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
+import edu.axboot.domain.chk.ChkService;
 import edu.axboot.domain.code.CommonCodeService;
 import edu.axboot.domain.code.codegroup.CommonCodeGroup;
 import edu.axboot.domain.code.codegroup.CommonCodeGroupService;
 import edu.axboot.domain.code.codegroup.CommonCodeRequestVO;
 import edu.axboot.domain.user.auth.menu.AuthGroupMenu;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/api/v1/commoncodegroup")
 public class CommonCodeGroupController extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
 
     @Inject
     private CommonCodeGroupService commonCodeGroupService;

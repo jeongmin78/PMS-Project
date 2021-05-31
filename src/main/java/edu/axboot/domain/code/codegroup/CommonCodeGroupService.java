@@ -4,6 +4,9 @@ import com.chequer.axboot.core.parameter.RequestParams;
 import com.chequer.axboot.core.utils.ArrayUtils;
 import com.querydsl.core.BooleanBuilder;
 import edu.axboot.domain.BaseService;
+import edu.axboot.domain.chk.ChkService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -13,6 +16,8 @@ import java.util.List;
 
 @Service
 public class CommonCodeGroupService extends BaseService<CommonCodeGroup, Long> {
+    private static final Logger logger = LoggerFactory.getLogger(ChkService.class);
+
     private CommonCodeGroupRepository commonCodeGroupRepository;
 
     @Inject
@@ -149,13 +154,15 @@ public class CommonCodeGroupService extends BaseService<CommonCodeGroup, Long> {
                 if (isEmpty(m.getGroupCd())) {
                     m.setGroupCd("New Item");
                 }
+                if (isEmpty(m.getGroupNm())) {
+                    m.setGroupNm("New Item");
+                }
                 if (m.getLevel() == 0) {
                     m.setParentId(null);
                 }
                 if (m.getUseYn() == null) {
                     m.setUseYn("Y");
                 }
-
             });
 
             save(groups);

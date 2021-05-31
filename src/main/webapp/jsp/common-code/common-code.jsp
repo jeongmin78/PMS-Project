@@ -79,7 +79,7 @@
                                 <div data-ax-td style="width:100%">
                                     <div data-ax-td-label style="width:150px;">코드설명</div>
                                     <div data-ax-td-wrap>
-                                        <textarea name="rmk" data-ax-path="rmk" rows="2" class="form-control"></textarea>
+                                        <textarea name="rmk" data-ax-path="rmk" rows="2" class="form-control js-rmk"></textarea>
                                     </div>
                                 </div>
                             </div>

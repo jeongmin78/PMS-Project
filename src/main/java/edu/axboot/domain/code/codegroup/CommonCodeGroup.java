@@ -68,7 +68,7 @@ public class CommonCodeGroup extends BaseJpaModel<Long> {
 
 	@JsonProperty("name")
 	public String label() {
-		return groupNm;
+		return groupCd;
 	}
 
 	@JsonProperty("id")
