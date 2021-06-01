@@ -33,9 +33,9 @@
                                     <button type="button" class="btn btn-default js-sixmonth" data-search-view-btn="sixmonth">6개월</button>
                                     <button type="button" class="btn btn-default js-oneyear" data-search-view-btn="oneyear">1년</button>
                                     <div class="input-group" data-ax5picker="date">
-                                        <input type="text" class="form-control js-arrDt" placeholder="yyyy-mm-dd">
+                                        <input type="text" data-ax-path="rsvDt" class="form-control js-rsvDt" placeholder="yyyy-mm-dd">
                                         <span class="input-group-addon">~</span>
-                                        <input type="text" class="form-control js-arrDt-end" placeholder="yyyy-mm-dd">
+                                        <input type="text" data-ax-path="rsvDtEnd" class="form-control js-rsvDtEnd" placeholder="yyyy-mm-dd">
                                         <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                                     </div>
                                 </div>
@@ -48,7 +48,7 @@
         </div>
 
         <ax:split-layout name="ax1" orientation="horizontal">
-            <ax:split-panel width="*" style="">
+            <ax:split-panel>
 
                 <!-- 목록 -->
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">

@@ -83,7 +83,7 @@ public class ChkServiceTest {
     }
 
     @Test
-    public void test3_예약_숙박메모_등록하기() {
+    public void test4_예약_숙박메모_등록하기() {
         //given
         List<ChkMemoSaveRequestDto> memoList = new ArrayList<ChkMemoSaveRequestDto>();
         memoList.add(ChkMemoSaveRequestDto.builder()

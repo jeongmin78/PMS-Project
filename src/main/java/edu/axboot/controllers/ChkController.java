@@ -47,12 +47,6 @@ public class ChkController extends BaseController {
         return chkService.getOneByDesc();
     }
 
-    @RequestMapping(value = "total", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public Responses.ListResponse view2(RequestParams<ChkReportListResponseDto> requestParams) {
-        List<ChkReportListResponseDto> list = chkService.getArrDtTotalCount(requestParams);
-        return Responses.ListResponse.of(list);
-    }
-
     @RequestMapping(method = {RequestMethod.POST}, produces = APPLICATION_JSON)
     public Responses.MapResponse save(@RequestBody ChkSaveRequestDto requestDto, HttpServletRequest request) {
         Long id = chkService.saveUsingJpa(requestDto);
@@ -69,11 +63,7 @@ public class ChkController extends BaseController {
 
     @RequestMapping(value = "/sttus", method = RequestMethod.POST, produces = APPLICATION_JSON)
     public ApiResponse update2(@RequestParam(value = "ids") List<Long> ids, @RequestParam(value = "sttusCd") String sttusCd) {
-        logger.info("=========================> " + ids);
-        logger.info("=========================> " + sttusCd);
-
         for(Long id: ids){
-            logger.info("=========================> " + id);
             chkService.updateSttus(id, sttusCd);
         }
         return ok();

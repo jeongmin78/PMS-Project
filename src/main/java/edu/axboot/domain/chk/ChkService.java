@@ -4,7 +4,10 @@ import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import edu.axboot.controllers.dto.*;
+import edu.axboot.controllers.dto.ChkMemoSaveRequestDto;
+import edu.axboot.controllers.dto.ChkResponseDto;
+import edu.axboot.controllers.dto.ChkSaveRequestDto;
+import edu.axboot.controllers.dto.ChkUpdateRequestDto;
 import edu.axboot.domain.BaseService;
 import edu.axboot.domain.chkmemo.ChkMemo;
 import edu.axboot.domain.chkmemo.ChkMemoRepository;
@@ -18,7 +21,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -213,40 +215,4 @@ public class ChkService extends BaseService<Chk, Long> {
         chkEntity.예약상태_수정하기(sttusCd);
     }
 
-    public List<ChkReportListResponseDto> getArrDtTotalCount(RequestParams<ChkReportListResponseDto> requestParams) {
-        String arrDt = requestParams.getString("arrDt","");
-        String arrDtEnd = requestParams.getString("arrDtEnd","");
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (isNotEmpty(arrDt)){
-            if (isNotEmpty(arrDtEnd)){
-                builder.and(qChk.arrDt.between(arrDt,arrDtEnd));
-            }else
-                builder.and(qChk.arrDt.between(arrDt, String.valueOf(today)));
-        }
-
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        List<ChkReportListResponseDto> chkReportList = queryFactory.selectFrom(qChk)
-                .where(builder)
-                .groupBy(qChk.arrDt)
-                .select(Projections.constructor(ChkReportListResponseDto.class, qChk.arrDt, qChk.rsvNum.count(), qChk.salePrc.sum(), qChk.svcPrc.sum()))
-                .orderBy(qChk.rsvNum.count().desc())
-                .fetch();
-
-        long count=0;
-        BigDecimal salePrc = BigDecimal.ZERO;
-        BigDecimal svcPrc = BigDecimal.ZERO;
-        for (ChkReportListResponseDto chkReport : chkReportList){
-            logger.info("===============> " + chkReport.getSalePrc());
-            logger.info("===============> " + chkReport.getSvcPrc());
-            count += chkReport.getRoomCount();
-            if (chkReport.getSalePrc() != null) salePrc = salePrc.add(chkReport.getSalePrc());
-            if (chkReport.getSvcPrc() != null) svcPrc = svcPrc.add(chkReport.getSvcPrc());
-        }
-        ChkReportListResponseDto reportDto = new ChkReportListResponseDto("합계", count, salePrc,svcPrc);
-        chkReportList.add(0, reportDto);
-        return chkReportList;
-    }
 }

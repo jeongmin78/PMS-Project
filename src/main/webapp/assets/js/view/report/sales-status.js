@@ -2,11 +2,11 @@ var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         var paramObj = caller.searchView.getData();
-        if (data) paramObj.arrDt = data;
+        if (data) paramObj.rsvDt = data;
         console.log(paramObj);
         axboot.ajax({
             type: 'GET',
-            url: '/api/v1/chk/total',
+            url: '/api/v1/report/total',
             data: paramObj,
             callback: function (res) {
                 console.log(res);
@@ -84,39 +84,45 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.model = new ax5.ui.binder();
         this.model.setModel({}, this.target);
 
-        this.arrDt = $('.js-arrDt');
-        this.arrDtEnd = $('.js-arrDt-end');
+        this.rsvDt = $('.js-rsvDt');
+        this.rsvDtEnd = $('.js-rsvDtEnd');
 
-        console.log(this);
-
-        $('.js-today').onClick = function () {
-            this.model.set('arrDt', moment().format('yyyy-MM-DD'));
-            this.model.set('arrDtEnd', '');
-        };
         axboot.buttonClick(this, 'data-search-view-btn', {
             today: function () {
                 console.log(this.model);
-                this.model.set('arrDt', moment().format('yyyy-MM-DD'));
-                this.model.set('arrDtEnd', '');
-                // ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
             yesterday: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-1, 'days').format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().add(-1, 'days').format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().add(-1, 'days').format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
             threedays: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-3, 'days').format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().add(-3, 'days').format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
             sevendays: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-7, 'days').format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().add(-7, 'days').format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
             onemonth: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-1, 'months').format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().add(-1, 'months').format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
             sixmonth: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-6, 'months').format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().add(-6, 'months').format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
             oneyear: function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, moment().add(-1, 'years').format('yyyy-MM-DD'));
+                this.model.set('rsvDt', moment().add(-1, 'years').format('yyyy-MM-DD'));
+                this.model.set('rsvDtEnd', moment().format('yyyy-MM-DD'));
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
         });
     },
@@ -124,8 +130,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         return {
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
-            arrDt: this.arrDt.val(),
-            arrDtEnd: this.arrDtEnd.val(),
+            rsvDt: this.rsvDt.val(),
+            rsvDtEnd: this.rsvDtEnd.val(),
         };
     },
 });
@@ -144,10 +150,30 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                { key: 'arrDt', label: '날짜', width: 150, align: 'center' },
+                { key: 'rsvDt', label: '날짜', width: 150, align: 'center' },
                 { key: 'roomCount', label: '투숙건수', collector: 'count', width: 150, align: 'center' },
-                { key: 'salePrc', label: '판매금액', width: 100, align: 'center', formatter: 'money' },
-                { key: 'svcPrc', label: '서비스금액', width: 100, align: 'center', formatter: 'money' },
+                {
+                    key: 'salePrc',
+                    label: '판매금액',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        var value = 0;
+                        value = this.item.salePrc;
+                        return ax5.util.number(value, { money: 1 });
+                    },
+                },
+                {
+                    key: 'svcPrc',
+                    label: '서비스금액',
+                    width: 100,
+                    align: 'center',
+                    formatter: function () {
+                        var value = 0;
+                        value = this.item.svcPrc;
+                        return ax5.util.number(value, { money: 1 });
+                    },
+                },
                 {
                     key: 'salePrc',
                     label: '합계',
