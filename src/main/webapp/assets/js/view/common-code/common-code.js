@@ -19,7 +19,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             list: caller.treeView01.getData(),
             deletedList: caller.treeView01.getDeletedList(),
         };
-        console.log(obj);
         var groupId;
         if (formData.groupId) groupId = '/' + formData.groupId;
         else groupId = '';
@@ -33,12 +32,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     axToast.push('공통코드 카테고리가 저장 되었습니다');
                 },
             })
-            // .call({
-            //     type: 'PUT',
-            //     url: '/api/v1/commoncodegroup' + groupId,
-            //     data: JSON.stringify(formData),
-            //     callback: function (res) {},
-            // })
+            .call({
+                type: 'PUT',
+                url: '/api/v1/commoncodegroup' + groupId,
+                data: JSON.stringify(formData),
+                callback: function (res) {},
+            })
             .done(function () {
                 if (data && data.callback) {
                     data.callback();
@@ -46,13 +45,29 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, { groupId: caller.formView01.getData().groupId });
                 }
             });
-
+    },
+    TREEITEM_SAVE: function (caller, act, data) {
+        var formData = caller.formView01.getData();
+        var obj = {
+            list: caller.treeView01.getData(),
+            deletedList: caller.treeView01.getDeletedList(),
+        };
         var groupId;
+        if (formData.groupId) groupId = '/' + formData.groupId;
+        else groupId = '';
+        axboot.ajax({
+            type: 'PUT',
+            url: '/api/v1/commoncodegroup',
+            data: JSON.stringify(obj),
+            callback: function (res) {
+                caller.treeView01.clearDeletedList();
+                axToast.push('공통코드 카테고리가 저장 되었습니다');
+            },
+        });
         if (formData.groupId) {
-            groupId = '/' + formData.groupId;
             axboot.ajax({
                 type: 'PUT',
-                url: '/api/v1/commoncodegroup' + groupId,
+                url: '/api/v1/commoncodegroup/' + formData.groupId,
                 data: JSON.stringify(formData),
                 callback: function (res) {
                     console.log(res);
@@ -290,7 +305,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     ACTIONS.dispatch(ACTIONS.TREE_ROOTNODE_ADD);
                     break;
                 case 'save':
-                    ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+                    ACTIONS.dispatch(ACTIONS.TREEITEM_SAVE);
                     break;
             }
         });
@@ -514,17 +529,16 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 //menuId
                 { key: 'groupCd', label: '분류코드', width: 160, align: 'center' },
                 { key: 'groupNm', label: '분류명', width: 100, align: 'center' },
-                { key: 'code', label: '코드', width: 80, align: 'center', editor: 'text' },
+                { key: 'code', label: '코드', width: 80, align: 'center', editor: { type: 'text', disabled: 'notCreated' } },
                 { key: 'name', label: '코드값', width: 100, align: 'center', editor: 'text' },
                 { key: 'sort', label: '정렬', width: 80, align: 'center', editor: 'text' },
-                { key: 'useYn', label: '사용여부', width: 80, align: 'center' },
+                { key: 'useYn', label: '사용여부', width: 80, align: 'center', editor: 'checkYn' },
                 { key: 'rmk', label: '비고', width: 100, align: 'center', editor: 'text' },
                 /// --> 이것들을 list로 담아서  [PUT] "/api/v2/menu/auth"
             ],
             body: {
                 onClick: function () {
-                    // this.self.select(this.dindex, { selectedClear: true });
-                    // ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
+                    this.self.select(this.dindex, { selectedClear: true });
                 },
             },
         });
@@ -547,7 +561,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
 
         if (_type == 'modified' || _type == 'deleted') {
             list = ax5.util.filter(_list, function () {
-                return this.progNm && this.progPh;
+                return this.groupCd && this.code;
             });
         } else {
             list = _list;

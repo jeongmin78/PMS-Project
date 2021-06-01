@@ -26,7 +26,7 @@
                     <div class="left">
                         <h2>
                             <i class="cqc-list"></i>
-                            <ax:lang id="ax.admin.menu.title"/> </h2>
+                            코드 </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
