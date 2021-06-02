@@ -16,7 +16,6 @@
     <jsp:body>
 
         <ax:page-buttons>
-            <button type="button" class="btn btn-info" data-page-btn="save"><i class="cqc-save"></i> 저장</button>
         </ax:page-buttons>
 
 
